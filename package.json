@@ -13,10 +13,13 @@
     "@types/node": "^22.1.0",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "@types/bcrypt": "^5.0.2"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
+    "joi": "^17.13.3",
     "mongoose": "^8.5.2"
   }
 }

@@ -1,5 +1,6 @@
 import Joi from "joi";
 import mongoose from "mongoose";
+import { IRecipe } from "../Recipe/recipe.type";
 
 export enum EStatus {
     active = "active",
@@ -18,6 +19,9 @@ export interface IUser extends mongoose.Document {
     full_name: string;
     phone_number: string;
     status: TStatus;
+
+    booked_recipes: mongoose.Types.ObjectId[] | IRecipe[];
+    my_recipes: mongoose.Types.ObjectId[] | IRecipe[];
 }
 
 export interface IUserMethods {

@@ -10,6 +10,9 @@ export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
     first_name: { type: String },
     last_name: { type: String },
     phone_number: { type: String },
+    status: { type: String, enum: Object.values(EStatus), default: EStatus.active },
+    booked_recipes: [{ type: mongoose.Types.ObjectId, ref: "Recipe" }],
+    my_recipes: [{ type: mongoose.Types.ObjectId, ref: "Recipe" }],
 
 }, {
     timestamps: true,

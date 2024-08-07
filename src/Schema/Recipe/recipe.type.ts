@@ -2,6 +2,7 @@ import Joi from "joi";
 import mongoose, { Schema } from "mongoose";
 import { IIngredient } from "../Ingredient/ingredient.type";
 import { IModerator } from "../Moderator/moderator.type";
+import { IReview } from "../Review/review.type";
 
 export enum EPreferredMealTime {
     breakfast = "breakfast",
@@ -44,8 +45,9 @@ export interface IRecipe extends mongoose.Document {
     cookingTime: number;
     ingredients: IngredientDetail[];
     instructions: string;
+
     rating: number;
-    active: boolean;
+    reviews: Schema.Types.ObjectId[] | IReview[];
 
     status: TRecipeStatus;
     moderator?: {

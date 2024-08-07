@@ -1,0 +1,454 @@
+{
+  "ingredients": [
+    {
+      "name": "Salt",
+      "type": "Seasoning",
+      "unit": "grams"
+    },
+    {
+      "name": "Sugar",
+      "type": "Sweetener",
+      "unit": "grams"
+    },
+    {
+      "name": "Olive Oil",
+      "type": "Oil",
+      "unit": "milliliters"
+    },
+    {
+      "name": "Chicken Breast",
+      "type": "Meat",
+      "unit": "grams"
+    },
+    {
+      "name": "Garlic",
+      "type": "Vegetable",
+      "unit": "cloves"
+    },
+    {
+      "name": "Onion",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Tomato",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Basil",
+      "type": "Herb",
+      "unit": "grams"
+    },
+    {
+      "name": "Butter",
+      "type": "Dairy",
+      "unit": "grams"
+    },
+    {
+      "name": "Milk",
+      "type": "Dairy",
+      "unit": "milliliters"
+    },
+    {
+      "name": "Flour",
+      "type": "Grain",
+      "unit": "grams"
+    },
+    {
+      "name": "Eggs",
+      "type": "Dairy",
+      "unit": "pieces"
+    },
+    {
+      "name": "Cheese",
+      "type": "Dairy",
+      "unit": "grams"
+    },
+    {
+      "name": "Black Pepper",
+      "type": "Seasoning",
+      "unit": "grams"
+    },
+    {
+      "name": "Carrot",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Potato",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Lemon",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Soy Sauce",
+      "type": "Condiment",
+      "unit": "milliliters"
+    },
+    {
+      "name": "Honey",
+      "type": "Sweetener",
+      "unit": "grams"
+    },
+    {
+      "name": "Rice",
+      "type": "Grain",
+      "unit": "grams"
+    },
+    {
+      "name": "Beef",
+      "type": "Meat",
+      "unit": "grams"
+    },
+    {
+      "name": "Pork",
+      "type": "Meat",
+      "unit": "grams"
+    },
+    {
+      "name": "Fish",
+      "type": "Seafood",
+      "unit": "grams"
+    },
+    {
+      "name": "Shrimp",
+      "type": "Seafood",
+      "unit": "grams"
+    },
+    {
+      "name": "Mushroom",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Spinach",
+      "type": "Vegetable",
+      "unit": "grams"
+    },
+    {
+      "name": "Broccoli",
+      "type": "Vegetable",
+      "unit": "grams"
+    },
+    {
+      "name": "Zucchini",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Bell Pepper",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Cucumber",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Coriander",
+      "type": "Herb",
+      "unit": "grams"
+    },
+    {
+      "name": "Parsley",
+      "type": "Herb",
+      "unit": "grams"
+    },
+    {
+      "name": "Chili Powder",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Cumin",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Paprika",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Cinnamon",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Nutmeg",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Vanilla Extract",
+      "type": "Flavoring",
+      "unit": "milliliters"
+    },
+    {
+      "name": "Baking Powder",
+      "type": "Leavening Agent",
+      "unit": "grams"
+    },
+    {
+      "name": "Baking Soda",
+      "type": "Leavening Agent",
+      "unit": "grams"
+    },
+    {
+      "name": "Yeast",
+      "type": "Leavening Agent",
+      "unit": "grams"
+    },
+    {
+      "name": "Coconut Oil",
+      "type": "Oil",
+      "unit": "milliliters"
+    },
+    {
+      "name": "Peanut Butter",
+      "type": "Spread",
+      "unit": "grams"
+    },
+    {
+      "name": "Jam",
+      "type": "Spread",
+      "unit": "grams"
+    },
+    {
+      "name": "Almonds",
+      "type": "Nut",
+      "unit": "grams"
+    },
+    {
+      "name": "Walnuts",
+      "type": "Nut",
+      "unit": "grams"
+    },
+    {
+      "name": "Cashews",
+      "type": "Nut",
+      "unit": "grams"
+    },
+    {
+      "name": "Raisins",
+      "type": "Dried Fruit",
+      "unit": "grams"
+    },
+    {
+      "name": "Dates",
+      "type": "Dried Fruit",
+      "unit": "grams"
+    },
+    {
+      "name": "Oats",
+      "type": "Grain",
+      "unit": "grams"
+    },
+    {
+      "name": "Quinoa",
+      "type": "Grain",
+      "unit": "grams"
+    },
+    {
+      "name": "Blueberries",
+      "type": "Fruit",
+      "unit": "grams"
+    },
+    {
+      "name": "Strawberries",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Raspberries",
+      "type": "Fruit",
+      "unit": "grams"
+    },
+    {
+      "name": "Avocado",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Pineapple",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Mango",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Peach",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Cherry",
+      "type": "Fruit",
+      "unit": "grams"
+    },
+    {
+      "name": "Pomegranate",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Mint",
+      "type": "Herb",
+      "unit": "grams"
+    },
+    {
+      "name": "Thyme",
+      "type": "Herb",
+      "unit": "grams"
+    },
+    {
+      "name": "Rosemary",
+      "type": "Herb",
+      "unit": "grams"
+    },
+    {
+      "name": "Sage",
+      "type": "Herb",
+      "unit": "grams"
+    },
+    {
+      "name": "Tarragon",
+      "type": "Herb",
+      "unit": "grams"
+    },
+    {
+      "name": "Chives",
+      "type": "Herb",
+      "unit": "grams"
+    },
+    {
+      "name": "Bay Leaf",
+      "type": "Herb",
+      "unit": "pieces"
+    },
+    {
+      "name": "Cloves",
+      "type": "Spice",
+      "unit": "pieces"
+    },
+    {
+      "name": "Cardamom",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Ginger",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Turmeric",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Mustard Seeds",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Fennel Seeds",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Star Anise",
+      "type": "Spice",
+      "unit": "pieces"
+    },
+    {
+      "name": "Saffron",
+      "type": "Spice",
+      "unit": "grams"
+    },
+    {
+      "name": "Pistachios",
+      "type": "Nut",
+      "unit": "grams"
+    },
+    {
+      "name": "Macadamia Nuts",
+      "type": "Nut",
+      "unit": "grams"
+    },
+    {
+      "name": "Hazelnuts",
+      "type": "Nut",
+      "unit": "grams"
+    },
+    {
+      "name": "Sunflower Seeds",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Pumpkin Seeds",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Chia Seeds",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Sesame Seeds",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Hemp Seeds",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Linseed",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Almond Milk",
+      "type": "Dairy Alternative",
+      "unit": "milliliters"
+    },
+    {
+      "name": "Soy Milk",
+      "type": "Dairy Alternative",
+      "unit": "milliliters"
+    },
+    {
+      "name": "Coconut Milk",
+      "type": "Dairy Alternative",
+      "unit": "milliliters"
+    },
+    {
+      "name": "Tofu",
+      "type": "Dairy Alternative",
+      "unit": "grams"
+    },
+    {
+      "name": "Tempeh",
+      "type": "Dairy Alternative",
+      "unit": "grams"
+    },
+    {
+      "name": "Seitan",
+      "type": "Dairy Alternative",
+      "unit": "grams"
+    }
+  ]
+}

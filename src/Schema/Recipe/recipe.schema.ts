@@ -7,6 +7,7 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     name: { type: String, required: true },
     description: { type: String },
     imgs: { type: [String] },
+    category: { type: String },
     preferredMealTime: { type: [String], enum: Object.values(EPreferredMealTime) },
     preparationDifficulty: { type: String, enum: Object.values(EPreparationDifficulty) },
     cookingTime: { type: Number },
@@ -17,9 +18,8 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     instructions: { type: String },
     rating: { type: Number, default: 0 },
     active: { type: Boolean, default: false },
-    moderator_Comment: { type: String },
 
-    nutritionalInformation: { type: Schema.Types.ObjectId, ref: 'NutritionalInformation' },
+    moderator_Comment: { type: String },
     approved_moderators: { type: Schema.Types.ObjectId, ref: 'Moderator' }
 }, {
     timestamps: true,
@@ -33,6 +33,6 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
 
 recipeSchema.plugin<any>(mongooseErrorPlugin);
 
-const RecipeModel = mongoose.model<IRecipe, IRecipeModel>('User', recipeSchema);
+const RecipeModel = mongoose.model<IRecipe, IRecipeModel>('Recipe', recipeSchema);
 
 export default RecipeModel;

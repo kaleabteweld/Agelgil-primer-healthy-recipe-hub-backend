@@ -1,5 +1,6 @@
 import Joi from "joi";
 import mongoose, { Schema } from "mongoose";
+import { IIngredient } from "../Ingredient/ingredient.type";
 
 export enum EPreferredMealTime {
     breakfast = "breakfast",
@@ -21,7 +22,7 @@ export enum EPreparationDifficulty {
 export type TPreparationDifficulty = "easy" | "medium" | "hard";
 
 interface IngredientDetail {
-    Ingredient: Schema.Types.ObjectId;
+    Ingredient: Schema.Types.ObjectId | IIngredient;
     amount: number;
 }
 
@@ -29,6 +30,7 @@ export interface IRecipe extends mongoose.Document {
     name: string;
     description?: string;
     imgs: string[];
+    category: string;
     preferredMealTime: TPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: number;
@@ -38,7 +40,6 @@ export interface IRecipe extends mongoose.Document {
     active: boolean;
     moderator_Comment?: string;
 
-    nutritionalInformation?: Schema.Types.ObjectId;
     approved_moderators?: Schema.Types.ObjectId;
 }
 

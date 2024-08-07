@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
 import { getById, removeByID, validator } from './recipe.extended';
-import { EPreferredMealTime, EPreparationDifficulty, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
+import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
 
 const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     name: { type: String, required: true },
@@ -19,8 +19,12 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     rating: { type: Number, default: 0 },
     active: { type: Boolean, default: false },
 
-    moderator_Comment: { type: String },
-    approved_moderators: { type: Schema.Types.ObjectId, ref: 'Moderator' }
+    status: { type: String, enum: Object.values(ERecipeStatus), default: ERecipeStatus.pending },
+    moderator: {
+        moderator: { type: Schema.Types.ObjectId, ref: 'Moderator' },
+        comment: { type: String }
+    },
+
 }, {
     timestamps: true,
     statics: {

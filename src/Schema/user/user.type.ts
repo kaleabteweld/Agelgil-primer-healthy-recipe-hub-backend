@@ -10,6 +10,7 @@ export enum EStatus {
 export type TStatus = "active" | "disabled" | "blocked";
 
 export interface IUser extends mongoose.Document {
+    profile_img?: string;
     email: string;
     password: string;
     first_name: string;
@@ -46,6 +47,7 @@ export interface IUserSignUpFrom {
     first_name: string;
     last_name: string;
     phone_number: string;
+    profile_img?: string;
 }
 
 export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {

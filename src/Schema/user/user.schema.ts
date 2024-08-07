@@ -4,7 +4,7 @@ import { EStatus, IUser, IUserMethods, IUserModel } from './user.type';
 import { checkPassword, encryptPassword, getByEmail, getById, removeByID, setStatus, update, validator } from './user.extended';
 
 export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
-
+    profile_img: { type: String, default: null },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     first_name: { type: String },

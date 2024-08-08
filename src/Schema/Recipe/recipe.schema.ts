@@ -24,6 +24,12 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         comment: { type: String }
     },
 
+    user: {
+        user: { type: Schema.Types.ObjectId, ref: 'User' },
+        full_name: { type: String },
+        profile_img: { type: String }
+    }
+
 }, {
     timestamps: true,
     statics: {

@@ -3,6 +3,7 @@ import mongoose, { Schema } from "mongoose";
 import { IIngredient } from "../Ingredient/ingredient.type";
 import { IModerator } from "../Moderator/moderator.type";
 import { IReview } from "../Review/review.type";
+import { IUser } from "../user/user.type";
 
 export enum EPreferredMealTime {
     breakfast = "breakfast",
@@ -53,6 +54,12 @@ export interface IRecipe extends mongoose.Document {
     moderator?: {
         moderator: Schema.Types.ObjectId | IModerator;
         Comment: string;
+    };
+
+    user: {
+        user: Schema.Types.ObjectId | IUser;
+        full_name: string;
+        profile_img: string;
     }
 }
 

@@ -21,7 +21,6 @@ privateUserRouter.patch("/update", userOnly, MakeErrorHandler(
     }
 ));
 
-
 publicUserRouter.get("/id/:id", MakeErrorHandler(
     async (req: Request, res: Response) => {
         res.json(await UserController.getById(req.params.id));
@@ -41,7 +40,7 @@ privateUserRouter.get("/bookedRecipes/toggle/:recipeId", userOnly, MakeErrorHand
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
         const recipeId = req.params.recipeId;
-        res.json(await UserController.bookedRecipes(_user._id as any, recipeId));
+        res.json(await UserController.toggleBookedRecipes(_user._id as any, recipeId));
     }
 ));
 

@@ -5,6 +5,7 @@ import { MakeTokens, removeRefreshToken, verifyAccessToken, verifyRefreshToken }
 import { UserType } from "../../Util/jwt/jwt.types";
 import { userLogInSchema, userSignUpSchema, userUpdateSchema } from "../../Schema/user/user.validation";
 import { IRecipe } from "../../Schema/Recipe/recipe.type";
+import RecipeModel from "../../Schema/Recipe/recipe.schema";
 
 
 export default class UserController {
@@ -68,7 +69,8 @@ export default class UserController {
         return { body: await UserModel.getBookedRecipes(userId, pagination) };
     }
 
-    static async bookRecipeToggle(userId: string, recipeId: string): Promise<IResponseType<IRecipe[]>> {
-        return { body: await UserModel.bookRecipeToggle(userId, recipeId) };
+    static async toggleBookedRecipes(userId: string, recipeId: string): Promise<IResponseType<IRecipe[]>> {
+        const recipe = await RecipeModel.getById(recipeId);
+        return { body: await UserModel.toggleBookedRecipes(userId, recipe) };
     }
 }

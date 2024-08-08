@@ -40,6 +40,7 @@ export interface IUserModel extends mongoose.Model<IUserDocument> {
     update(_id: string, newUser: IUserUpdateFrom, populatePath?: string | string[]): Promise<IUserDocument | null>
     removeByID(_id: string): Promise<void>
     getBookedRecipes(_id: string, pagination: IPagination): Promise<IRecipe[]>
+    toggleBookedRecipes(_id: string, recipe: IRecipe): Promise<IRecipe[]>
 }
 
 export interface IUserLogInFrom {

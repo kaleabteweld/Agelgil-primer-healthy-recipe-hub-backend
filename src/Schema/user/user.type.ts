@@ -1,6 +1,7 @@
 import Joi from "joi";
 import mongoose from "mongoose";
 import { IRecipe } from "../Recipe/recipe.type";
+import { IPagination } from "../../Types";
 
 export enum EStatus {
     active = "active",
@@ -38,6 +39,7 @@ export interface IUserModel extends mongoose.Model<IUserDocument> {
     setStatus(_id: string, status: TStatus): Promise<IUserDocument | null>
     update(_id: string, newUser: IUserUpdateFrom, populatePath?: string | string[]): Promise<IUserDocument | null>
     removeByID(_id: string): Promise<void>
+    getBookedRecipes(_id: string, pagination: IPagination): Promise<IRecipe[]>
 }
 
 export interface IUserLogInFrom {

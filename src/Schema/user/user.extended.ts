@@ -5,6 +5,8 @@ import { ValidationErrorFactory, errorFactory, isValidationError } from "../../T
 import { BSONError } from 'bson';
 import { EStatus, IUser, IUserUpdateFrom } from "./user.type";
 import { MakeValidator } from "../../Util";
+import { IRecipe } from "../Recipe/recipe.type";
+import { IPagination } from "../../Types";
 
 
 export async function encryptPassword(this: IUser, password?: string): Promise<String> {
@@ -136,6 +138,64 @@ export async function setStatus(this: mongoose.Model<IUser>, _id: string, status
         var newDoc: any = await this.findByIdAndUpdate(_id, { status }, { new: true, overwrite: true });
         return newDoc;
     } catch (error) {
+        throw error;
+    }
+}
+
+export async function getBookedRecipes(this: mongoose.Model<IUser>, _id: string, pagination: IPagination): Promise<IRecipe[]> {
+
+    try {
+        const user = await this.findById(new mongoose.Types.ObjectId(_id)).select('booked_recipes').populate({
+            path: 'booked_recipes',
+            select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
+            options: { limit: pagination.limit }
+        }).exec();
+        if (user == null) {
+            throw ValidationErrorFactory({
+                msg: "User not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        return user.booked_recipes as IRecipe[];
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}
+
+export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: string, recipe: IRecipe): Promise<IRecipe[]> {
+
+    try {
+        const user = await this.findById(new mongoose.Types.ObjectId(_id)).select('booked_recipes').exec();
+        if (user == null) {
+            throw ValidationErrorFactory({
+                msg: "User not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+
+        const recipeIndex = user.booked_recipes.indexOf(recipe._id as any);
+        if (recipeIndex !== -1) user.booked_recipes.splice(recipeIndex, 1);
+        else user.booked_recipes.push(recipe._id as any);
+
+        await user.save();
+        return user.booked_recipes as IRecipe[];
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
         throw error;
     }
 }

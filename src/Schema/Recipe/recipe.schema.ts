@@ -17,7 +17,6 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     }],
     instructions: { type: String },
     rating: { type: Number, default: 0 },
-    active: { type: Boolean, default: false },
 
     status: { type: String, enum: Object.values(ERecipeStatus), default: ERecipeStatus.pending },
     moderator: {

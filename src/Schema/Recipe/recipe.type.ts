@@ -75,7 +75,7 @@ export interface INewRecipeFrom {
     preferredMealTime: TPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: number;
-    nutritionalInformation?: Schema.Types.ObjectId;
+    // nutritionalInformation?: Schema.Types.ObjectId;
     ingredients: IngredientDetail[];
     instructions: string;
 }

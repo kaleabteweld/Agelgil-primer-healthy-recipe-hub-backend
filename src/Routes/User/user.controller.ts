@@ -73,4 +73,8 @@ export default class UserController {
         const recipe = await RecipeModel.getById(recipeId);
         return { body: await UserModel.toggleBookedRecipes(userId, recipe) };
     }
+
+    static async myRecipes(userId: string, pagination: IPagination): Promise<IResponseType<IRecipe[]>> {
+        return { body: await UserModel.getMyRecipes(userId, pagination) };
+    }
 }

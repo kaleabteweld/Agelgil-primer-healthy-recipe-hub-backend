@@ -41,6 +41,7 @@ export interface IUserModel extends mongoose.Model<IUserDocument> {
     removeByID(_id: string): Promise<void>
     getBookedRecipes(_id: string, pagination: IPagination): Promise<IRecipe[]>
     toggleBookedRecipes(_id: string, recipe: IRecipe): Promise<IRecipe[]>
+    getMyRecipes(_id: string, pagination: IPagination): Promise<IRecipe[]>
 }
 
 export interface IUserLogInFrom {

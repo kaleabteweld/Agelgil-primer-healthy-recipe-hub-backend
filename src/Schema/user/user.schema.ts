@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
 import { EStatus, IUser, IUserMethods, IUserModel } from './user.type';
-import { checkPassword, encryptPassword, getBookedRecipes, getByEmail, getById, removeByID, setStatus, toggleBookedRecipes, update, validator } from './user.extended';
+import { checkPassword, encryptPassword, getBookedRecipes, getByEmail, getById, getMyRecipes, removeByID, setStatus, toggleBookedRecipes, update, validator } from './user.extended';
 
 export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
     profile_img: { type: String, default: null },
@@ -32,6 +32,7 @@ export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
         setStatus,
         getBookedRecipes,
         toggleBookedRecipes,
+        getMyRecipes,
     },
     methods: {
         encryptPassword,

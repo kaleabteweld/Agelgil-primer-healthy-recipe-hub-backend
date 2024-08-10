@@ -13,6 +13,28 @@ publicRecipeRouter.get("/:recipeId", MakeErrorHandler(
     }
 ));
 
+publicRecipeRouter.get("/carbs/:recipeId", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        res.json(await RecipeController.carbs(req.params.recipeId));
+    }
+));
+
+publicRecipeRouter.get("/list/:skip/:limit", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const skip = Number.parseInt(req.params.skip);
+        const limit = Number.parseInt(req.params.limit);
+        res.json(await RecipeController.list({ skip, limit }));
+    }
+));
+
+// publicRecipeRouter.get("/recommendation/:skip/:limit", userOnly, MakeErrorHandler(
+//     async (req: any, res: Response) => {
+//         const skip = Number.parseInt(req.params.skip);
+//         const limit = Number.parseInt(req.params.limit);
+//         res.json(await RecipeController.list({ skip, limit }));
+//     }
+// ));
+
 privateRecipeRouter.post("/create", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];

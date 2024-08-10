@@ -4,6 +4,8 @@ import { newRecipeSchema, recipeUpdateSchema } from "../../Schema/Recipe/recipe.
 import UserModel from "../../Schema/user/user.schema";
 import { IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
+import Calorieninjas from "../../Util/calorieninjas";
+import { NutritionData } from "../../Util/calorieninjas/types";
 
 
 export default class RecipeController {
@@ -50,11 +52,17 @@ export default class RecipeController {
     }
 
     static async removeById(recipeId: string, user: IRecipe): Promise<IResponseType<{} | null>> {
-        const event = await RecipeModel.getById(recipeId);
-        await RecipeModel.removeByID(event?.id)
+        const recipe = await RecipeModel.getById(recipeId);
+        await RecipeModel.removeByID(recipe?.id)
 
         return { body: {} };
 
+    }
+
+    static async carbs(recipeId: string): Promise<IResponseType<NutritionData | null>> {
+        const recipe = await RecipeModel.getById(recipeId);
+        const calorieninjas: Calorieninjas = new Calorieninjas({ apiKey: process.env.CALORIENINJAS_API_KEY ?? "" })
+        return { body: await calorieninjas.getNutritionData(recipe.name) }
     }
 
 }

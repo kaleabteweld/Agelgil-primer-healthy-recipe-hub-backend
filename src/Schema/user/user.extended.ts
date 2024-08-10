@@ -199,3 +199,31 @@ export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: stri
         throw error;
     }
 }
+
+export async function getMyRecipes(this: mongoose.Model<IUser>, _id: string, pagination: IPagination): Promise<IRecipe[]> {
+
+    try {
+        const user = await this.findById(new mongoose.Types.ObjectId(_id)).select('my_recipes').populate({
+            path: 'my_recipes',
+            select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
+            options: { limit: pagination.limit }
+        }).exec();
+        if (user == null) {
+            throw ValidationErrorFactory({
+                msg: "User not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        return user.my_recipes as IRecipe[];
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}

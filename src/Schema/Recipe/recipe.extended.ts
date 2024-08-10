@@ -3,7 +3,7 @@ import Joi from "joi";
 import { ValidationErrorFactory, errorFactory, isValidationError } from "../../Types/error"
 import { BSONError } from 'bson';
 import { MakeValidator } from "../../Util";
-import { IRecipe } from "./recipe.type";
+import { IModeratorRecipeUpdateFrom, IRecipe } from "./recipe.type";
 
 
 
@@ -57,6 +57,37 @@ export async function removeByID(this: mongoose.Model<IRecipe>, _id: string): Pr
     }
 }
 
-// export async function update(this: mongoose.Model<IRecipe>, _id: string, newrecipe: IRecipeUpdateFrom, populatePath?: string | string[]): Promise<IRecipe | null> {
-
-// }
+export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, moderatorId: string, body: IModeratorRecipeUpdateFrom): Promise<IRecipe> {
+    try {
+        const recipe = await this.findById(new mongoose.Types.ObjectId(_id));
+        if (recipe == null) {
+            throw ValidationErrorFactory({
+                msg: "recipe not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        if (recipe.moderator != null && recipe.status !== "pending") {
+            throw ValidationErrorFactory({
+                msg: "recipe already has a moderator",
+                statusCode: 400,
+                type: "Validation"
+            }, "_id")
+        }
+        recipe.moderator = {
+            moderator: new mongoose.Types.ObjectId(moderatorId) as any,
+            Comment: body.Comment
+        }
+        recipe.status = body.status;
+        return await recipe.save();
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}

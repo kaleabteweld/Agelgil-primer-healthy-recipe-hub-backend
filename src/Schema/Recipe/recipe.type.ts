@@ -73,6 +73,7 @@ export interface IRecipeModel extends mongoose.Model<IRecipeDocument> {
     getById(_id: string): Promise<IRecipeDocument>
     update(_id: string, newUser: IRecipeUpdateFrom, populatePath?: string | string[]): Promise<IRecipeDocument | null>
     removeByID(_id: string): Promise<void>
+    addModerator(this: mongoose.Model<IRecipe>, _id: string, moderatorId: string, body: IModeratorRecipeUpdateFrom): Promise<IRecipe>
 }
 
 export interface INewRecipeFrom {
@@ -82,7 +83,6 @@ export interface INewRecipeFrom {
     preferredMealTime: TPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: number;
-    // nutritionalInformation?: Schema.Types.ObjectId;
     ingredients: IngredientDetail[];
     instructions: string;
 }
@@ -90,4 +90,8 @@ export interface INewRecipeFrom {
 export interface IRecipeUpdateFrom extends Partial<INewRecipeFrom> {
 }
 
+export interface IModeratorRecipeUpdateFrom {
+    status: TRecipeStatus;
+    Comment: string;
+}
 

@@ -3,6 +3,7 @@ import { MakeErrorHandler, adminOnly, authorization } from "../../Util/middlewar
 import { UserController } from "../User";
 import { UserType } from "../../Util/jwt/jwt.types";
 import { makeAuthHeaders } from "../../Util/jwt";
+import { ModeratorController } from "../Moderator";
 
 const publicAuthenticationRouter = express.Router();
 const privateAuthenticationRouter = express.Router();
@@ -10,26 +11,19 @@ const privateAuthenticationRouter = express.Router();
 function ClassMap(userType: string): UserController {
     const classmap = new Map<string, any>();
     classmap.set(UserType.user, UserController);
-    // classmap.set(UserType.admin, AdminController);
+    classmap.set(UserType.moderator, ModeratorController);
     return classmap.get(userType);
 }
 
 publicAuthenticationRouter.post('/user/signUp', MakeErrorHandler(
     async (req: Request, res: Response) => {
-        const user = await UserController.signUp(req.body);
+        const controller: any = ClassMap(req.params.userType);
+        const user = await controller.signUp(req.body);
         makeAuthHeaders(res, user.header)
         res.json(user.body);
     }
 ));
 
-// privateAuthenticationRouter.post('/admin/signUp', adminOnly, MakeErrorHandler(
-//     async (req: any, res: Response) => {
-//         const _user: IAdmin = req['admin'];
-//         const user = await AdminController.signUp(req.body, _user);
-//         makeAuthHeaders(res, user.header)
-//         res.json(user.body);
-//     }
-// ));
 
 publicAuthenticationRouter.post('/:userType/logIn', MakeErrorHandler(
     async (req: Request, res: Response) => {
@@ -53,7 +47,7 @@ publicAuthenticationRouter.get('/:userType/refreshToken', MakeErrorHandler(
     }
 ));
 
-privateAuthenticationRouter.delete('/:userType/logOut', authorization([UserType.admin, UserType.user]), MakeErrorHandler(
+privateAuthenticationRouter.delete('/:userType/logOut', authorization([UserType.moderator, UserType.user]), MakeErrorHandler(
     async (req: Request, res: Response) => {
 
         const token = req.headers.authorization?.split('Bearer ')[1] ?? "";

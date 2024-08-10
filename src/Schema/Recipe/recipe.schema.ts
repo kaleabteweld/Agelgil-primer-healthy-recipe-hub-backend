@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { getById, removeByID, validator } from './recipe.extended';
+import { addModerator, getById, removeByID, validator } from './recipe.extended';
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
 
 const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
@@ -35,12 +35,21 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     statics: {
         validator,
         getById,
-        removeByID
+        removeByID,
+        addModerator,
     }
 });
 
 
 recipeSchema.plugin<any>(mongooseErrorPlugin);
+
+recipeSchema.post('save', async function (doc) {
+    const moderator = await mongoose.model('Moderator').findById(doc.moderator?.moderator);
+    if (moderator) {
+        moderator.recipes.addToSet(doc._id);
+        await moderator.save();
+    }
+})
 
 const RecipeModel = mongoose.model<IRecipe, IRecipeModel>('Recipe', recipeSchema);
 

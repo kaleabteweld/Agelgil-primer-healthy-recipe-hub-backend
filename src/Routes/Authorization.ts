@@ -1,15 +1,16 @@
 import express from "express";
 import { privateAuthenticationRouter, publicAuthenticationRouter } from "./Authentication";
 import { privateUserRouter, publicUserRouter } from "./User";
-import { publicAdminRouter, privateAdminRouter } from "./Admin";
-import { publicProductRouter, privateProductRouter } from "./Product";
-import { publicCategoryRouter, privateCategoryRouter } from "./Category";
+import { privateModeratorRouter, publicModeratorRouter } from "./Moderator";
+import { privateRecipeRouter, publicRecipeRouter } from "./Recipe";
+import { privateReviewRouter, publicReviewRouter } from "./Review";
+
 
 const publicRouter = express.Router();
 const privateRouter = express.Router();
 
-publicRouter.use([publicUserRouter, publicAuthenticationRouter, publicProductRouter, publicAdminRouter, publicCategoryRouter]);
-privateRouter.use([privateUserRouter, privateAuthenticationRouter, privateProductRouter, privateAdminRouter, privateCategoryRouter]);
+publicRouter.use([publicUserRouter, publicAuthenticationRouter, publicModeratorRouter, publicRecipeRouter, publicReviewRouter]);
+privateRouter.use([privateUserRouter, privateAuthenticationRouter, privateModeratorRouter, privateRecipeRouter, privateReviewRouter]);
 
 
 export { publicRouter, privateRouter }

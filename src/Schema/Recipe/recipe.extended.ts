@@ -4,6 +4,8 @@ import { ValidationErrorFactory, errorFactory, isValidationError } from "../../T
 import { BSONError } from 'bson';
 import { MakeValidator } from "../../Util";
 import { IModeratorRecipeUpdateFrom, IRecipe } from "./recipe.type";
+import { IPagination } from "../../Types";
+import { IReview } from "../Review/review.type";
 
 
 
@@ -80,6 +82,33 @@ export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, m
         }
         recipe.status = body.status;
         return await recipe.save();
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}
+
+export async function getRecipesReview(this: mongoose.Model<IRecipe>, _id: string, pagination: IPagination): Promise<IReview[]> {
+
+    try {
+        const recipe = await this.findById(new mongoose.Types.ObjectId(_id)).select('reviews').populate({
+            path: 'reviews',
+            options: { limit: pagination.limit }
+        }).exec();
+        if (recipe == null) {
+            throw ValidationErrorFactory({
+                msg: "recipe not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        return recipe.reviews as IReview[];
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({

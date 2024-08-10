@@ -4,6 +4,7 @@ import { IIngredient } from "../Ingredient/ingredient.type";
 import { IModerator } from "../Moderator/moderator.type";
 import { IReview } from "../Review/review.type";
 import { IUser } from "../user/user.type";
+import { IPagination } from "../../Types";
 
 export enum EPreferredMealTime {
     breakfast = "breakfast",
@@ -74,6 +75,7 @@ export interface IRecipeModel extends mongoose.Model<IRecipeDocument> {
     update(_id: string, newUser: IRecipeUpdateFrom, populatePath?: string | string[]): Promise<IRecipeDocument | null>
     removeByID(_id: string): Promise<void>
     addModerator(this: mongoose.Model<IRecipe>, _id: string, moderatorId: string, body: IModeratorRecipeUpdateFrom): Promise<IRecipe>
+    getRecipesReview(_id: string, pagination: IPagination): Promise<IReview[]>
 }
 
 export interface INewRecipeFrom {

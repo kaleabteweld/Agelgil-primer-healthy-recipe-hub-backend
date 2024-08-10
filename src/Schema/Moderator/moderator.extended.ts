@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 import Joi from "joi";
 import { ValidationErrorFactory, errorFactory, isValidationError } from "../../Types/error"
 import { BSONError } from 'bson';
-import { EStatus, IUser, IUserUpdateFrom } from "./moderator.type";
+import { EStatus, IModerator, IModeratorUpdateFrom } from "./moderator.type";
 import { MakeValidator } from "../../Util";
 
 
-export async function encryptPassword(this: IUser, password?: string): Promise<String> {
+export async function encryptPassword(this: IModerator, password?: string): Promise<String> {
 
     const saltRounds: number = Number.parseInt(process.env.saltRounds || "11");
     try {
@@ -25,7 +25,7 @@ export async function encryptPassword(this: IUser, password?: string): Promise<S
     }
 }
 
-export async function checkPassword(this: IUser, password: string): Promise<boolean> {
+export async function checkPassword(this: IModerator, password: string): Promise<boolean> {
 
     try {
         const gate = await bcrypt.compare(password, this.password as string);
@@ -51,33 +51,33 @@ export async function checkPassword(this: IUser, password: string): Promise<bool
     }
 }
 
-export function validator<T>(userInput: T, schema: Joi.ObjectSchema<T>) {
-    return MakeValidator<T>(schema, userInput);
+export function validator<T>(moderatorInput: T, schema: Joi.ObjectSchema<T>) {
+    return MakeValidator<T>(schema, moderatorInput);
 }
 
-export async function getByEmail(this: mongoose.Model<IUser>, email: string): Promise<IUser> {
-    const user = await this.findOne({ email });
-    if (user == null) {
+export async function getByEmail(this: mongoose.Model<IModerator>, email: string): Promise<IModerator> {
+    const moderator = await this.findOne({ email });
+    if (moderator == null) {
         throw ValidationErrorFactory({
             msg: "Invalid Email or Password",
             statusCode: 404,
             type: "Validation"
         }, "")
     }
-    return user;
+    return moderator;
 }
 
-export async function getById(this: mongoose.Model<IUser>, _id: string): Promise<IUser> {
+export async function getById(this: mongoose.Model<IModerator>, _id: string): Promise<IModerator> {
     try {
-        const user = await this.findById(new mongoose.Types.ObjectId(_id));
-        if (user == null) {
+        const moderator = await this.findById(new mongoose.Types.ObjectId(_id));
+        if (moderator == null) {
             throw ValidationErrorFactory({
-                msg: "User not found",
+                msg: "moderator not found",
                 statusCode: 404,
                 type: "Validation"
             }, "_id")
         }
-        return user;
+        return moderator;
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({
@@ -91,12 +91,12 @@ export async function getById(this: mongoose.Model<IUser>, _id: string): Promise
 
 }
 
-export async function removeByID(this: mongoose.Model<IUser>, _id: string): Promise<void> {
+export async function removeByID(this: mongoose.Model<IModerator>, _id: string): Promise<void> {
     try {
         const result = await this.deleteOne({ _id: new mongoose.Types.ObjectId(_id) })
         if (result.deletedCount === 0) {
             throw ValidationErrorFactory({
-                msg: "User not found",
+                msg: "moderator not found",
                 statusCode: 404,
                 type: "Validation"
             }, "_id")
@@ -113,15 +113,15 @@ export async function removeByID(this: mongoose.Model<IUser>, _id: string): Prom
     }
 }
 
-export async function update(this: mongoose.Model<IUser>, _id: string, newUser: IUserUpdateFrom, populatePath?: string | string[]): Promise<IUser | null> {
+export async function update(this: mongoose.Model<IModerator>, _id: string, mwIModerator: IModeratorUpdateFrom, populatePath?: string | string[]): Promise<IModerator | null> {
 
     try {
         var newDoc: any = {};
-        if (newUser.password) {
-            const newPassword = await (encryptPassword.bind({} as any))(newUser.password);
-            newDoc = await this.findByIdAndUpdate(_id, { ...newUser, password: newPassword }, { new: true, overwrite: true });
+        if (mwIModerator.password) {
+            const newPassword = await (encryptPassword.bind({} as any))(mwIModerator.password);
+            newDoc = await this.findByIdAndUpdate(_id, { ...mwIModerator, password: newPassword }, { new: true, overwrite: true });
         } else {
-            newDoc = await this.findByIdAndUpdate(_id, newUser, { new: true, overwrite: true });
+            newDoc = await this.findByIdAndUpdate(_id, mwIModerator, { new: true, overwrite: true });
         }
         if (populatePath) await newDoc?.populate(populatePath)
         return newDoc;
@@ -130,7 +130,7 @@ export async function update(this: mongoose.Model<IUser>, _id: string, newUser: 
     }
 }
 
-export async function setStatus(this: mongoose.Model<IUser>, _id: string, status: EStatus): Promise<IUser | null> {
+export async function setStatus(this: mongoose.Model<IModerator>, _id: string, status: EStatus): Promise<IModerator | null> {
 
     try {
         var newDoc: any = await this.findByIdAndUpdate(_id, { status }, { new: true, overwrite: true });

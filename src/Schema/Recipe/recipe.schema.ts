@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { addModerator, getById, removeByID, validator } from './recipe.extended';
+import { addModerator, getById, getRecipesReview, removeByID, validator } from './recipe.extended';
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
 
 const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
@@ -17,6 +17,7 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     }],
     instructions: { type: String },
     rating: { type: Number, default: 0 },
+    reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
 
     status: { type: String, enum: Object.values(ERecipeStatus), default: ERecipeStatus.pending },
     moderator: {
@@ -37,6 +38,7 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         getById,
         removeByID,
         addModerator,
+        getRecipesReview,
     }
 });
 

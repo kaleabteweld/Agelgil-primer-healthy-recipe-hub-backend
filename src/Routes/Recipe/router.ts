@@ -27,6 +27,13 @@ publicRecipeRouter.get("/list/:skip/:limit", MakeErrorHandler(
     }
 ));
 
+publicRecipeRouter.post("/search/:page", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const page = Number.parseInt(req.params.page);
+        res.json(await RecipeController.search(req.body, page));
+    }
+));
+
 // publicRecipeRouter.get("/recommendation/:skip/:limit", userOnly, MakeErrorHandler(
 //     async (req: any, res: Response) => {
 //         const skip = Number.parseInt(req.params.skip);

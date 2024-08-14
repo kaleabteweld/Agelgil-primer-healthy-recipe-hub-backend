@@ -1,6 +1,7 @@
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
-import { INewRecipeFrom, IRecipe, IRecipeUpdateFrom } from "../../Schema/Recipe/recipe.type";
-import { newRecipeSchema, recipeUpdateSchema } from "../../Schema/Recipe/recipe.validation";
+import { INewRecipeFrom, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom } from "../../Schema/Recipe/recipe.type";
+import { RecipeSearchBuilder } from "../../Schema/Recipe/recipe.utils";
+import { newRecipeSchema, recipeSearchSchema, recipeUpdateSchema } from "../../Schema/Recipe/recipe.validation";
 import UserModel from "../../Schema/user/user.schema";
 import { IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
@@ -63,6 +64,14 @@ export default class RecipeController {
         const recipe = await RecipeModel.getById(recipeId);
         const calorieninjas: Calorieninjas = new Calorieninjas({ apiKey: process.env.CALORIENINJAS_API_KEY ?? "" })
         return { body: await calorieninjas.getNutritionData(recipe.name) }
+    }
+
+    static async search(searchFrom: IRecipeSearchFrom, page: number = 1): Promise<IResponseType<IRecipe[]>> {
+        RecipeModel.validator(searchFrom, recipeSearchSchema);
+        return {
+            body: await ((await RecipeSearchBuilder.fromJSON(searchFrom, recipeSearchSchema)).withPagination(page)).execute()
+
+        }
     }
 
 }

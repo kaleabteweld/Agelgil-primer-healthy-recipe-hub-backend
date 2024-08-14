@@ -97,3 +97,10 @@ export interface IModeratorRecipeUpdateFrom {
     Comment: string;
 }
 
+export interface IRecipeSearchFrom {
+    preferredMealTime?: TPreferredMealTime[];
+    name?: string;
+    preparationDifficulty?: TPreparationDifficulty;
+    cookingTime?: number;
+    ingredients: string[]
+}

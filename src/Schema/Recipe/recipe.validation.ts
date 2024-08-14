@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IModeratorRecipeUpdateFrom, INewRecipeFrom, IRecipeUpdateFrom } from "./recipe.type";
+import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IModeratorRecipeUpdateFrom, INewRecipeFrom, IRecipeSearchFrom, IRecipeUpdateFrom } from "./recipe.type";
 
 
 export const newRecipeSchema = Joi.object<INewRecipeFrom>({
@@ -33,6 +33,14 @@ export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
 export const moderatorRecipeUpdateSchema = Joi.object<IModeratorRecipeUpdateFrom>({
     status: Joi.string().valid(...Object.values(ERecipeStatus)).required(),
     Comment: Joi.string().required(),
+});
+
+export const recipeSearchSchema = Joi.object<IRecipeSearchFrom>({
+    name: Joi.string().optional(),
+    preferredMealTime: Joi.array().items(Joi.string().valid(...Object.values(EPreferredMealTime)).optional()),
+    preparationDifficulty: Joi.string().valid(...Object.values(EPreparationDifficulty)).optional(),
+    cookingTime: Joi.number().optional(),
+    ingredients: Joi.array().items(Joi.string()).optional(),
 });
 
 

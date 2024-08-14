@@ -4,13 +4,14 @@ import { privateUserRouter, publicUserRouter } from "./User";
 import { privateModeratorRouter, publicModeratorRouter } from "./Moderator";
 import { privateRecipeRouter, publicRecipeRouter } from "./Recipe";
 import { privateReviewRouter, publicReviewRouter } from "./Review";
+import { publicIngredientsRouter, privateIngredientsRouter } from "./Ingredient";
 
 
 const publicRouter = express.Router();
 const privateRouter = express.Router();
 
-publicRouter.use([publicUserRouter, publicAuthenticationRouter, publicModeratorRouter, publicRecipeRouter, publicReviewRouter]);
-privateRouter.use([privateUserRouter, privateAuthenticationRouter, privateModeratorRouter, privateRecipeRouter, privateReviewRouter]);
+publicRouter.use([publicUserRouter, publicAuthenticationRouter, publicModeratorRouter, publicRecipeRouter, publicReviewRouter, publicIngredientsRouter]);
+privateRouter.use([privateUserRouter, privateAuthenticationRouter, privateModeratorRouter, privateRecipeRouter, privateReviewRouter, privateIngredientsRouter]);
 
 
 export { publicRouter, privateRouter }

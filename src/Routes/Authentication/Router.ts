@@ -15,7 +15,7 @@ function ClassMap(userType: string): UserController {
     return classmap.get(userType);
 }
 
-publicAuthenticationRouter.post('/user/signUp', MakeErrorHandler(
+publicAuthenticationRouter.post('/:userType/signUp', MakeErrorHandler(
     async (req: Request, res: Response) => {
         const controller: any = ClassMap(req.params.userType);
         const user = await controller.signUp(req.body);

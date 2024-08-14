@@ -56,7 +56,3 @@ export async function removeByID(this: mongoose.Model<IIngredient>, _id: string)
         throw error;
     }
 }
-
-// export async function update(this: mongoose.Model<IIngredient>, _id: string, newingredient: IIngredientUpdateFrom, populatePath?: string | string[]): Promise<IIngredient | null> {
-
-// }

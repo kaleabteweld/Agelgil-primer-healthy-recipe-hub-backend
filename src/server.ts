@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { makeServer } from './Util/Factories';
 import dotenv from 'dotenv';
 import RedisCache from "./Util/cache/redis";
+import { IngredientController } from "./Routes/Ingredient";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV?.trim()}` });
 console.log(`[+] running on ${process.env.NODE_ENV?.trim()} mode`)
@@ -14,8 +15,10 @@ app.listen(port, () => {
 
 mongoose.connect(process.env.DATABASE_URL ?? "").catch((error) => {
     console.log("[-] Database Connection Error", error);
-}).then(() => {
+}).then(async () => {
     console.log("[+] Database Connected");
+    await IngredientController.seed()
+    console.log("[+] Ingredients Seeded");
 });
 
 const redisCache = RedisCache.getInstance();

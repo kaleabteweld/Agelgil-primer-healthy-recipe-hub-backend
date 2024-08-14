@@ -4,7 +4,7 @@
   "description": "Senior project",
   "main": "server.ts",
   "scripts": {
-    "dev": "nodemon src/server.ts",
+    "dev": "set NODE_ENV=development && nodemon src/server.ts",
     "build": "npm i && tsc",
     "start": "node dist/server.js"
   },

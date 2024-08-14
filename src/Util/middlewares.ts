@@ -26,7 +26,6 @@ export function JWTMiddleWare(req: any, res: any, next: NextFunction) {
         if (userType === undefined || userType === null) throw Error("No Valid Token");
 
 
-
         const typeSecret = TokenSecret(<UserType>userType, TokenType.accessToken);
         if (typeSecret === undefined) throw Error("No Env");
 

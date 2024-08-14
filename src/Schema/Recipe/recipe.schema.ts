@@ -51,6 +51,12 @@ recipeSchema.post('save', async function (doc) {
         moderator.recipes.addToSet(doc._id);
         await moderator.save();
     }
+
+    const user = await mongoose.model('User').findById(doc.user?.user);
+    if (user) {
+        user.my_recipes.addToSet(doc._id);
+        await user.save();
+    }
 })
 
 const RecipeModel = mongoose.model<IRecipe, IRecipeModel>('Recipe', recipeSchema);

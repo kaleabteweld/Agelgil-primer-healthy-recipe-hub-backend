@@ -25,6 +25,15 @@ const reviewSchema = new Schema<IReview, IReviewModel, IReviewMethods>({
 
 reviewSchema.plugin<any>(mongooseErrorPlugin);
 
+reviewSchema.post('save', async function (doc) {
+    const recipe = await mongoose.model('Recipe').findById(doc.recipe);
+    if (recipe) {
+        recipe.reviews.addToSet(doc._id);
+        recipe.rating = (recipe.rating + doc.rating) / recipe.reviews.length;
+        await recipe.save();
+    }
+})
+
 const ReviewModel = mongoose.model<IReview, IReviewModel>('Review', reviewSchema);
 
 export default ReviewModel;

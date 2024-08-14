@@ -33,7 +33,7 @@ export enum ERecipeStatus {
 }
 export type TRecipeStatus = "verified" | "pending" | "rejected";
 interface IngredientDetail {
-    Ingredient: Schema.Types.ObjectId | IIngredient;
+    ingredient: Schema.Types.ObjectId | IIngredient;
     amount: number;
 }
 

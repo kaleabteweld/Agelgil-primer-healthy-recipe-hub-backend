@@ -15,9 +15,9 @@ app.listen(port, () => {
 
 mongoose.connect(process.env.DATABASE_URL ?? "").catch((error) => {
     console.log("[-] Database Connection Error", error);
-}).then(async () => {
+}).then(() => {
     console.log("[+] Database Connected");
-    await IngredientController.seed()
+    IngredientController.seed()
     console.log("[+] Ingredients Seeded");
 });
 

@@ -13,7 +13,7 @@ export default class RecipeController {
 
     static async create(_recipe: INewRecipeFrom, user: IUser): Promise<IResponseType<IRecipe>> {
 
-        const _user = await UserModel.getById(user._id as any)
+        const _user = await UserModel.getById(user.id as any)
         await RecipeModel.validator(_recipe, newRecipeSchema);
 
         _recipe = {

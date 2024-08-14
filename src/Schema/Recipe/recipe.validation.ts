@@ -8,10 +8,10 @@ export const newRecipeSchema = Joi.object<INewRecipeFrom>({
     imgs: Joi.array().items(Joi.string()).required(),
     instructions: Joi.string().required(),
     name: Joi.string().required(),
-    preferredMealTime: Joi.array().items(Joi.string().valid(...Object.values(EPreferredMealTime)).required()),
+    preferredMealTime: Joi.array().items(Joi.string().valid(...Object.values(EPreferredMealTime)).required()).required(),
     preparationDifficulty: Joi.string().valid(...Object.values(EPreparationDifficulty)).required(),
     ingredients: Joi.array().items(Joi.object({
-        Ingredient: Joi.string().required(),
+        ingredient: Joi.string().required(),
         amount: Joi.number().required(),
     })).required(),
 });
@@ -25,7 +25,7 @@ export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
     preferredMealTime: Joi.array().items(Joi.string().valid(...Object.values(EPreferredMealTime)).optional()),
     preparationDifficulty: Joi.string().valid(...Object.values(EPreparationDifficulty)).optional(),
     ingredients: Joi.array().items(Joi.object({
-        Ingredient: Joi.string().optional(),
+        ingredient: Joi.string().optional(),
         amount: Joi.number().optional(),
     })).optional(),
 });

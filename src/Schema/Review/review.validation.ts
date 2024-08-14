@@ -2,7 +2,6 @@ import Joi from "joi";
 import { INewReviewFrom, IReviewUpdateFrom } from "./review.type";
 
 export const newReviewSchema = Joi.object<INewReviewFrom>({
-    user: Joi.string().required(),
     recipe: Joi.string().required(),
     comment: Joi.string().required(),
     rating: Joi.number().min(1).max(5).required(),

@@ -27,7 +27,6 @@ export interface IReviewModel extends mongoose.Model<IReviewDocument> {
 }
 
 export interface INewReviewFrom {
-    user: string
     recipe: string;
     comment: string;
     rating: number;

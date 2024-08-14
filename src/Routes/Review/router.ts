@@ -22,7 +22,7 @@ publicReviewRouter.get("/recipe/:recipeId/:skip/:limit", MakeErrorHandler(
     }
 ));
 
-privateReviewRouter.post("/create/:recipeId", userOnly, MakeErrorHandler(
+privateReviewRouter.post("/create", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
         res.json(await ReviewController.create(req.body, _user));

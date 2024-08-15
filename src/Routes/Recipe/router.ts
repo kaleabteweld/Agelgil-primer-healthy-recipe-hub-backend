@@ -42,6 +42,14 @@ privateRecipeRouter.get("/recommendation/:skip/:limit", userOnly, MakeErrorHandl
         res.json(await RecipeController.recommendation(user, { skip, limit }));
     }
 ));
+publicRecipeRouter.get("/similar/:recipeId/:skip/:limit", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const recipeId = req.params.recipeId;
+        const skip = Number.parseInt(req.params.skip);
+        const limit = Number.parseInt(req.params.limit);
+        res.json(await RecipeController.similar(recipeId, { skip, limit }));
+    }
+));
 
 privateRecipeRouter.post("/create", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {

@@ -8,6 +8,7 @@ const ingredientSchema = new Schema<IIngredient, IIngredientModel, IIngredientMe
     name: { type: String, required: true },
     type: { type: String },
     unit: { type: String },
+    localName: { type: String },
     // imgs: { type: [String] },
     // nutritionalInformation: { type: Schema.Types.ObjectId, ref: 'NutritionalInformation' },
     // approved_moderators: { type: Schema.Types.ObjectId, ref: 'Moderator' }

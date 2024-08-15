@@ -6,6 +6,7 @@ export interface IIngredient extends mongoose.Document {
     name: string;
     type: string;
     unit: string;
+    localName: string;
 }
 
 export interface IIngredientMethods {
@@ -24,6 +25,7 @@ export interface INewIngredientFrom {
     name: string;
     type: string;
     unit: string;
+    localName: string;
 }
 
 export interface IngredientUpdateFrom extends Partial<INewIngredientFrom> {

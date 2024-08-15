@@ -1,13 +1,17 @@
 import express from "express";
 import appRouter from "../Routes";
 import { errorMiddleWare } from "./middlewares";
-import swaggerUi from "swagger-ui-express";
 import helmet from "helmet";
-import swaggerJsdoc from 'swagger-jsdoc'
+import Cors from "cors";
 
 export function makeServer() {
     const app = express();
 
+    app.use(Cors({
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization", "RefreshToken"],
+    }))
     app.use(helmet())
     app.disable('x-powered-by')
     app.use(express.json())

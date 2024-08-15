@@ -9,7 +9,7 @@ export function makeServer() {
 
     app.use(Cors({
         origin: "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
         allowedHeaders: ["Content-Type", "Authorization", "RefreshToken"],
         exposedHeaders: ["Authorization", "RefreshToken"]
     }))

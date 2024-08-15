@@ -51,9 +51,10 @@ export default class IngredientController {
     }
 
     static async seed(): Promise<IResponseType<{}>> {
-        // insert ingredients if not exists
-        await IngredientModel.deleteMany({});
-        await IngredientModel.insertMany(Ingredients.ingredients);
+        const ingredientCount = await IngredientModel.countDocuments();
+        if (ingredientCount === 0) {
+            await IngredientModel.insertMany(Ingredients.ingredients);
+        }
         return { body: {} };
     }
 

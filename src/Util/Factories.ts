@@ -11,6 +11,7 @@ export function makeServer() {
         origin: "*",
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization", "RefreshToken"],
+        exposedHeaders: ["Authorization", "RefreshToken"]
     }))
     app.use(helmet())
     app.disable('x-powered-by')

@@ -13,7 +13,8 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     cookingTime: { type: Number },
     ingredients: [{
         Ingredient: { type: Schema.Types.ObjectId, ref: 'Ingredient' },
-        amount: { type: Number }
+        amount: { type: Number },
+        //TODo: remark: { type: String }
     }],
     instructions: { type: String },
     rating: { type: Number, default: 0 },

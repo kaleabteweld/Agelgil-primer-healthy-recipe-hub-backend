@@ -103,4 +103,5 @@ export interface IRecipeSearchFrom {
     preparationDifficulty?: TPreparationDifficulty;
     cookingTime?: number;
     ingredients: string[]
+    //TODO: INewMedicalConditionFrom
 }

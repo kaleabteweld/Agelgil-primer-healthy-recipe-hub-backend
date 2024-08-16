@@ -17,6 +17,7 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         //TODo: remark: { type: String }
     }],
     instructions: { type: String },
+    youtubeLink: { type: String },
     rating: { type: Number, default: 0 },
     reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
     totalReviews: { type: Number, default: 0 },

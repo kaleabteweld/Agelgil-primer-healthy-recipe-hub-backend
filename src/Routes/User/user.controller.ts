@@ -4,7 +4,7 @@ import { IListResponseType, IPagination, IResponseType, IResponseWithHeaderType 
 import { MakeTokens, removeRefreshToken, verifyAccessToken, verifyRefreshToken } from "../../Util/jwt";
 import { UserType } from "../../Util/jwt/jwt.types";
 import { userLogInSchema, userSignUpSchema, userUpdateSchema } from "../../Schema/user/user.validation";
-import { IRecipe } from "../../Schema/Recipe/recipe.type";
+import { IRecipe, TRecipeStatus } from "../../Schema/Recipe/recipe.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 
 
@@ -74,7 +74,7 @@ export default class UserController {
         return { body: await UserModel.toggleBookedRecipes(userId, recipe) };
     }
 
-    static async myRecipes(userId: string, pagination: IPagination): Promise<IResponseType<IRecipe[]>> {
-        return { body: await UserModel.getMyRecipes(userId, pagination) };
+    static async myRecipes(userId: string, status: TRecipeStatus, pagination: IPagination): Promise<IResponseType<IRecipe[]>> {
+        return { body: await UserModel.getMyRecipes(userId, pagination, status) };
     }
 }

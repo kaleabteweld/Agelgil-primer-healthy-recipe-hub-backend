@@ -35,6 +35,16 @@ privateModeratorRouter.patch("/updateRecipeStatus/:recipeId", moderatorOnly, Mak
     }
 ));
 
+privateModeratorRouter.get("/moderatedRecipes/:status/:skip/:limit", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _moderator: IModerator = req['moderator'];
+        const skip = Number.parseInt(req.params.skip);
+        const limit = Number.parseInt(req.params.limit);
+        const status = req.params.status;
+        res.json(await moderatorController.moderatedRecipes(_moderator.id, status, { skip, limit }));
+    }
+));
+
 publicModeratorRouter.use("/moderator", publicModeratorRouter);
 privateModeratorRouter.use("/moderator", privateModeratorRouter);
 

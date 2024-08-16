@@ -37,6 +37,7 @@ export default class RecipeController {
             body: await RecipeModel.find()
                 .skip(skip ?? 0)
                 .limit(limit ?? 0)
+                .sort({ createdAt: -1 })
                 .exec()
         }
     }

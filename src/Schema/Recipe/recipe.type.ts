@@ -47,6 +47,7 @@ export interface IRecipe extends mongoose.Document {
     cookingTime: number;
     ingredients: IngredientDetail[];
     instructions: string;
+    youtubeLink?: string;
 
     rating: number;
     reviews: Schema.Types.ObjectId[] | IReview[];
@@ -93,7 +94,7 @@ export interface INewRecipeFrom {
     ingredients: IngredientDetail[];
     instructions: string;
     medical_condition: IMedicalCondition;
-
+    youtubeLink?: string;
 }
 
 export interface IRecipeUpdateFrom extends Partial<INewRecipeFrom> {

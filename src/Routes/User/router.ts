@@ -36,12 +36,13 @@ privateUserRouter.get("/bookedRecipes/:skip/:limit", userOnly, MakeErrorHandler(
     }
 ));
 
-privateUserRouter.get("/myRecipe/:skip/:limit", userOnly, MakeErrorHandler(
+privateUserRouter.get("/myRecipe/:status/:skip/:limit", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
         const skip = Number.parseInt(req.params.skip);
         const limit = Number.parseInt(req.params.limit);
-        res.json(await UserController.myRecipes(_user._id as any, { skip, limit }));
+        const status = req.params.status;
+        res.json(await UserController.myRecipes(_user.id, status, { skip, limit }));
     }
 ));
 

@@ -1,7 +1,7 @@
 
 import { IListResponseType, IPagination, IResponseType, IResponseWithHeaderType } from "../../Types";
 import { MakeTokens, removeRefreshToken, verifyAccessToken, verifyRefreshToken } from "../../Util/jwt";
-import { IModeratorRecipeUpdateFrom, IRecipe } from "../../Schema/Recipe/recipe.type";
+import { IModeratorRecipeUpdateFrom, IRecipe, TRecipeStatus } from "../../Schema/Recipe/recipe.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import ModeratorModel from "../../Schema/Moderator/moderator.schema";
 import { IModerator, IModeratorLogInFrom, IModeratorSignUpFrom, IModeratorUpdateFrom } from "../../Schema/Moderator/moderator.type";
@@ -72,5 +72,9 @@ export default class ModeratorController {
         await RecipeModel.validator(body, moderatorRecipeUpdateSchema);
         await RecipeModel.addModerator(recipeId, moderatorId, body);
         return { body: (await RecipeModel.addModerator(recipeId, moderatorId, body)).toJSON() }
+    }
+
+    static async moderatedRecipes(moderatorId: string, status: TRecipeStatus, pagination: IPagination): Promise<IResponseType<IRecipe>> {
+        return { body: await await ModeratorModel.moderatedRecipes(moderatorId, pagination, status) as any };
     }
 }

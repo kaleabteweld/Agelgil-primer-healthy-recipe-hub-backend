@@ -5,6 +5,8 @@ import { ValidationErrorFactory, errorFactory, isValidationError } from "../../T
 import { BSONError } from 'bson';
 import { EStatus, IModerator, IModeratorUpdateFrom } from "./moderator.type";
 import { MakeValidator } from "../../Util";
+import { IPagination } from "../../Types";
+import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 
 
 export async function encryptPassword(this: IModerator, password?: string): Promise<String> {
@@ -136,6 +138,36 @@ export async function setStatus(this: mongoose.Model<IModerator>, _id: string, s
         var newDoc: any = await this.findByIdAndUpdate(_id, { status }, { new: true, overwrite: true });
         return newDoc;
     } catch (error) {
+        throw error;
+    }
+}
+
+export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: string, pagination: IPagination, status: TRecipeStatus): Promise<IRecipe[]> {
+
+    try {
+        const moderated = await this.findOne({ _id: new mongoose.Types.ObjectId(_id), moderated_recipe: { status } }).select('moderated_recipe').populate({
+            path: 'recipe',
+            select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
+            options: { limit: pagination.limit }
+        }).exec();
+        console.log({ moderated });
+        if (moderated == null) {
+            throw ValidationErrorFactory({
+                msg: "moderated not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        // TODO: test
+        return moderated.moderated_recipe as any;
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
         throw error;
     }
 }

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { checkPassword, encryptPassword, getByEmail, getById, removeByID, setStatus, update, validator } from './moderator.extended';
+import { checkPassword, encryptPassword, getByEmail, getById, moderatedRecipes, removeByID, setStatus, update, validator } from './moderator.extended';
 import { EStatus, IModerator, IModeratorMethods, IModeratorModel } from './moderator.type';
 import { ERecipeStatus } from '../Recipe/recipe.type';
 
@@ -36,6 +36,7 @@ export const moderatorSchema = new mongoose.Schema<IModerator, IModeratorModel, 
         removeByID,
         update,
         setStatus,
+        moderatedRecipes,
     },
     methods: {
         encryptPassword,

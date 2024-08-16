@@ -1,6 +1,6 @@
 import Joi from "joi";
 import mongoose from "mongoose";
-import { IRecipe } from "../Recipe/recipe.type";
+import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
 
 export enum EStatus {
@@ -73,7 +73,7 @@ export interface IUserModel extends mongoose.Model<IUserDocument> {
     removeByID(_id: string): Promise<void>
     getBookedRecipes(_id: string, pagination: IPagination): Promise<IRecipe[]>
     toggleBookedRecipes(_id: string, recipe: IRecipe): Promise<IRecipe[]>
-    getMyRecipes(_id: string, pagination: IPagination): Promise<IRecipe[]>
+    getMyRecipes(_id: string, pagination: IPagination, status: TRecipeStatus): Promise<IRecipe[]>
 }
 
 export interface IUserLogInFrom {

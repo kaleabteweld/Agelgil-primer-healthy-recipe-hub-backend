@@ -1,6 +1,7 @@
 import Joi from "joi";
 import mongoose from "mongoose";
-import { ERecipeStatus, IRecipe } from "../Recipe/recipe.type";
+import { ERecipeStatus, IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
+import { IPagination } from "../../Types";
 
 export enum EStatus {
     active = "active",
@@ -43,6 +44,7 @@ export interface IModeratorModel extends mongoose.Model<IModeratorDocument> {
     setStatus(_id: string, status: TStatus): Promise<IModeratorDocument | null>
     update(_id: string, newUser: IModeratorUpdateFrom, populatePath?: string | string[]): Promise<IModeratorDocument | null>
     removeByID(_id: string): Promise<void>
+    moderatedRecipes(_id: string, pagination: IPagination, status: TRecipeStatus): Promise<IRecipe[]>
 }
 
 export interface IModeratorLogInFrom {

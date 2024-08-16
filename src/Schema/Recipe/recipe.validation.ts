@@ -19,6 +19,7 @@ export const newRecipeSchema = Joi.object<INewRecipeFrom>({
         chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).required()).required(),
         dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).required()).required(),
     }).required(),
+    youtubeLink: Joi.string().uri().optional(),
 });
 
 export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
@@ -37,6 +38,7 @@ export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
         chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional()),
         dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
     }).optional(),
+    youtubeLink: Joi.string().uri().optional(),
 });
 
 export const moderatorRecipeUpdateSchema = Joi.object<IModeratorRecipeUpdateFrom>({

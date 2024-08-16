@@ -21,6 +21,14 @@ publicIngredientsRouter.get("/list/:skip/:limit", MakeErrorHandler(
     }
 ));
 
+publicIngredientsRouter.get("/ingredientByName/:nameType/:name", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const name = req.params.name;
+        const nameType = req.params.nameType;
+        res.json(await IngredientController.getIngredientByName(name, nameType));
+    }
+));
+
 
 
 

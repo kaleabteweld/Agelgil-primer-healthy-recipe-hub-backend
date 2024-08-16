@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IRecipe, IRecipeDocument, IRecipeSearchFrom, TPreferredMealTime, TPreparationDifficulty } from "./recipe.type";
+import { IRecipe, IRecipeDocument, IRecipeSearchFrom, TPreferredMealTime, TPreparationDifficulty, TRecipeStatus } from "./recipe.type";
 import RecipeModel from "./recipe.schema";
 import { ValidationErrorFactory } from "../../Types/error";
 import Joi from "joi";
@@ -65,6 +65,11 @@ export class RecipeSearchBuilder {
         return this;
     }
 
+    withStatus(status: TRecipeStatus): this {
+        this.query.status = status
+        return this
+    }
+
     async execute(): Promise<IRecipe[]> {
         try {
             const skip = (this.page - 1) * this.pageSize;
@@ -109,6 +114,9 @@ export class RecipeSearchBuilder {
         }
         if (json.medical_condition) {
             builder.withMedicalCondition(json.medical_condition);
+        }
+        if (json.status) {
+            builder.withStatus(json.status);
         }
         return builder;
     }

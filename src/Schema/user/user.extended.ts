@@ -5,7 +5,7 @@ import { ValidationErrorFactory, errorFactory, isValidationError } from "../../T
 import { BSONError } from 'bson';
 import { EStatus, IUser, IUserUpdateFrom } from "./user.type";
 import { MakeValidator } from "../../Util";
-import { IRecipe } from "../Recipe/recipe.type";
+import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
 
 
@@ -200,10 +200,10 @@ export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: stri
     }
 }
 
-export async function getMyRecipes(this: mongoose.Model<IUser>, _id: string, pagination: IPagination): Promise<IRecipe[]> {
+export async function getMyRecipes(this: mongoose.Model<IUser>, _id: string, pagination: IPagination, status: TRecipeStatus): Promise<IRecipe[]> {
 
     try {
-        const user = await this.findById(new mongoose.Types.ObjectId(_id)).select('my_recipes').populate({
+        const user = await this.findOne({ _id: new mongoose.Types.ObjectId(_id), status }).select('my_recipes').populate({
             path: 'my_recipes',
             select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
             options: { limit: pagination.limit }

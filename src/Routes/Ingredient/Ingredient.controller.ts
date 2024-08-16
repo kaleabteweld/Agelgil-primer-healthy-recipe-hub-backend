@@ -58,4 +58,10 @@ export default class IngredientController {
         return { body: {} };
     }
 
+    static async getIngredientByName(name: string, nameType: "name" | "localName"): Promise<IResponseType<IIngredient | null>> {
+        const ingredient = await IngredientModel.findOne({ [nameType]: name })
+        return { body: ingredient ? ingredient.toJSON() as any : null }
+    }
+
+
 }

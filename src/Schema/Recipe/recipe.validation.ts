@@ -58,6 +58,7 @@ export const recipeSearchSchema = Joi.object<IRecipeSearchFrom>({
         chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional()),
         dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
     }).optional(),
+    status: Joi.string().valid(...Object.values(ERecipeStatus)).required(),
 });
 
 

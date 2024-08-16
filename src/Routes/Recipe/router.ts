@@ -42,6 +42,7 @@ privateRecipeRouter.get("/recommendation/:skip/:limit", userOnly, MakeErrorHandl
         res.json(await RecipeController.recommendation(user, { skip, limit }));
     }
 ));
+
 publicRecipeRouter.get("/similar/:recipeId/:skip/:limit", MakeErrorHandler(
     async (req: any, res: Response) => {
         const recipeId = req.params.recipeId;

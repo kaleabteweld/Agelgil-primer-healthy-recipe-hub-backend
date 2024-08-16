@@ -3,7 +3,7 @@ import Joi from "joi";
 import { ValidationErrorFactory } from "../../Types/error"
 import { BSONError } from 'bson';
 import { MakeValidator } from "../../Util";
-import { IModeratorRecipeUpdateFrom, IRecipe } from "./recipe.type";
+import { IModeratorRecipeUpdateFrom, IRecipe, IRecipeUpdateFrom } from "./recipe.type";
 import { IPagination } from "../../Types";
 import { IReview } from "../Review/review.type";
 
@@ -117,6 +117,17 @@ export async function getRecipesReview(this: mongoose.Model<IRecipe>, _id: strin
                 type: "validation",
             }, "id");
         }
+        throw error;
+    }
+}
+
+export async function update(this: mongoose.Model<IRecipe>, _id: string, newRecipe: IRecipeUpdateFrom, populatePath: string | string[]): Promise<IRecipe | null> {
+
+    try {
+        const newDoc = await this.findByIdAndUpdate(_id, newRecipe, { new: true, overwrite: true });
+        await newDoc?.populate(populatePath)
+        return newDoc;
+    } catch (error) {
         throw error;
     }
 }

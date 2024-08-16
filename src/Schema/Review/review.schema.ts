@@ -30,6 +30,8 @@ reviewSchema.post('save', async function (doc) {
     if (recipe) {
         recipe.reviews.addToSet(doc._id);
         recipe.rating = (recipe.rating + doc.rating) / recipe.reviews.length;
+        recipe.totalReviews += 1;
+
         await recipe.save();
     }
 })

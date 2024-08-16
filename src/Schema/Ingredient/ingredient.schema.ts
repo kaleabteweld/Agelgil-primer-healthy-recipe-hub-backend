@@ -11,7 +11,6 @@ const ingredientSchema = new Schema<IIngredient, IIngredientModel, IIngredientMe
     localName: { type: String },
     // imgs: { type: [String] },
     // nutritionalInformation: { type: Schema.Types.ObjectId, ref: 'NutritionalInformation' },
-    // approved_moderators: { type: Schema.Types.ObjectId, ref: 'Moderator' }
 }, {
     timestamps: true,
     statics: {

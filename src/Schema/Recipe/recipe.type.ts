@@ -50,6 +50,7 @@ export interface IRecipe extends mongoose.Document {
 
     rating: number;
     reviews: Schema.Types.ObjectId[] | IReview[];
+    totalReviews: number;
 
     status: TRecipeStatus;
 
@@ -79,6 +80,7 @@ export interface IRecipeModel extends mongoose.Model<IRecipeDocument> {
     removeByID(_id: string): Promise<void>
     addModerator(this: mongoose.Model<IRecipe>, _id: string, moderatorId: string, body: IModeratorRecipeUpdateFrom): Promise<IRecipe>
     getRecipesReview(_id: string, pagination: IPagination): Promise<IReview[]>
+    update(_id: string, newRecipe: IRecipeUpdateFrom, populatePath: string | string[]): Promise<IRecipe | null>
 }
 
 export interface INewRecipeFrom {
@@ -110,5 +112,5 @@ export interface IRecipeSearchFrom {
     ingredients: string[]
     sort?: { field: string, order: mongoose.SortOrder }[];
     medical_condition?: IMedicalCondition;
-    //TODO: INewMedicalConditionFrom
+    status?: TRecipeStatus;
 }

@@ -1,5 +1,6 @@
+import { IModerator } from "../../Schema/Moderator/moderator.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
-import { INewRecipeFrom, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom } from "../../Schema/Recipe/recipe.type";
+import { ERecipeStatus, INewRecipeFrom, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom } from "../../Schema/Recipe/recipe.type";
 import { RecipeSearchBuilder } from "../../Schema/Recipe/recipe.utils";
 import { newRecipeSchema, recipeSearchSchema, recipeUpdateSchema } from "../../Schema/Recipe/recipe.validation";
 import UserModel from "../../Schema/user/user.schema";
@@ -52,7 +53,7 @@ export default class RecipeController {
         return { body: ((await RecipeModel.getById(recipeId))?.toJSON() as any) };
     }
 
-    static async removeById(recipeId: string, user: IRecipe): Promise<IResponseType<{} | null>> {
+    static async removeById(recipeId: string, user: IUser | IModerator): Promise<IResponseType<{} | null>> {
         const recipe = await RecipeModel.getById(recipeId);
         await RecipeModel.removeByID(recipe?.id)
 

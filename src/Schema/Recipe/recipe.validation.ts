@@ -41,6 +41,10 @@ export const recipeSearchSchema = Joi.object<IRecipeSearchFrom>({
     preparationDifficulty: Joi.string().valid(...Object.values(EPreparationDifficulty)).optional(),
     cookingTime: Joi.number().optional(),
     ingredients: Joi.array().items(Joi.string()).optional(),
+    sort: Joi.array().items(Joi.object({
+        field: Joi.string().required(),
+        order: Joi.string().valid('asc', 'desc').required(),
+    })).optional(),
 });
 
 

@@ -7,14 +7,11 @@ import { BSONError } from 'bson';
 
 
 export class RecipeSearchBuilder {
-
     private query: mongoose.FilterQuery<IRecipeDocument> = {};
-    private sortCriteria: Record<string, number> = {};
+    private sortCriteria: { [key: string]: mongoose.SortOrder } = {};
     private page: number = 1;
 
-
-    constructor(private model: mongoose.Model<IRecipeDocument> = RecipeModel, private pageSize: number = 10) {
-    }
+    constructor(private model: mongoose.Model<IRecipeDocument> = RecipeModel, private pageSize: number = 10) { }
 
     withName(name: string): this {
         this.query.name = { $regex: new RegExp(name, 'i') };
@@ -38,8 +35,16 @@ export class RecipeSearchBuilder {
         this.query.cookingTime = cookingTime;
         return this;
     }
+
     withIngredients(ingredients: string[]): this {
-        this.query = { "ingredients.Ingredient": ingredients };
+        this.query["ingredients.Ingredient"] = { $in: ingredients };
+        return this;
+    }
+
+    withSort(sort: { field: string, order: mongoose.SortOrder }[]): this {
+        sort.forEach((s) => {
+            this.sortCriteria[s.field] = s.order;
+        });
         return this;
     }
 
@@ -48,7 +53,7 @@ export class RecipeSearchBuilder {
             msg: 'page must be greater than 1',
             statusCode: 400,
             type: "validation"
-        }, "page")
+        }, "page");
         this.page = page;
         return this;
     }
@@ -58,7 +63,7 @@ export class RecipeSearchBuilder {
             const skip = (this.page - 1) * this.pageSize;
             const result = await this.model
                 .find(this.query)
-                .sort(this.sortCriteria as any)
+                .sort(this.sortCriteria)
                 .skip(skip)
                 .limit(this.pageSize);
             return result;
@@ -91,6 +96,9 @@ export class RecipeSearchBuilder {
         }
         if (json.ingredients) {
             builder.withIngredients(json.ingredients);
+        }
+        if (json.sort) {
+            builder.withSort(json.sort);
         }
         return builder;
     }

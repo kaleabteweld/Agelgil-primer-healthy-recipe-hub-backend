@@ -103,5 +103,6 @@ export interface IRecipeSearchFrom {
     preparationDifficulty?: TPreparationDifficulty;
     cookingTime?: number;
     ingredients: string[]
+    sort?: { field: string, order: mongoose.SortOrder }[];
     //TODO: INewMedicalConditionFrom
 }

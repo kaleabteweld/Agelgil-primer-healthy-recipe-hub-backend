@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom } from "./user.type";
+import { IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, EChronicDisease, EDietaryPreferences } from "./user.type";
 
 
 export const userSignUpSchema = Joi.object<IUserSignUpFrom>({
@@ -9,6 +9,10 @@ export const userSignUpSchema = Joi.object<IUserSignUpFrom>({
     last_name: Joi.string().required(),
     phone_number: Joi.string().required(),
     profile_img: Joi.string().optional(),
+    medical_condition: Joi.object({
+        chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).required()).required(),
+        dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).required()).required(),
+    }).required(),
 });
 
 export const userLogInSchema = Joi.object<IUserLogInFrom>({
@@ -23,6 +27,10 @@ export const userUpdateSchema = Joi.object<IUserUpdateFrom>({
     password: Joi.string().min(8).optional(),
     email: Joi.string().email().optional(),
     profile_img: Joi.string().optional(),
+    medical_condition: Joi.object({
+        chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional()),
+        dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
+    }).optional(),
 });
 
 

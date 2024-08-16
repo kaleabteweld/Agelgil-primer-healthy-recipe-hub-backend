@@ -4,6 +4,7 @@ import RecipeModel from "./recipe.schema";
 import { ValidationErrorFactory } from "../../Types/error";
 import Joi from "joi";
 import { BSONError } from 'bson';
+import { IMedicalCondition } from "../user/user.type";
 
 
 export class RecipeSearchBuilder {
@@ -45,6 +46,12 @@ export class RecipeSearchBuilder {
         sort.forEach((s) => {
             this.sortCriteria[s.field] = s.order;
         });
+        return this;
+    }
+
+    withMedicalCondition(medicalCondition: IMedicalCondition): this {
+        this.query["medical_condition.chronicDiseases"] = { $in: medicalCondition.chronicDiseases };
+        this.query["medical_condition.dietary_preferences"] = { $in: medicalCondition.dietary_preferences };
         return this;
     }
 
@@ -99,6 +106,9 @@ export class RecipeSearchBuilder {
         }
         if (json.sort) {
             builder.withSort(json.sort);
+        }
+        if (json.medical_condition) {
+            builder.withMedicalCondition(json.medical_condition);
         }
         return builder;
     }

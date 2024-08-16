@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 import { IIngredient } from "../Ingredient/ingredient.type";
 import { IModerator } from "../Moderator/moderator.type";
 import { IReview } from "../Review/review.type";
-import { IUser } from "../user/user.type";
+import { IMedicalCondition, IUser } from "../user/user.type";
 import { IPagination } from "../../Types";
 
 export enum EPreferredMealTime {
@@ -52,6 +52,9 @@ export interface IRecipe extends mongoose.Document {
     reviews: Schema.Types.ObjectId[] | IReview[];
 
     status: TRecipeStatus;
+
+    medical_condition: IMedicalCondition;
+
     moderator?: {
         moderator: Schema.Types.ObjectId | IModerator;
         Comment: string;
@@ -87,6 +90,8 @@ export interface INewRecipeFrom {
     cookingTime: number;
     ingredients: IngredientDetail[];
     instructions: string;
+    medical_condition: IMedicalCondition;
+
 }
 
 export interface IRecipeUpdateFrom extends Partial<INewRecipeFrom> {
@@ -104,5 +109,6 @@ export interface IRecipeSearchFrom {
     cookingTime?: number;
     ingredients: string[]
     sort?: { field: string, order: mongoose.SortOrder }[];
+    medical_condition?: IMedicalCondition;
     //TODO: INewMedicalConditionFrom
 }

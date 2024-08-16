@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IModeratorRecipeUpdateFrom, INewRecipeFrom, IRecipeSearchFrom, IRecipeUpdateFrom } from "./recipe.type";
+import { EChronicDisease, EDietaryPreferences } from "../user/user.type";
 
 
 export const newRecipeSchema = Joi.object<INewRecipeFrom>({
@@ -14,6 +15,10 @@ export const newRecipeSchema = Joi.object<INewRecipeFrom>({
         ingredient: Joi.string().required(),
         amount: Joi.number().required(),
     })).required(),
+    medical_condition: Joi.object({
+        chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).required()).required(),
+        dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).required()).required(),
+    }).required(),
 });
 
 export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
@@ -28,6 +33,10 @@ export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
         ingredient: Joi.string().optional(),
         amount: Joi.number().optional(),
     })).optional(),
+    medical_condition: Joi.object({
+        chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional()),
+        dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
+    }).optional(),
 });
 
 export const moderatorRecipeUpdateSchema = Joi.object<IModeratorRecipeUpdateFrom>({
@@ -45,6 +54,10 @@ export const recipeSearchSchema = Joi.object<IRecipeSearchFrom>({
         field: Joi.string().required(),
         order: Joi.string().valid('asc', 'desc').required(),
     })).optional(),
+    medical_condition: Joi.object({
+        chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional()),
+        dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
+    }).optional(),
 });
 
 

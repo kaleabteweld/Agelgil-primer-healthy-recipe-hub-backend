@@ -74,4 +74,14 @@ export default class RecipeController {
         }
     }
 
+    static async recommendation(user: IUser, { skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
+        const _user = await UserModel.getById(user.id as any)
+        return {
+            body: await RecipeModel.find({ user: _user?._id })
+                .skip(skip ?? 0)
+                .limit(limit ?? 0)
+                .exec()
+        }
+    }
+
 }

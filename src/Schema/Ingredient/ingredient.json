@@ -2,453 +2,701 @@
   "ingredients": [
     {
       "name": "Salt",
+      "localName": "ጨው",
       "type": "Seasoning",
       "unit": "grams"
     },
     {
       "name": "Sugar",
+      "localName": "ስኳር",
       "type": "Sweetener",
       "unit": "grams"
     },
     {
       "name": "Olive Oil",
+      "localName": "የወይራ ዘይት",
       "type": "Oil",
       "unit": "milliliters"
     },
     {
       "name": "Chicken Breast",
+      "localName": "የዶሮ መላላጫ",
       "type": "Meat",
       "unit": "grams"
     },
     {
       "name": "Garlic",
+      "localName": "ነጭ ሽንኩርት",
       "type": "Vegetable",
       "unit": "cloves"
     },
     {
       "name": "Onion",
+      "localName": "ሽንኩርት",
       "type": "Vegetable",
       "unit": "pieces"
     },
     {
       "name": "Tomato",
+      "localName": "ቲማቲም",
       "type": "Vegetable",
       "unit": "pieces"
     },
     {
       "name": "Basil",
+      "localName": "በሶ ቢላ",
       "type": "Herb",
       "unit": "grams"
     },
     {
       "name": "Butter",
+      "localName": "ቅቤ",
       "type": "Dairy",
       "unit": "grams"
     },
     {
       "name": "Milk",
+      "localName": "ወተት",
       "type": "Dairy",
       "unit": "milliliters"
     },
     {
       "name": "Flour",
+      "localName": "ዱቄት",
       "type": "Grain",
       "unit": "grams"
     },
     {
       "name": "Eggs",
+      "localName": "እንቁላል",
       "type": "Dairy",
       "unit": "pieces"
     },
     {
       "name": "Cheese",
+      "localName": "አይብ",
       "type": "Dairy",
       "unit": "grams"
     },
     {
       "name": "Black Pepper",
+      "localName": "ቁንዶ በርበሬ",
       "type": "Seasoning",
       "unit": "grams"
     },
     {
       "name": "Carrot",
+      "localName": "ካሮት",
       "type": "Vegetable",
       "unit": "pieces"
     },
     {
       "name": "Potato",
+      "localName": "ድንች",
       "type": "Vegetable",
       "unit": "pieces"
     },
     {
       "name": "Lemon",
+      "localName": "ሎሚ",
       "type": "Fruit",
       "unit": "pieces"
     },
     {
       "name": "Soy Sauce",
+      "localName": "አኩሪ አተር",
       "type": "Condiment",
       "unit": "milliliters"
     },
     {
       "name": "Honey",
+      "localName": "ማር",
       "type": "Sweetener",
       "unit": "grams"
     },
     {
       "name": "Rice",
+      "localName": "ሩዝ",
       "type": "Grain",
       "unit": "grams"
     },
     {
       "name": "Beef",
+      "localName": "የበሬ ሥጋ",
       "type": "Meat",
       "unit": "grams"
     },
     {
       "name": "Pork",
+      "localName": "የአሳማ ሥጋ",
       "type": "Meat",
       "unit": "grams"
     },
     {
       "name": "Fish",
+      "localName": "አሳ",
       "type": "Seafood",
       "unit": "grams"
     },
     {
       "name": "Shrimp",
+      "localName": "ሽሪምፕ",
       "type": "Seafood",
       "unit": "grams"
     },
     {
       "name": "Mushroom",
+      "localName": "እንጉዳይ",
       "type": "Vegetable",
       "unit": "pieces"
     },
     {
       "name": "Spinach",
+      "localName": "ስፒናች",
       "type": "Vegetable",
       "unit": "grams"
     },
     {
       "name": "Broccoli",
+      "localName": "ብሮኮሊ",
       "type": "Vegetable",
       "unit": "grams"
     },
     {
       "name": "Zucchini",
+      "localName": "ዙኪኒ",
       "type": "Vegetable",
       "unit": "pieces"
     },
     {
       "name": "Bell Pepper",
+      "localName": "የፈረንጅ ቃርያ",
       "type": "Vegetable",
       "unit": "pieces"
     },
     {
       "name": "Cucumber",
+      "localName": "ኩከምበር",
       "type": "Vegetable",
       "unit": "pieces"
     },
     {
       "name": "Coriander",
+      "localName": "ኮሪንደር",
       "type": "Herb",
       "unit": "grams"
     },
     {
       "name": "Parsley",
+      "localName": "ፓርስሊ",
       "type": "Herb",
       "unit": "grams"
     },
     {
       "name": "Chili Powder",
+      "localName": "ሚጥሚጣ",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Cumin",
+      "localName": "ከሙን",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Paprika",
+      "localName": "በርበሬ",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Cinnamon",
+      "localName": "ቀረፋ",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Nutmeg",
+      "localName": "ገዉዝ",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Vanilla Extract",
+      "localName": "ቫኒላ",
       "type": "Flavoring",
       "unit": "milliliters"
     },
     {
       "name": "Baking Powder",
+      "localName": "መጋገር ዱቄት",
       "type": "Leavening Agent",
       "unit": "grams"
     },
     {
       "name": "Baking Soda",
+      "localName": "ቤኪንግ ሶዳ",
       "type": "Leavening Agent",
       "unit": "grams"
     },
     {
       "name": "Yeast",
+      "localName": "እርሾ",
       "type": "Leavening Agent",
       "unit": "grams"
     },
     {
       "name": "Coconut Oil",
+      "localName": "የኮኮናት ዘይት",
       "type": "Oil",
       "unit": "milliliters"
     },
     {
       "name": "Peanut Butter",
+      "localName": "የኦቾሎኒ ቅቤ",
       "type": "Spread",
       "unit": "grams"
     },
     {
       "name": "Jam",
+      "localName": "ማርማላታ",
       "type": "Spread",
       "unit": "grams"
     },
     {
       "name": "Almonds",
+      "localName": "ለውዝ",
       "type": "Nut",
       "unit": "grams"
     },
     {
       "name": "Walnuts",
+      "localName": "ለውዝ",
       "type": "Nut",
       "unit": "grams"
     },
     {
       "name": "Cashews",
+      "localName": "ለውዝ",
       "type": "Nut",
       "unit": "grams"
     },
     {
       "name": "Raisins",
+      "localName": "ዘቢብ",
       "type": "Dried Fruit",
       "unit": "grams"
     },
     {
       "name": "Dates",
+      "localName": "ቴምር",
       "type": "Dried Fruit",
       "unit": "grams"
     },
     {
       "name": "Oats",
+      "localName": "አጃ",
       "type": "Grain",
       "unit": "grams"
     },
     {
       "name": "Quinoa",
+      "localName": "ኪንዋ",
       "type": "Grain",
       "unit": "grams"
     },
     {
       "name": "Blueberries",
+      "localName": "ሰማያዊ እንጆሪ ",
       "type": "Fruit",
       "unit": "grams"
     },
     {
       "name": "Strawberries",
+      "localName": "እንጆሪ",
       "type": "Fruit",
       "unit": "pieces"
     },
     {
       "name": "Raspberries",
+      "localName": "ቀይ እንጆሪ",
       "type": "Fruit",
       "unit": "grams"
     },
     {
       "name": "Avocado",
+      "localName": "አቮካዶ",
       "type": "Fruit",
       "unit": "pieces"
     },
     {
       "name": "Pineapple",
+      "localName": "አናናስ",
       "type": "Fruit",
       "unit": "pieces"
     },
     {
       "name": "Mango",
+      "localName": "ማንጎ",
       "type": "Fruit",
       "unit": "pieces"
     },
     {
       "name": "Peach",
+      "localName": "ኮክ",
       "type": "Fruit",
       "unit": "pieces"
     },
     {
       "name": "Cherry",
+      "localName": "ቼሪ",
       "type": "Fruit",
       "unit": "grams"
     },
     {
       "name": "Pomegranate",
+      "localName": "ሮማን",
       "type": "Fruit",
       "unit": "pieces"
     },
     {
       "name": "Mint",
+      "localName": "ናና",
       "type": "Herb",
       "unit": "grams"
     },
     {
       "name": "Thyme",
+      "localName": "ጦስኝ",
       "type": "Herb",
       "unit": "grams"
     },
     {
       "name": "Rosemary",
+      "localName": "ጥብስ ቅጠል",
       "type": "Herb",
       "unit": "grams"
     },
     {
       "name": "Sage",
+      "localName": "ኮሰረት",
       "type": "Herb",
       "unit": "grams"
     },
     {
       "name": "Tarragon",
+      "localName": "ችጉኝ",
       "type": "Herb",
       "unit": "grams"
     },
     {
       "name": "Chives",
+      "localName": "",
       "type": "Herb",
       "unit": "grams"
     },
     {
       "name": "Bay Leaf",
+      "localName": "ቤይ ቅጠል",
       "type": "Herb",
       "unit": "pieces"
     },
     {
       "name": "Cloves",
+      "localName": "ቅርንፉድ",
       "type": "Spice",
       "unit": "pieces"
     },
     {
       "name": "Cardamom",
+      "localName": "ሄል",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Ginger",
+      "localName": "ዝንጅብል",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Turmeric",
+      "localName": "እርድ",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Mustard Seeds",
+      "localName": "ሰናፍጭ ዘር",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Fennel Seeds",
+      "localName": "እንስላል ፍፌ",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Star Anise",
+      "localName": "",
       "type": "Spice",
       "unit": "pieces"
     },
     {
       "name": "Saffron",
+      "localName": "ሳፍሮን",
       "type": "Spice",
       "unit": "grams"
     },
     {
       "name": "Pistachios",
+      "localName": "ለውዝ",
       "type": "Nut",
       "unit": "grams"
     },
     {
       "name": "Macadamia Nuts",
+      "localName": "ለውዝ",
       "type": "Nut",
       "unit": "grams"
     },
     {
       "name": "Hazelnuts",
+      "localName": "ለውዝ",
       "type": "Nut",
       "unit": "grams"
     },
     {
       "name": "Sunflower Seeds",
+      "localName": "ሱፍ ዘር",
       "type": "Seed",
       "unit": "grams"
     },
     {
       "name": "Pumpkin Seeds",
+      "localName": "ዱባ ዘር",
       "type": "Seed",
       "unit": "grams"
     },
     {
       "name": "Chia Seeds",
+      "localName": "ቺአ ዘር",
       "type": "Seed",
       "unit": "grams"
     },
     {
       "name": "Sesame Seeds",
+      "localName": "ሰሊጥ ዘር",
       "type": "Seed",
       "unit": "grams"
     },
     {
       "name": "Hemp Seeds",
+      "localName": "",
       "type": "Seed",
       "unit": "grams"
     },
     {
       "name": "Linseed",
+      "localName": "",
       "type": "Seed",
       "unit": "grams"
     },
     {
       "name": "Almond Milk",
+      "localName": "አልሞንድ ወተት",
       "type": "Dairy Alternative",
       "unit": "milliliters"
     },
     {
       "name": "Soy Milk",
+      "localName": "አኩሪ አተር ወተት",
       "type": "Dairy Alternative",
       "unit": "milliliters"
     },
     {
       "name": "Coconut Milk",
+      "localName": "ኮኮናት ወተት",
       "type": "Dairy Alternative",
       "unit": "milliliters"
     },
     {
       "name": "Tofu",
+      "localName": "ቶፉ",
       "type": "Dairy Alternative",
       "unit": "grams"
     },
     {
-      "name": "Tempeh",
-      "type": "Dairy Alternative",
+      "name": "Celery",
+      "localName": "የሾርባ ቅጠል",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Cabbage",
+      "localName": "ጥቅል ጎመን",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Cauliflower",
+      "localName": "የአበባ ጎመን",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Banana",
+      "localName": "ሙዝ",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Orange",
+      "localName": "ቡርትኮን",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Corn",
+      "localName": "በቆሎ",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    
+    {
+      "name": "Chickpea ",
+      "localName": "ሽምብራ",
+      "type": "Seed",
       "unit": "grams"
     },
     {
-      "name": "Seitan",
-      "type": "Dairy Alternative",
+      "name": "Red Lentil",
+      "localName": "ምስር",
+      "type": "Seed",
       "unit": "grams"
+    },
+    {
+      "name": "Green Lentil",
+      "localName": "ድፍን ምስር",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Beans",
+      "localName": "ባቄላ",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Spring Onion",
+      "localName": "ባህሮ",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Pea",
+      "localName": "አተር",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Beet Root",
+      "localName": "ቀይ ስር",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Asparagus",
+      "localName": "አስፓራገስ",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Green Bean",
+      "localName": "ፎሶልያ",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+    {
+      "name": "Collard Greens",
+      "localName": "ጎመን",
+      "type": "Vegetable",
+      "unit": "pieces"
+    },
+
+    {
+      "name": "Black-eyed pea",
+      "localName": "ቦለቄ",
+      "type": "Seed",
+      "unit": "grams"
+    },
+    {
+      "name": "Teff",
+      "localName": "ጤፍ",
+      "type": "Grain",
+      "unit": "grams"
+    },
+    {
+      "name": "Grape",
+      "localName": "ወይን",
+      "type": "Fruit",
+      "unit": "grams"
+    },
+    {
+      "name": "Apple",
+      "localName": "ፖም",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Grapefruit",
+      "localName": "የባህር ሎሚ",
+      "type": "Fruit",
+      "unit": "grams"
+    },
+    {
+      "name": "Watermelon",
+      "localName": "ሐብሐብ",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Papaya",
+      "localName": "ፓፓዬ",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Pear",
+      "localName": "ፒር",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Cactus Fruit",
+      "localName": "ቁልቋል",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Kiwi",
+      "localName": "ኪዊ",
+      "type": "Fruit",
+      "unit": "grams"
+    },
+    {
+      "name": "wild apple custard",
+      "localName": "ግሽጣ",
+      "type": "Fruit",
+      "unit": "pieces"
+    },
+    {
+      "name": "Citron",
+      "localName": "ትርንጎ",
+      "type": "Fruit",
+      "unit": "pieces"
     }
   ]
 }

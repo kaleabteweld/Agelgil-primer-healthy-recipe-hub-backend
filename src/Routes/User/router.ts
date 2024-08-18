@@ -46,7 +46,7 @@ privateUserRouter.get("/myRecipe/:status/:skip/:limit", userOnly, MakeErrorHandl
     }
 ));
 
-privateUserRouter.get("/bookedRecipes/toggle/:recipeId", userOnly, MakeErrorHandler(
+privateUserRouter.patch("/bookedRecipes/toggle/:recipeId", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
         const recipeId = req.params.recipeId;

@@ -2,6 +2,7 @@ import Joi from "joi";
 import mongoose from "mongoose";
 import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
+import e from "express";
 
 export enum EStatus {
     active = "active",
@@ -36,9 +37,37 @@ export enum EDietaryPreferences {
 }
 
 export type TDietaryPreferences = "vegetarian" | "vegan" | "gluten_free" | "dairy_free" | "nut_free" | "LowSugar" | "other" | "none";
+
+export enum EAllergies {
+    peanuts = "peanuts",
+    tree_nuts = "tree_nuts",
+    shellfish = "shellfish",
+    dairy = "dairy",
+    eggs = "eggs",
+    wheat = "wheat",
+    soy = "soy",
+    fish = "fish",
+    other = "other",
+    none = "none",
+}
+
+export type TAllergies = "peanuts" | "tree_nuts" | "shellfish" | "dairy" | "eggs" | "wheat" | "soy" | "fish" | "other" | "none";
+
+export enum EDietGoals {
+    weight_loss = "weight_loss",
+    weight_gain = "weight_gain",
+    muscle_gain = "muscle_gain",
+    maintain_weight = "maintain_weight",
+    none = "none",
+}
+
+export type TDietGoals = "weight_loss" | "weight_gain" | "muscle_gain" | "maintain_weight" | "none";
+
 export interface IMedicalCondition extends mongoose.Document {
     chronicDiseases: TChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
+    allergies: EAllergies[];
+    diet_goals: EDietGoals;
 }
 
 export interface IUser extends mongoose.Document {

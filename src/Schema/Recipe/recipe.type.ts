@@ -114,4 +114,5 @@ export interface IRecipeSearchFrom {
     sort?: { field: string, order: mongoose.SortOrder }[];
     medical_condition?: IMedicalCondition;
     status?: TRecipeStatus;
+    rating?: number;
 }

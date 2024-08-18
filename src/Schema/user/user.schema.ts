@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { EChronicDisease, EDietaryPreferences, EStatus, IUser, IUserMethods, IUserModel } from './user.type';
+import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals, EStatus, IUser, IUserMethods, IUserModel } from './user.type';
 import { checkPassword, encryptPassword, getBookedRecipes, getByEmail, getById, getMyRecipes, removeByID, setStatus, toggleBookedRecipes, update, validator } from './user.extended';
 
 export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
@@ -18,6 +18,8 @@ export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
     medical_condition: {
         chronicDiseases: { type: [String], enum: Object.values(EChronicDisease) },
         dietary_preferences: { type: [String], enum: Object.values(EDietaryPreferences) },
+        allergies: { type: [String], enum: Object.values(EAllergies) },
+        diet_goals: { type: [String], enum: Object.values(EDietGoals) },
     }
 
 }, {

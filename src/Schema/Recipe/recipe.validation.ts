@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IModeratorRecipeUpdateFrom, INewRecipeFrom, IRecipeSearchFrom, IRecipeUpdateFrom } from "./recipe.type";
-import { EChronicDisease, EDietaryPreferences } from "../user/user.type";
+import { EAllergies, EChronicDisease, EDietaryPreferences } from "../user/user.type";
 
 
 export const newRecipeSchema = Joi.object<INewRecipeFrom>({
@@ -18,6 +18,7 @@ export const newRecipeSchema = Joi.object<INewRecipeFrom>({
     medical_condition: Joi.object({
         chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).required()).required(),
         dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).required()).required(),
+        allergies: Joi.array().items(Joi.string().valid(...Object.values(EAllergies)).required()).required(),
     }).required(),
     youtubeLink: Joi.string().uri().optional(),
 });
@@ -37,6 +38,7 @@ export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
     medical_condition: Joi.object({
         chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional()),
         dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
+        allergies: Joi.array().items(Joi.string().valid(...Object.values(EAllergies)).optional()),
     }).optional(),
     youtubeLink: Joi.string().uri().optional(),
 });
@@ -59,8 +61,10 @@ export const recipeSearchSchema = Joi.object<IRecipeSearchFrom>({
     medical_condition: Joi.object({
         chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional()),
         dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
+        allergies: Joi.array().items(Joi.string().valid(...Object.values(EAllergies)).optional()),
     }).optional(),
     status: Joi.string().valid(...Object.values(ERecipeStatus)).required(),
+    rating: Joi.number().min(0).max(5).optional(),
 });
 
 

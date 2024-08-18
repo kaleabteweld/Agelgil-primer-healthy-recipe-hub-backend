@@ -70,6 +70,11 @@ export class RecipeSearchBuilder {
         return this
     }
 
+    withRating(rating: number): this {
+        this.query.rating = { $gte: rating }
+        return this
+    }
+
     async execute(): Promise<IRecipe[]> {
         try {
             const skip = (this.page - 1) * this.pageSize;
@@ -117,6 +122,9 @@ export class RecipeSearchBuilder {
         }
         if (json.status) {
             builder.withStatus(json.status);
+        }
+        if (json.rating) {
+            builder.withRating(json.rating);
         }
         return builder;
     }

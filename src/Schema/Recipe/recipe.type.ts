@@ -9,12 +9,11 @@ import { IPagination } from "../../Types";
 export enum EPreferredMealTime {
     breakfast = "breakfast",
     lunch = "lunch",
-    dinner = "dinner",
     snack = "snack",
     dessert = "dessert",
     other = "other",
 }
-export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "other";
+export type TPreferredMealTime = "breakfast" | "lunch" | "snack" | "dessert" | "other";
 
 
 export enum EPreparationDifficulty {

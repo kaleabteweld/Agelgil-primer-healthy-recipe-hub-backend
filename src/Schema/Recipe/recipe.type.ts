@@ -84,6 +84,7 @@ export interface IRecipeModel extends mongoose.Model<IRecipeDocument> {
     getRecipesReview(_id: string, pagination: IPagination): Promise<IReview[]>
     update(_id: string, newRecipe: IRecipeUpdateFrom, populatePath: string | string[]): Promise<IRecipe | null>
     similarRecipes(queryVector: number[], pagination: IPagination): Promise<IRecipe[]>
+    checkIfUserOwnsRecipe(_id: string, user: IUser): Promise<IRecipe>
 }
 
 export interface INewRecipeFrom {

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { addModerator, getById, getRecipesReview, removeByID, similarRecipes, update, validator } from './recipe.extended';
+import { addModerator, checkIfUserOwnsRecipe, getById, getRecipesReview, removeByID, similarRecipes, update, validator } from './recipe.extended';
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
 import CohereAI from '../../Util/cohere';
 import { IIngredient } from '../Ingredient/ingredient.type';
@@ -51,6 +51,7 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         getRecipesReview,
         update,
         similarRecipes,
+        checkIfUserOwnsRecipe,
     }
 });
 

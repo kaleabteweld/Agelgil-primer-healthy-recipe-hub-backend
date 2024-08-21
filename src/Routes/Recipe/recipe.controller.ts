@@ -42,10 +42,10 @@ export default class RecipeController {
         }
     }
 
-    static async update(_recipe: IRecipeUpdateFrom, recipeId: string): Promise<IResponseType<IRecipe | null>> {
+    static async update(_recipe: IRecipeUpdateFrom, recipeId: string, user: IUser): Promise<IResponseType<IRecipe | null>> {
 
-        await RecipeModel.validator(_recipe, recipeUpdateSchema)
-        const recipe = await RecipeModel.getById(recipeId);
+        await RecipeModel.validator(_recipe, recipeUpdateSchema);
+        const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, await UserModel.getById(user.id as any));
         const updateRecipe = await RecipeModel.update(recipe.id, _recipe)
         return { body: (updateRecipe as any).toJSON() }
     }
@@ -54,8 +54,8 @@ export default class RecipeController {
         return { body: ((await RecipeModel.getById(recipeId))?.toJSON() as any) };
     }
 
-    static async removeById(recipeId: string, user: IUser | IModerator): Promise<IResponseType<{} | null>> {
-        const recipe = await RecipeModel.getById(recipeId);
+    static async removeById(recipeId: string, user: IUser): Promise<IResponseType<{} | null>> {
+        const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, await UserModel.getById(user.id as any));
         await RecipeModel.removeByID(recipe?.id)
 
         return { body: {} };

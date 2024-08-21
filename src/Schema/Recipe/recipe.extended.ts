@@ -6,6 +6,7 @@ import { MakeValidator } from "../../Util";
 import { IModeratorRecipeUpdateFrom, IRecipe, IRecipeUpdateFrom } from "./recipe.type";
 import { IPagination } from "../../Types";
 import { IReview } from "../Review/review.type";
+import { IUser } from "../user/user.type";
 
 
 
@@ -155,6 +156,36 @@ export async function similarRecipes(this: mongoose.Model<IRecipe>, queryVector:
 
         console.log(similarRecipes);
         return similarRecipes;
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}
+
+export async function checkIfUserOwnsRecipe(this: mongoose.Model<IRecipe>, _id: string, user: IUser): Promise<IRecipe> {
+    try {
+        const recipe = await this.findById(new mongoose.Types.ObjectId(_id));
+        if (recipe == null) {
+            throw ValidationErrorFactory({
+                msg: "recipe not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        if (recipe.user.user == user._id) {
+            throw ValidationErrorFactory({
+                msg: "user does not own recipe",
+                statusCode: 403,
+                type: "Validation"
+            }, "_id")
+        }
+        return recipe;
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({

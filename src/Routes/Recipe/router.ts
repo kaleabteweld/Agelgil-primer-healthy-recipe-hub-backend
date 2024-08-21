@@ -61,7 +61,8 @@ privateRecipeRouter.post("/create", userOnly, MakeErrorHandler(
 
 privateRecipeRouter.patch("/update/:recipeId", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
-        res.json(await RecipeController.update(req.body, req.params.recipeId));
+        const _user: IUser = req['user'];
+        res.json(await RecipeController.update(req.body, req.params.recipeId, _user));
     }
 ));
 

@@ -7,6 +7,7 @@ import { IModeratorRecipeUpdateFrom, IRecipe, IRecipeUpdateFrom } from "./recipe
 import { IPagination } from "../../Types";
 import { IReview } from "../Review/review.type";
 import { IUser } from "../user/user.type";
+import ShareableLink from "../../Util/ShareableLink";
 
 
 
@@ -15,6 +16,9 @@ export function validator<T>(recipeInput: T, schema: Joi.ObjectSchema<T>) {
 }
 
 export async function getById(this: mongoose.Model<IRecipe>, _id: string): Promise<IRecipe> {
+    if (ShareableLink.getInstance({}).isEncrypted(_id)) {
+        _id = ShareableLink.getInstance({}).decryptId(_id);
+    }
     try {
         const recipe = await this.findById(new mongoose.Types.ObjectId(_id));
         if (recipe == null) {
@@ -196,4 +200,11 @@ export async function checkIfUserOwnsRecipe(this: mongoose.Model<IRecipe>, _id: 
         }
         throw error;
     }
+}
+
+export function getRecipeByShareableLink(this: mongoose.Model<IRecipe>, recipeId: string): Promise<IRecipe> {
+    if (ShareableLink.getInstance({}).isEncrypted(recipeId)) {
+        return getById.bind(this)(ShareableLink.getInstance({}).decryptId(recipeId))
+    }
+    return getById.bind(this)(recipeId)
 }

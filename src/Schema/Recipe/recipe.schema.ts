@@ -1,9 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { addModerator, checkIfUserOwnsRecipe, getById, getRecipesReview, removeByID, similarRecipes, update, validator } from './recipe.extended';
+import { addModerator, checkIfUserOwnsRecipe, getById, getRecipeByShareableLink, getRecipesReview, removeByID, similarRecipes, update, validator } from './recipe.extended';
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
 import CohereAI from '../../Util/cohere';
-import { IIngredient } from '../Ingredient/ingredient.type';
+import ShareableLink from '../../Util/ShareableLink';
 
 const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
 
@@ -52,9 +52,13 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         update,
         similarRecipes,
         checkIfUserOwnsRecipe,
+        getRecipeByShareableLink,
     }
 });
 
+recipeSchema.virtual('shareableLink').get(function () {
+    return ShareableLink.getInstance({}).getShareableLink((this as any)._id);
+})
 
 recipeSchema.plugin<any>(mongooseErrorPlugin);
 

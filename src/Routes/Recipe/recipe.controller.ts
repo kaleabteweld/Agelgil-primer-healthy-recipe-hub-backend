@@ -92,6 +92,4 @@ export default class RecipeController {
             body: await RecipeModel.similarRecipes(recipe.recipeEmbedding, { skip, limit })
         }
     }
-
-    //TODO: Share Recipes
 }

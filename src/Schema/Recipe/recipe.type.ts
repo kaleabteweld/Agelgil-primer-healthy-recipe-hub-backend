@@ -38,10 +38,13 @@ interface IngredientDetail {
 }
 
 export interface IRecipe extends mongoose.Document {
+
+    recipeEmbedding: number[];
+
     name: string;
     description?: string;
     imgs: string[];
-    category: string;
+    // category: string;
     preferredMealTime: TPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: number;
@@ -82,6 +85,7 @@ export interface IRecipeModel extends mongoose.Model<IRecipeDocument> {
     addModerator(this: mongoose.Model<IRecipe>, _id: string, moderatorId: string, body: IModeratorRecipeUpdateFrom): Promise<IRecipe>
     getRecipesReview(_id: string, pagination: IPagination): Promise<IReview[]>
     update(_id: string, newRecipe: IRecipeUpdateFrom, populatePath: string | string[]): Promise<IRecipe | null>
+    similarRecipes(queryVector: number[], pagination: IPagination): Promise<IRecipe[]>
 }
 
 export interface INewRecipeFrom {

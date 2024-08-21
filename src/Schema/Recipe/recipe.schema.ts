@@ -1,18 +1,23 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { addModerator, getById, getRecipesReview, removeByID, update, validator } from './recipe.extended';
+import { addModerator, getById, getRecipesReview, removeByID, similarRecipes, update, validator } from './recipe.extended';
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
+import CohereAI from '../../Util/cohere';
+import { IIngredient } from '../Ingredient/ingredient.type';
 
 const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
+
+    recipeEmbedding: [{ type: Number, select: false }],
+
     name: { type: String, required: true },
     description: { type: String },
     imgs: { type: [String] },
-    category: { type: String },
+    // category: { type: String },
     preferredMealTime: { type: [String], enum: Object.values(EPreferredMealTime) },
     preparationDifficulty: { type: String, enum: Object.values(EPreparationDifficulty) },
     cookingTime: { type: Number },
     ingredients: [{
-        Ingredient: { type: Schema.Types.ObjectId, ref: 'Ingredient' },
+        ingredient: { type: Schema.Types.ObjectId, ref: 'Ingredient' },
         amount: { type: Number },
         //TODo: remark: { type: String }
     }],
@@ -27,6 +32,8 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         moderator: { type: Schema.Types.ObjectId, ref: 'Moderator' },
         comment: { type: String }
     },
+
+    //TODO add medical_condition
 
     user: {
         user: { type: Schema.Types.ObjectId, ref: 'User' },
@@ -43,6 +50,7 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         addModerator,
         getRecipesReview,
         update,
+        similarRecipes,
     }
 });
 
@@ -50,17 +58,53 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
 recipeSchema.plugin<any>(mongooseErrorPlugin);
 
 recipeSchema.post('save', async function (doc) {
-    const moderator = await mongoose.model('Moderator').findById(doc.moderator?.moderator);
-    if (moderator) {
-        moderator.recipes.addToSet(doc._id);
-        await moderator.save();
-    }
 
-    const user = await mongoose.model('User').findById(doc.user?.user);
-    if (user) {
-        user.my_recipes.addToSet(doc._id);
-        await user.save();
+    const recipe: IRecipe = this;
+
+    mongoose.model('Moderator').findById(doc.moderator?.moderator).then((moderator) => {
+        if (moderator) {
+            moderator.recipes.addToSet(doc._id);
+            moderator.save();
+        } else {
+            throw new Error("Moderator not found");
+        }
+    }).catch((error) => {
+        console.log("Error in saving moderator", error);
+    });
+
+
+    mongoose.model('User').findById(doc.user?.user).then((user) => {
+        if (user) {
+            user.my_recipes.addToSet(doc._id);
+            user.save();
+        } else {
+            throw new Error("User not found");
+        }
+    }).catch((error) => {
+        console.log("Error in saving user", error)
+    });
+
+    const isRunningInJest: boolean = typeof process !== 'undefined' && process.env.JEST_WORKER_ID !== undefined;
+    const cohere = CohereAI.getInstance(process.env.COHERE_API_KEY, !isRunningInJest);
+
+    recipe.populate({
+        path: 'ingredients.ingredient',
+        select: 'name,type',
+    }).then((_recipe) => {
+        try {
+            cohere.embedRecipes(_recipe).then((embedding) => {
+                _recipe.recipeEmbedding = embedding;
+                _recipe.save();
+            }).catch((error) => {
+                throw error;
+            });
+        } catch (error) {
+            console.log("Error in embedding recipe", error);
+        }
+    }).catch((error) => {
+        console.log("Error in populating ingredients", error);
     }
+    );
 })
 
 const RecipeModel = mongoose.model<IRecipe, IRecipeModel>('Recipe', recipeSchema);

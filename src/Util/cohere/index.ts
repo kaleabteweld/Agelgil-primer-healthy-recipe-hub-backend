@@ -1,6 +1,8 @@
 import { CohereClient } from "cohere-ai";
 import { TModels } from "./type";
 import { EmbedInputType } from "cohere-ai/api";
+import { IRecipe } from "../../Schema/Recipe/recipe.type";
+import { IIngredient } from "../../Schema/Ingredient/ingredient.type";
 
 export default class CohereAI {
     private static instance: CohereAI; // Static property to hold the single instance
@@ -38,6 +40,19 @@ export default class CohereAI {
         } catch (error) {
             console.log("embedding error", error);
             throw error
+        }
+    }
+
+    async embedRecipes(recipe: IRecipe, model: TModels = "embed-english-v3.0", inputType: EmbedInputType | undefined = "classification"): Promise<number[]> {
+        try {
+            //TODO: add medicalConditions
+            const embedding = await this.embed(`${recipe.name} ${recipe.description} ${recipe.instructions} ${recipe.cookingTime} mins ${recipe.rating}/5
+            ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
+            ${recipe.ingredients.map(ingredientDetail => (ingredientDetail.ingredient as IIngredient).name).join(' ')}`, model, inputType);
+            return embedding;
+        } catch (error) {
+            console.log("Error in embedding recipe", error);
+            throw error;
         }
     }
 }

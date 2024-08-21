@@ -45,10 +45,12 @@ export default class CohereAI {
 
     async embedRecipes(recipe: IRecipe, model: TModels = "embed-english-v3.0", inputType: EmbedInputType | undefined = "classification"): Promise<number[]> {
         try {
-            //TODO: add medicalConditions
             const embedding = await this.embed(`${recipe.name} ${recipe.description} ${recipe.instructions} ${recipe.cookingTime} mins ${recipe.rating}/5
             ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
-            ${recipe.ingredients.map(ingredientDetail => (ingredientDetail.ingredient as IIngredient).name).join(' ')}`, model, inputType);
+            ${recipe.ingredients.map(ingredientDetail => (ingredientDetail.ingredient as IIngredient).name).join(' ')}
+            ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
+            ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')} ${recipe.medical_condition.diet_goals}`
+                , model, inputType);
             return embedding;
         } catch (error) {
             console.log("Error in embedding recipe", error);

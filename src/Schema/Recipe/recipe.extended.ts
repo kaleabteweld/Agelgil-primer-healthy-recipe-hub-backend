@@ -131,3 +131,38 @@ export async function update(this: mongoose.Model<IRecipe>, _id: string, newReci
         throw error;
     }
 }
+
+export async function similarRecipes(this: mongoose.Model<IRecipe>, queryVector: number[], pagination: IPagination): Promise<IRecipe[]> {
+    try {
+        const similarRecipes = await this.aggregate([
+            {
+                $addFields: {
+                    similarityScore: {
+                        $cosineSimilarity: {
+                            vector1: '$recipeEmbedding',
+                            vector2: queryVector,
+                        },
+                    },
+                },
+            },
+            {
+                $sort: { similarityScore: -1 },
+            },
+            {
+                $limit: pagination.limit ?? 10,
+            },
+        ]);
+
+        console.log(similarRecipes);
+        return similarRecipes;
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}

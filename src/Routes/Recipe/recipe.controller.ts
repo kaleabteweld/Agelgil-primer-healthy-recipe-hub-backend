@@ -87,13 +87,11 @@ export default class RecipeController {
     }
 
     static async similar(recipeId: string, { skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
-        // const recipe = await RecipeModel.getById(recipeId);
+        const recipe = await RecipeModel.getById(recipeId);
         return {
-            body: await RecipeModel.find()
-                .skip(skip ?? 0)
-                .limit(limit ?? 0)
-                .exec()
+            body: await RecipeModel.similarRecipes(recipe.recipeEmbedding, { skip, limit })
         }
     }
 
+    //TODO: Share Recipes
 }

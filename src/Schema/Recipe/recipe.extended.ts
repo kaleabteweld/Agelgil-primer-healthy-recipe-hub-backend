@@ -141,6 +141,9 @@ export async function similarRecipes(this: mongoose.Model<IRecipe>, queryVector:
     try {
         const similarRecipes = await this.aggregate([
             {
+                $match: {
+                    status: "verified"
+                },
                 $addFields: {
                     similarityScore: {
                         $cosineSimilarity: {
@@ -156,6 +159,15 @@ export async function similarRecipes(this: mongoose.Model<IRecipe>, queryVector:
             {
                 $limit: pagination.limit ?? 10,
             },
+            {
+                $project: {
+                    name: 1,
+                    description: 1,
+                    imgs: 1,
+                    preparationDifficulty: 1,
+                    preferredMealTime: 1,
+                }
+            }
         ]);
 
         console.log(similarRecipes);

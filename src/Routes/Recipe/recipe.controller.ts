@@ -46,8 +46,12 @@ export default class RecipeController {
 
         await RecipeModel.validator(_recipe, recipeUpdateSchema);
         const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, await UserModel.getById(user.id as any));
-        const updateRecipe = await RecipeModel.update(recipe.id, _recipe)
-        return { body: (updateRecipe as any).toJSON() }
+        const updateRecipe: any = await RecipeModel.update(recipe.id, _recipe)
+        if (recipe.status === ERecipeStatus.rejected) {
+            updateRecipe.status = ERecipeStatus.pending
+            await updateRecipe.save()
+        }
+        return { body: updateRecipe.toJSON() }
     }
 
     static async getById(recipeId: string = ""): Promise<IResponseType<IRecipe | null>> {

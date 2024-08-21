@@ -12,10 +12,9 @@ export enum EPreferredMealTime {
     dinner = "dinner",
     snack = "snack",
     dessert = "dessert",
-    drink = "drink",
     other = "other",
 }
-export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "drink" | "other";
+export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "other";
 
 
 export enum EPreparationDifficulty {

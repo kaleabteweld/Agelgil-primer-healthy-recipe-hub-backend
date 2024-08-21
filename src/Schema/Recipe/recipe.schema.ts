@@ -4,6 +4,7 @@ import { addModerator, checkIfUserOwnsRecipe, getById, getRecipeByShareableLink,
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
 import CohereAI from '../../Util/cohere';
 import ShareableLink from '../../Util/ShareableLink';
+import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals } from '../user/user.type';
 
 const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
 
@@ -33,7 +34,12 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         comment: { type: String }
     },
 
-    //TODO add medical_condition
+    medical_condition: {
+        chronicDiseases: { type: [String], enum: Object.values(EChronicDisease) },
+        dietary_preferences: { type: [String], enum: Object.values(EDietaryPreferences) },
+        allergies: { type: [String], enum: Object.values(EAllergies) },
+        diet_goals: { type: [String], enum: Object.values(EDietGoals) },
+    },
 
     user: {
         user: { type: Schema.Types.ObjectId, ref: 'User' },

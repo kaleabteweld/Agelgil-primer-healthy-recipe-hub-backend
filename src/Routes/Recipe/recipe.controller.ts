@@ -19,6 +19,8 @@ export default class RecipeController {
 
         _recipe = {
             ..._recipe,
+            nutrition: await (new Calorieninjas({ apiKey: process.env.CALORIENINJAS_API_KEY ?? "" }))
+                .getNutritionData(_recipe.ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(" ")),
             user: {
                 user: _user?._id,
                 profile_img: _user?.profile_img,
@@ -55,7 +57,7 @@ export default class RecipeController {
     }
 
     static async getById(recipeId: string = ""): Promise<IResponseType<IRecipe | null>> {
-        return { body: ((await RecipeModel.getById(recipeId))?.toJSON() as any) };
+        return { body: ((await RecipeModel.getById(recipeId, ["ingredients.ingredient", "reviews"]))?.toJSON() as any) };
     }
 
     static async removeById(recipeId: string, user: IUser): Promise<IResponseType<{} | null>> {

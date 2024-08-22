@@ -13,12 +13,12 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     name: { type: String, required: true },
     description: { type: String },
     imgs: { type: [String] },
-    // category: { type: String },
     preferredMealTime: { type: [String], enum: Object.values(EPreferredMealTime) },
     preparationDifficulty: { type: String, enum: Object.values(EPreparationDifficulty) },
     cookingTime: { type: Number },
     ingredients: [{
         ingredient: { type: Schema.Types.ObjectId, ref: 'Ingredient' },
+        name: { type: String },
         amount: { type: Number },
         //TODo: remark: { type: String }
     }],
@@ -30,8 +30,26 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
 
     status: { type: String, enum: Object.values(ERecipeStatus), default: ERecipeStatus.pending },
     moderator: {
-        moderator: { type: Schema.Types.ObjectId, ref: 'Moderator' },
+        moderator: {
+            moderator: { type: Schema.Types.ObjectId, ref: 'Moderator' },
+            full_name: { type: String },
+            profile_img: { type: String }
+        },
         comment: { type: String }
+    },
+
+    nutrition: {
+        sugar_g: { type: Number },
+        fiber_g: { type: Number },
+        serving_size_g: { type: Number },
+        sodium_mg: { type: Number },
+        potassium_mg: { type: Number },
+        fat_saturated_g: { type: Number },
+        fat_total_g: { type: Number },
+        calories: { type: Number },
+        cholesterol_mg: { type: Number },
+        protein_g: { type: Number },
+        carbohydrates_total_g: { type: Number },
     },
 
     medical_condition: {
@@ -98,25 +116,14 @@ recipeSchema.post('save', async function (doc) {
     const isRunningInJest: boolean = typeof process !== 'undefined' && process.env.JEST_WORKER_ID !== undefined;
     const cohere = CohereAI.getInstance(process.env.COHERE_API_KEY, !isRunningInJest);
 
-    recipe.populate({
-        path: 'ingredients.ingredient',
-        select: 'name,type',
-    }).then((_recipe) => {
-        try {
-            cohere.embedRecipes(_recipe).then((embedding) => {
-                _recipe.recipeEmbedding = embedding;
-                _recipe.save();
-            }).catch((error) => {
-                throw error;
-            });
-        } catch (error) {
-            console.log("Error in embedding recipe", error);
-        }
+
+    cohere.embedRecipes(recipe).then((embedding) => {
+        recipe.recipeEmbedding = embedding;
+        recipe.save();
     }).catch((error) => {
-        console.log("Error in populating ingredients", error);
-    }
-    );
-})
+        throw error;
+    });
+});
 
 const RecipeModel = mongoose.model<IRecipe, IRecipeModel>('Recipe', recipeSchema);
 

@@ -69,9 +69,9 @@ export default class ModeratorController {
 
     static async updateRecipeStatus(recipeId: string, body: IModeratorRecipeUpdateFrom, moderatorId: string): Promise<IResponseType<IRecipe | null>> {
 
+        const moderator = await ModeratorModel.getById(moderatorId);
         await RecipeModel.validator(body, moderatorRecipeUpdateSchema);
-        await RecipeModel.addModerator(recipeId, moderatorId, body);
-        return { body: (await RecipeModel.addModerator(recipeId, moderatorId, body)).toJSON() }
+        return { body: (await RecipeModel.addModerator(recipeId, moderator, body)).toJSON() }
     }
 
     static async moderatedRecipes(moderatorId: string, status: TRecipeStatus, pagination: IPagination): Promise<IResponseType<IRecipe>> {

@@ -8,6 +8,7 @@ import { IPagination } from "../../Types";
 import { IReview } from "../Review/review.type";
 import { IUser } from "../user/user.type";
 import ShareableLink from "../../Util/ShareableLink";
+import { IModerator } from "../Moderator/moderator.type";
 
 
 
@@ -15,12 +16,14 @@ export function validator<T>(recipeInput: T, schema: Joi.ObjectSchema<T>) {
     return MakeValidator<T>(schema, recipeInput);
 }
 
-export async function getById(this: mongoose.Model<IRecipe>, _id: string): Promise<IRecipe> {
+export async function getById(this: mongoose.Model<IRecipe>, _id: string, populate?: string | string[]): Promise<IRecipe> {
     if (ShareableLink.getInstance({}).isEncrypted(_id)) {
         _id = ShareableLink.getInstance({}).decryptId(_id);
     }
     try {
-        const recipe = await this.findById(new mongoose.Types.ObjectId(_id));
+        let recipe: any = this.findById(new mongoose.Types.ObjectId(_id))
+        if (populate) recipe.populate(populate)
+        recipe = await recipe.exec();
         if (recipe == null) {
             throw ValidationErrorFactory({
                 msg: "recipe not found",
@@ -64,7 +67,7 @@ export async function removeByID(this: mongoose.Model<IRecipe>, _id: string): Pr
     }
 }
 
-export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, moderatorId: string, body: IModeratorRecipeUpdateFrom): Promise<IRecipe> {
+export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, moderator: IModerator, body: IModeratorRecipeUpdateFrom): Promise<IRecipe> {
     try {
         const recipe = await this.findById(new mongoose.Types.ObjectId(_id));
         if (recipe == null) {
@@ -82,7 +85,11 @@ export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, m
             }, "_id")
         }
         recipe.moderator = {
-            moderator: new mongoose.Types.ObjectId(moderatorId) as any,
+            moderator: {
+                moderator: moderator._id as mongoose.ObjectId,
+                full_name: moderator.full_name,
+                profile_img: moderator.profile_img as string,
+            },
             Comment: body.Comment
         }
         recipe.status = body.status;

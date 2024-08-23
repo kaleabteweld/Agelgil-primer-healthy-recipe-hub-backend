@@ -64,11 +64,19 @@ export enum EDietGoals {
 export type TDietGoals = "weight_loss" | "weight_gain" | "muscle_gain" | "maintain_weight" | "none";
 
 export interface IMedicalCondition extends mongoose.Document {
-    chronicDiseases: TChronicDisease[];
+    chronicDiseases: EChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
     allergies: EAllergies[];
-    diet_goals: EDietGoals;
+    diet_goals?: EDietGoals;
 }
+
+export interface IMedicalConditionInput {
+    chronicDiseases: EChronicDisease[];
+    dietary_preferences: EDietaryPreferences[];
+    allergies: EAllergies[];
+    diet_goals?: EDietGoals;
+}
+
 
 export interface IUser extends mongoose.Document {
     profile_img?: string;
@@ -118,7 +126,7 @@ export interface IUserSignUpFrom {
     phone_number: string;
     profile_img?: string;
 
-    medical_condition: IMedicalCondition;
+    medical_condition: IMedicalConditionInput;
 }
 
 export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {

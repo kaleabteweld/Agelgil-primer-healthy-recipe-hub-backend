@@ -147,7 +147,7 @@ export async function getBookedRecipes(this: mongoose.Model<IUser>, _id: string,
     try {
         const user = await this.findById(new mongoose.Types.ObjectId(_id)).select('booked_recipes').populate({
             path: 'booked_recipes',
-            select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
+            select: ['name', 'description', 'imgs', 'preparationDifficulty', 'preferredMealTime', 'rating'],
             options: { limit: pagination.limit }
         }).exec();
         if (user == null) {
@@ -203,11 +203,13 @@ export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: stri
 export async function getMyRecipes(this: mongoose.Model<IUser>, _id: string, pagination: IPagination, status: TRecipeStatus): Promise<IRecipe[]> {
 
     try {
-        const user = await this.findOne({ _id: new mongoose.Types.ObjectId(_id), status }).select('my_recipes').populate({
-            path: 'my_recipes',
-            select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
-            options: { limit: pagination.limit }
-        }).exec();
+        const user = await this.findOne({ _id: new mongoose.Types.ObjectId(_id) })
+            .select('my_recipes').populate({
+                path: 'my_recipes',
+                match: { status: status },
+                select: ['name', 'description', 'imgs', 'preparationDifficulty', 'preferredMealTime', 'rating'],
+                options: { limit: pagination.limit }
+            }).exec();
         if (user == null) {
             throw ValidationErrorFactory({
                 msg: "User not found",

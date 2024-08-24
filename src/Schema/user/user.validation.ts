@@ -13,11 +13,11 @@ export const userSignUpSchema = Joi.object<IUserSignUpFrom>({
         chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).required()).required(),
         dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).required()).required(),
         allergies: Joi.array().items(Joi.string().valid(...Object.values(EAllergies)).required()).required(),
-        diet_goals: Joi.string().valid(...Object.values(EDietGoals)).when('chronicDiseases', {
-            is: Joi.array().items(Joi.string().valid('none')).has('none'),
-            then: Joi.required(),
-            otherwise: Joi.valid('none')
-        }).required(),
+        // diet_goals: Joi.string().valid(...Object.values(EDietGoals)).when('chronicDiseases', {
+        //     is: Joi.array().items(Joi.string().valid('none')).has('none'),
+        //     then: Joi.required(),
+        //     otherwise: Joi.valid('none')
+        // }).required(),
     }).required(),
 });
 
@@ -37,11 +37,11 @@ export const userUpdateSchema = Joi.object<IUserUpdateFrom>({
         chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional()),
         dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
         allergies: Joi.array().items(Joi.string().valid(...Object.values(EAllergies)).required()).required(),
-        diet_goals: Joi.string().valid(...Object.values(EDietGoals)).when('chronicDiseases', {
-            is: Joi.array().items(Joi.string().valid('none')).has('none'),
-            then: Joi.required(),
-            otherwise: Joi.valid('none')
-        }).optional(),
+        // diet_goals: Joi.string().valid(...Object.values(EDietGoals)).when('chronicDiseases', {
+        //     is: Joi.array().items(Joi.string().valid('none')).has('none'),
+        //     then: Joi.required(),
+        //     otherwise: Joi.valid('none')
+        // }).optional(),
     }).optional(),
 });
 

@@ -9,6 +9,7 @@ export default class Calorieninjas {
     }
 
     getNutritionData = async (food: string): Promise<NutritionData> => {
+        console.log("food", food);
         try {
             const response = await fetch(`https://api.calorieninjas.com/v1/nutrition?query=${food}`, {
                 method: 'GET',

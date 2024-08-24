@@ -67,7 +67,7 @@ export interface IMedicalCondition extends mongoose.Document {
     chronicDiseases: TChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
     allergies: EAllergies[];
-    diet_goals: EDietGoals;
+    // diet_goals: EDietGoals;
 }
 
 export interface IUser extends mongoose.Document {

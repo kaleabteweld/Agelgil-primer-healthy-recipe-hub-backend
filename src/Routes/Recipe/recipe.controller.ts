@@ -71,7 +71,9 @@ export default class RecipeController {
     static async carbs(recipeId: string): Promise<IResponseType<NutritionData | null>> {
         const recipe = await RecipeModel.getById(recipeId);
         const calorieninjas: Calorieninjas = new Calorieninjas({ apiKey: process.env.CALORIENINJAS_API_KEY ?? "" })
-        return { body: await calorieninjas.getNutritionData(recipe.name) }
+        return {
+            body: await calorieninjas.getNutritionData(recipe.ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(" "))
+        }
     }
 
     static async search(searchFrom: IRecipeSearchFrom, page: number = 1): Promise<IResponseType<IRecipe[]>> {

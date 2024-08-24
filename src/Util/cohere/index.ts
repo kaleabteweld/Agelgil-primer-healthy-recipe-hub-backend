@@ -49,7 +49,7 @@ export default class CohereAI {
             ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
             ${recipe.ingredients.map(ingredientDetail => ingredientDetail.name).join(' ')}
             ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
-            ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')} ${recipe.medical_condition.diet_goals}`
+            ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')}`
                 , model, inputType);
             return embedding;
         } catch (error) {

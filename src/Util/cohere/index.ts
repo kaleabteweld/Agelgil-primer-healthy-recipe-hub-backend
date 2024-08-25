@@ -45,7 +45,7 @@ export default class CohereAI {
 
     async embedRecipes(recipe: IRecipe, model: TModels = "embed-english-v3.0", inputType: EmbedInputType | undefined = "classification"): Promise<number[]> {
         try {
-            const embedding = await this.embed(`${recipe.name} ${recipe.description} ${recipe.cookingTime} mins ${recipe.rating}/5
+            const embedding = await this.embed(`${recipe.name} ${recipe.description}
             ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
             ${recipe.ingredients.map(ingredientDetail => ingredientDetail.name).join(' ')}
             ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 

@@ -20,7 +20,7 @@ export default class RecipeController {
         _recipe = {
             ..._recipe,
             nutrition: await (new Calorieninjas({ apiKey: process.env.CALORIENINJAS_API_KEY ?? "" }))
-                .getNutritionData(_recipe.ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(" ")),
+                .getTotalNutrition(_recipe.ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(",")),
             user: {
                 user: _user?._id,
                 profile_img: _user?.profile_img,
@@ -72,7 +72,7 @@ export default class RecipeController {
         const recipe = await RecipeModel.getById(recipeId);
         const calorieninjas: Calorieninjas = new Calorieninjas({ apiKey: process.env.CALORIENINJAS_API_KEY ?? "" })
         return {
-            body: await calorieninjas.getNutritionData(recipe.ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(" "))
+            body: (await calorieninjas.getTotalNutrition(recipe.ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(",")))
         }
     }
 

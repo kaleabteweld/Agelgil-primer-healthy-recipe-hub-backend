@@ -5,20 +5,21 @@ import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRe
 import CohereAI from '../../Util/cohere';
 import ShareableLink from '../../Util/ShareableLink';
 import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals } from '../user/user.type';
+import { ValidationErrorFactory } from '../../Types/error';
 
 const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
 
-    recipeEmbedding: [{ type: Number, select: false }],
+    recipeEmbedding: [[{ type: Number, select: false }]],
 
     name: { type: String, required: true },
     description: { type: String },
     imgs: { type: [String] },
-    // category: { type: String },
     preferredMealTime: { type: [String], enum: Object.values(EPreferredMealTime) },
     preparationDifficulty: { type: String, enum: Object.values(EPreparationDifficulty) },
     cookingTime: { type: Number },
     ingredients: [{
         ingredient: { type: Schema.Types.ObjectId, ref: 'Ingredient' },
+        name: { type: String },
         amount: { type: Number },
         //TODo: remark: { type: String }
     }],
@@ -30,8 +31,26 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
 
     status: { type: String, enum: Object.values(ERecipeStatus), default: ERecipeStatus.pending },
     moderator: {
-        moderator: { type: Schema.Types.ObjectId, ref: 'Moderator' },
+        moderator: {
+            moderator: { type: Schema.Types.ObjectId, ref: 'Moderator' },
+            full_name: { type: String },
+            profile_img: { type: String }
+        },
         comment: { type: String }
+    },
+
+    nutrition: {
+        sugar_g: { type: Number },
+        fiber_g: { type: Number },
+        serving_size_g: { type: Number },
+        sodium_mg: { type: Number },
+        potassium_mg: { type: Number },
+        fat_saturated_g: { type: Number },
+        fat_total_g: { type: Number },
+        calories: { type: Number },
+        cholesterol_mg: { type: Number },
+        protein_g: { type: Number },
+        carbohydrates_total_g: { type: Number },
     },
 
     medical_condition: {
@@ -49,6 +68,13 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
 
 }, {
     timestamps: true,
+    toJSON: {
+        virtuals: true,
+        transform: function (doc, ret) {
+            delete ret.recipeEmbedding;
+            return ret;
+        }
+    },
     statics: {
         validator,
         getById,
@@ -68,55 +94,63 @@ recipeSchema.virtual('shareableLink').get(function () {
 
 recipeSchema.plugin<any>(mongooseErrorPlugin);
 
+recipeSchema.pre('save', async function (next) {
+
+    const recipe: IRecipe = this;
+
+    try {
+        try {
+            // const isRunningInJest: boolean = typeof process !== 'undefined' && process.env.JEST_WORKER_ID !== undefined;
+            const cohere = CohereAI.getInstance(process.env.COHERE_API_KEY);
+            recipe.recipeEmbedding = await cohere.embedRecipes(recipe);
+        } catch (error) {
+            console.log("Error in embedding recipe", error);
+            throw error;
+        }
+
+        next();
+    } catch (error: any) {
+        next(error);
+    }
+});
+
 recipeSchema.post('save', async function (doc) {
 
     const recipe: IRecipe = this;
 
-    mongoose.model('Moderator').findById(doc.moderator?.moderator).then((moderator) => {
-        if (moderator) {
-            moderator.recipes.addToSet(doc._id);
-            moderator.save();
-        } else {
-            throw new Error("Moderator not found");
-        }
-    }).catch((error) => {
-        console.log("Error in saving moderator", error);
-    });
+    try {
+
+        // mongoose.model('Moderator').findById(doc.moderator?.moderator.moderator).then((moderator) => {
+        //     console.log({ moderator });
+        //     if (moderator) {
+        //         moderator.recipes.addToSet(doc._id);
+        //         moderator.save();
+        //     } else {
+        //         throw new Error("Moderator not found");
+        //     }
+        // }).catch((error) => {
+        //     console.log("Error in saving moderator", error);
+        // });
 
 
-    mongoose.model('User').findById(doc.user?.user).then((user) => {
+        const user = await mongoose.model('User').findById(doc.user?.user);
         if (user) {
             user.my_recipes.addToSet(doc._id);
             user.save();
         } else {
-            throw new Error("User not found");
+            throw ValidationErrorFactory({
+                msg: "User not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
         }
-    }).catch((error) => {
-        console.log("Error in saving user", error)
-    });
 
-    const isRunningInJest: boolean = typeof process !== 'undefined' && process.env.JEST_WORKER_ID !== undefined;
-    const cohere = CohereAI.getInstance(process.env.COHERE_API_KEY, !isRunningInJest);
-
-    recipe.populate({
-        path: 'ingredients.ingredient',
-        select: 'name,type',
-    }).then((_recipe) => {
-        try {
-            cohere.embedRecipes(_recipe).then((embedding) => {
-                _recipe.recipeEmbedding = embedding;
-                _recipe.save();
-            }).catch((error) => {
-                throw error;
-            });
-        } catch (error) {
-            console.log("Error in embedding recipe", error);
-        }
-    }).catch((error) => {
-        console.log("Error in populating ingredients", error);
+    } catch (error) {
+        console.log("recipe post save error", { error });
+        throw error;
     }
-    );
-})
+
+});
 
 const RecipeModel = mongoose.model<IRecipe, IRecipeModel>('Recipe', recipeSchema);
 

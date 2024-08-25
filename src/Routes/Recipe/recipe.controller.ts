@@ -19,6 +19,8 @@ export default class RecipeController {
 
         _recipe = {
             ..._recipe,
+            nutrition: await (new Calorieninjas({ apiKey: process.env.CALORIENINJAS_API_KEY ?? "" }))
+                .getTotalNutrition(_recipe.ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(",")),
             user: {
                 user: _user?._id,
                 profile_img: _user?.profile_img,
@@ -46,12 +48,16 @@ export default class RecipeController {
 
         await RecipeModel.validator(_recipe, recipeUpdateSchema);
         const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, await UserModel.getById(user.id as any));
-        const updateRecipe = await RecipeModel.update(recipe.id, _recipe)
-        return { body: (updateRecipe as any).toJSON() }
+        const updateRecipe: any = await RecipeModel.update(recipe.id, _recipe)
+        if (recipe.status === ERecipeStatus.rejected) {
+            updateRecipe.status = ERecipeStatus.pending
+            await updateRecipe.save()
+        }
+        return { body: updateRecipe.toJSON() }
     }
 
     static async getById(recipeId: string = ""): Promise<IResponseType<IRecipe | null>> {
-        return { body: ((await RecipeModel.getById(recipeId))?.toJSON() as any) };
+        return { body: ((await RecipeModel.getById(recipeId, ["ingredients.ingredient", "reviews"]))?.toJSON() as any) };
     }
 
     static async removeById(recipeId: string, user: IUser): Promise<IResponseType<{} | null>> {
@@ -65,7 +71,9 @@ export default class RecipeController {
     static async carbs(recipeId: string): Promise<IResponseType<NutritionData | null>> {
         const recipe = await RecipeModel.getById(recipeId);
         const calorieninjas: Calorieninjas = new Calorieninjas({ apiKey: process.env.CALORIENINJAS_API_KEY ?? "" })
-        return { body: await calorieninjas.getNutritionData(recipe.name) }
+        return {
+            body: (await calorieninjas.getTotalNutrition(recipe.ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(",")))
+        }
     }
 
     static async search(searchFrom: IRecipeSearchFrom, page: number = 1): Promise<IResponseType<IRecipe[]>> {
@@ -79,7 +87,7 @@ export default class RecipeController {
     static async recommendation(user: IUser, { skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
         const _user = await UserModel.getById(user.id as any)
         return {
-            body: await RecipeModel.find({ user: _user?._id })
+            body: await RecipeModel.find({ user: _user?.id })
                 .skip(skip ?? 0)
                 .limit(limit ?? 0)
                 .exec()

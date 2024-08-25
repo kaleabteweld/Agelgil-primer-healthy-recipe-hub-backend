@@ -13,6 +13,7 @@ export const newRecipeSchema = Joi.object<INewRecipeFrom>({
     preparationDifficulty: Joi.string().valid(...Object.values(EPreparationDifficulty)).required(),
     ingredients: Joi.array().items(Joi.object({
         ingredient: Joi.string().required(),
+        name: Joi.string().required(),
         amount: Joi.number().required(),
     })).required(),
     medical_condition: Joi.object({
@@ -33,6 +34,7 @@ export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
     preparationDifficulty: Joi.string().valid(...Object.values(EPreparationDifficulty)).optional(),
     ingredients: Joi.array().items(Joi.object({
         ingredient: Joi.string().optional(),
+        name: Joi.string().optional(),
         amount: Joi.number().optional(),
     })).optional(),
     medical_condition: Joi.object({

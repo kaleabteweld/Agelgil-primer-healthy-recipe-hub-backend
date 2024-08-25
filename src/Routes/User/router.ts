@@ -10,7 +10,7 @@ const privateUserRouter = express.Router();
 privateUserRouter.get("/", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
-        res.json(await UserController.getById(_user._id as any));
+        res.json(await UserController.getById(_user.id as any));
     }
 ));
 
@@ -39,6 +39,7 @@ privateUserRouter.get("/bookedRecipes/:skip/:limit", userOnly, MakeErrorHandler(
 privateUserRouter.get("/myRecipe/:status/:skip/:limit", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
+        console.log("myRecipe", { _user });
         const skip = Number.parseInt(req.params.skip);
         const limit = Number.parseInt(req.params.limit);
         const status = req.params.status;
@@ -50,7 +51,7 @@ privateUserRouter.patch("/bookedRecipes/toggle/:recipeId", userOnly, MakeErrorHa
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
         const recipeId = req.params.recipeId;
-        res.json(await UserController.toggleBookedRecipes(_user._id as any, recipeId));
+        res.json(await UserController.toggleBookedRecipes(_user.id as any, recipeId));
     }
 ));
 

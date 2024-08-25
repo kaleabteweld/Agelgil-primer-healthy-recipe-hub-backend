@@ -69,6 +69,7 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
 }, {
     timestamps: true,
     toJSON: {
+        virtuals: true,
         transform: function (doc, ret) {
             delete ret.recipeEmbedding;
             return ret;

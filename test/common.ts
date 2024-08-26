@@ -2,7 +2,7 @@ import { Response } from "supertest";
 import { expect } from '@jest/globals';
 import { UserType } from "../src/Util/jwt/jwt.types";
 import { EAllergies, EChronicDisease, EDietaryPreferences, IUser, IUserLogInFrom, IUserSignUpFrom } from "../src/Schema/user/user.type";
-import { IModeratorLogInFrom, IModeratorSignUpFrom } from "../src/Schema/Moderator/moderator.type";
+import { IModerator, IModeratorLogInFrom, IModeratorSignUpFrom } from "../src/Schema/Moderator/moderator.type";
 
 
 export const sighupUrl = (user: UserType) => `/Api/v1/public/authentication/${user}/signUp`;
@@ -31,6 +31,7 @@ export const newValidUser: IUserSignUpFrom = {
         dietary_preferences: [EDietaryPreferences.vegan, EDietaryPreferences.LowSugar],
     }
 };
+
 export const newValidUser2: IUserSignUpFrom = {
     email: "test2@test.com",
     password: "abcd12345",
@@ -43,6 +44,7 @@ export const newValidUser2: IUserSignUpFrom = {
         dietary_preferences: [EDietaryPreferences.other],
     }
 };
+
 export const ValidUser1Login: IUserLogInFrom = {
     email: "test@test.com",
     password: "abcd12345",
@@ -55,6 +57,12 @@ export const newValidModeratorSignUp: IModeratorSignUpFrom = {
     bio: "bio",
     first_name: "test",
     last_name: "last",
+    profile_img: "profile_img",
+}
+
+export const newValidModeratorLogin: IModeratorLogInFrom = {
+    email: "test@admin.com",
+    password: "abcd12345",
 }
 
 export const validAdmin1Login: IModeratorLogInFrom = {
@@ -87,6 +95,20 @@ export const createUser = async (request: Function, app: any, newValidUsers: IUs
     }
 
     return { users, accessTokens }
+}
+
+export const createModerator = async (request: Function, app: any, newValidModeratorSignUp: IModeratorSignUpFrom[]): Promise<{ moderator: IModerator[], accessToken: string }> => {
+
+    const moderator: IModerator[] = [];
+    const accessToken: string[] = [];
+
+    for (let index = 0; index < newValidModeratorSignUp.length; index++) {
+        const response = await request(app).post(sighupUrl(UserType.admin)).send(newValidModeratorSignUp[index]);
+        moderator.push(response.body);
+        accessToken.push(response.header.authorization.split(" ")[1])
+    }
+
+    return { moderator, accessToken: accessToken[0] }
 }
 
 export const expectValidProduct = async (product: any) => {

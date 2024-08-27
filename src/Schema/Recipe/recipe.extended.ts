@@ -9,6 +9,7 @@ import { IReview } from "../Review/review.type";
 import { IUser } from "../user/user.type";
 import ShareableLink from "../../Util/ShareableLink";
 import { IModerator } from "../Moderator/moderator.type";
+import { Datasx } from "../../Util/Datasx";
 
 
 
@@ -93,6 +94,8 @@ export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, m
             Comment: body.Comment
         }
         recipe.status = body.status;
+        const datasx = Datasx.getInstance();
+        await datasx.EmbedAndSave(recipe)
         return await recipe.save();
     } catch (error) {
         if (error instanceof BSONError) {
@@ -140,53 +143,6 @@ export async function update(this: mongoose.Model<IRecipe>, _id: string, newReci
         await newDoc?.populate(populatePath)
         return newDoc;
     } catch (error) {
-        throw error;
-    }
-}
-
-export async function similarRecipes(this: mongoose.Model<IRecipe>, queryVector: number[], pagination: IPagination): Promise<IRecipe[]> {
-    try {
-        const similarRecipes = await this.aggregate([
-            {
-                $match: {
-                    status: "verified"
-                },
-                $addFields: {
-                    similarityScore: {
-                        $cosineSimilarity: {
-                            vector1: '$recipeEmbedding',
-                            vector2: queryVector,
-                        },
-                    },
-                },
-            },
-            {
-                $sort: { similarityScore: -1 },
-            },
-            {
-                $limit: pagination.limit ?? 10,
-            },
-            {
-                $project: {
-                    name: 1,
-                    description: 1,
-                    imgs: 1,
-                    preparationDifficulty: 1,
-                    preferredMealTime: 1,
-                }
-            }
-        ]);
-
-        console.log(similarRecipes);
-        return similarRecipes;
-    } catch (error) {
-        if (error instanceof BSONError) {
-            throw ValidationErrorFactory({
-                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
-                statusCode: 400,
-                type: "validation",
-            }, "id");
-        }
         throw error;
     }
 }

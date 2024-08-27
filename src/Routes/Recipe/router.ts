@@ -44,14 +44,19 @@ privateRecipeRouter.get("/recommendation/:time/:skip/:limit", userOnly, MakeErro
     }
 ));
 
-publicRecipeRouter.get("/similar/:recipeId/:skip/:limit", MakeErrorHandler(
+publicRecipeRouter.get("/similar/:recipeId/:page", MakeErrorHandler(
     async (req: any, res: Response) => {
         const recipeId = req.params.recipeId;
-        const skip = Number.parseInt(req.params.skip);
-        const limit = Number.parseInt(req.params.limit);
-        res.json(await RecipeController.similar(recipeId, { skip, limit }));
+        const page = Number.parseInt(req.params.page);
+        res.json(await RecipeController.similar(recipeId, page));
     }
 ));
+
+// publicRecipeRouter.patch("/addEmbedding/:recipeId", MakeErrorHandler(
+//     async (req: any, res: Response) => {
+//         res.json(await RecipeController.addEmbedding(req.params.recipeId));
+//     }
+// ));
 
 privateRecipeRouter.post("/create", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {

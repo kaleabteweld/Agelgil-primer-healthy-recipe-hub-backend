@@ -40,8 +40,6 @@ interface IngredientDetail {
 
 export interface IRecipe extends mongoose.Document {
 
-    recipeEmbedding: number[];
-
     name: string;
     description?: string;
     imgs: string[];

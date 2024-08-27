@@ -8,6 +8,7 @@ import { IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
 import Calorieninjas from "../../Util/calorieninjas";
 import { NutritionData } from "../../Util/calorieninjas/types";
+import { Datasx } from "../../Util/Datasx";
 
 
 export default class RecipeController {
@@ -94,10 +95,16 @@ export default class RecipeController {
         }
     }
 
-    static async similar(recipeId: string, { skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
+    static async similar(recipeId: string, page: number): Promise<IResponseType<IRecipe[]>> {
         const recipe = await RecipeModel.getById(recipeId);
         return {
-            body: await RecipeModel.similarRecipes(recipe.recipeEmbedding, { skip, limit })
+            body: await Datasx.getInstance().getSuggestionsForRecipe(recipe, page)
         }
+    }
+
+    static async addEmbedding(recipeId: string): Promise<IResponseType<IRecipe | null>> {
+        const recipe = await RecipeModel.getById(recipeId);
+        await Datasx.getInstance().EmbedAndSave(recipe as any);
+        return { body: recipe }
     }
 }

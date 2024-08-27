@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { addModerator, checkIfUserOwnsRecipe, getById, getRecipeByShareableLink, getRecipesReview, removeByID, similarRecipes, update, validator } from './recipe.extended';
+import { addModerator, checkIfUserOwnsRecipe, getById, getRecipeByShareableLink, getRecipesReview, removeByID, update, validator } from './recipe.extended';
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
 import CohereAI from '../../Util/cohere';
 import ShareableLink from '../../Util/ShareableLink';
@@ -8,9 +8,6 @@ import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals } from '..
 import { ValidationErrorFactory } from '../../Types/error';
 
 const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
-
-    recipeEmbedding: [[{ type: Number, select: false }]],
-
     name: { type: String, required: true },
     description: { type: String },
     imgs: { type: [String] },
@@ -82,7 +79,6 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         addModerator,
         getRecipesReview,
         update,
-        similarRecipes,
         checkIfUserOwnsRecipe,
         getRecipeByShareableLink,
     }
@@ -94,25 +90,6 @@ recipeSchema.virtual('shareableLink').get(function () {
 
 recipeSchema.plugin<any>(mongooseErrorPlugin);
 
-recipeSchema.pre('save', async function (next) {
-
-    const recipe: IRecipe = this;
-
-    try {
-        try {
-            // const isRunningInJest: boolean = typeof process !== 'undefined' && process.env.JEST_WORKER_ID !== undefined;
-            const cohere = CohereAI.getInstance(process.env.COHERE_API_KEY);
-            recipe.recipeEmbedding = await cohere.embedRecipes(recipe);
-        } catch (error) {
-            console.log("Error in embedding recipe", error);
-            throw error;
-        }
-
-        next();
-    } catch (error: any) {
-        next(error);
-    }
-});
 
 recipeSchema.post('save', async function (doc) {
 

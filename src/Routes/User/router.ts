@@ -39,7 +39,6 @@ privateUserRouter.get("/bookedRecipes/:skip/:limit", userOnly, MakeErrorHandler(
 privateUserRouter.get("/myRecipe/:status/:skip/:limit", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
-        console.log("myRecipe", { _user });
         const skip = Number.parseInt(req.params.skip);
         const limit = Number.parseInt(req.params.limit);
         const status = req.params.status;

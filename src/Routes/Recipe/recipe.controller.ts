@@ -61,6 +61,13 @@ export default class RecipeController {
         return { body: ((await RecipeModel.getById(recipeId, ["ingredients.ingredient", "reviews"]))?.toJSON() as any) };
     }
 
+    static async getByIdWithUser(recipeId: string, userId: string): Promise<IResponseType<IRecipe | null>> {
+        const user = await UserModel.getById(userId)
+        const recipe = await RecipeModel.getById(recipeId, ["ingredients.ingredient", "reviews"]);
+        const _recipe = recipe?.toJSON() as any;
+        return { body: { ..._recipe, hasBookedRecipe: user.hasBookedRecipe(recipeId) } as any };
+    }
+
     static async removeById(recipeId: string, user: IUser): Promise<IResponseType<{} | null>> {
         const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, await UserModel.getById(user.id as any));
         await RecipeModel.removeByID(recipe?.id)

@@ -13,6 +13,13 @@ publicRecipeRouter.get("/:recipeId", MakeErrorHandler(
     }
 ));
 
+privateRecipeRouter.get("/:recipeId", userOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _user: IUser = req['user'];
+        res.json(await RecipeController.getByIdWithUser(req.params.recipeId, _user.id));
+    }
+));
+
 publicRecipeRouter.get("/carbs/:recipeId", MakeErrorHandler(
     async (req: any, res: Response) => {
         res.json(await RecipeController.carbs(req.params.recipeId));

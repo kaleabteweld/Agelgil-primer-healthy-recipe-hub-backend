@@ -203,9 +203,10 @@ export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: stri
 export async function getMyRecipes(this: mongoose.Model<IUser>, _id: string, pagination: IPagination, status: TRecipeStatus): Promise<IRecipe[]> {
 
     try {
-        const user = await this.findOne({ _id: new mongoose.Types.ObjectId(_id), status }).select('my_recipes').populate({
+        const user = await this.findOne({ _id: new mongoose.Types.ObjectId(_id) }).select('my_recipes').populate({
             path: 'my_recipes',
-            select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
+            match: { status },
+            select: ['name', 'description', 'imgs', 'preparationDifficulty', 'preferredMealTime', "rating"],
             options: { limit: pagination.limit }
         }).exec();
         if (user == null) {
@@ -227,3 +228,7 @@ export async function getMyRecipes(this: mongoose.Model<IUser>, _id: string, pag
         throw error;
     }
 }
+
+export function hasBookedRecipe(this: IUser, recipeId: any): boolean {
+    return this.booked_recipes.includes(recipeId);
+};

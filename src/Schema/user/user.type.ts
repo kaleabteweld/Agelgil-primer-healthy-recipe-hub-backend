@@ -84,14 +84,17 @@ export interface IUser extends mongoose.Document {
 
     booked_recipes: mongoose.Types.ObjectId[] | IRecipe[];
     my_recipes: mongoose.Types.ObjectId[] | IRecipe[];
+
 }
 
 export interface IUserMethods {
     encryptPassword(this: IUser, password?: string): Promise<String>
     checkPassword(this: IUser, password: string): Promise<boolean>
+    hasBookedRecipe(this: IUser, recipeId: any): boolean
 }
 
-export interface IUserDocument extends IUser, IUserMethods, mongoose.Document { }
+export interface IUserDocument extends IUser, IUserMethods, mongoose.Document {
+}
 
 export interface IUserModel extends mongoose.Model<IUserDocument> {
     validator<T>(userInput: T, schema: Joi.ObjectSchema<T>): Promise<any>

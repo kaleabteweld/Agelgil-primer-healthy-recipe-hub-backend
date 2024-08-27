@@ -15,7 +15,7 @@ export async function MakeTokens(user: any, userType: UserType) {
         const refreshKey = TokenSecret(userType, TokenType.refreshToken);
         if (tokenKey === undefined || refreshKey === undefined) throw Error("No Env");
 
-        const accessToken = Jwt.sign({ id: user.id, type: userType }, tokenKey, { expiresIn: "2h", });
+        const accessToken = Jwt.sign({ id: user.id, type: userType }, tokenKey); // expiresIn: "2h",
         const refreshToken = Jwt.sign({ id: user.id }, refreshKey, { expiresIn: "2w", });
 
         await redisCache.removeRefreshToken(user.id);

@@ -34,12 +34,13 @@ publicRecipeRouter.post("/search/:page", MakeErrorHandler(
     }
 ));
 
-privateRecipeRouter.get("/recommendation/:skip/:limit", userOnly, MakeErrorHandler(
+privateRecipeRouter.get("/recommendation/:time/:skip/:limit", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const user: IUser = req['user'];
         const skip = Number.parseInt(req.params.skip);
         const limit = Number.parseInt(req.params.limit);
-        res.json(await RecipeController.recommendation(user, { skip, limit }));
+        const time = req.params.time;
+        res.json(await RecipeController.recommendation(user, time, { skip, limit }));
     }
 ));
 

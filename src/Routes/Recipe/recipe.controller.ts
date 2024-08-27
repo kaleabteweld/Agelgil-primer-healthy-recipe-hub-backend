@@ -1,6 +1,6 @@
 import { IModerator } from "../../Schema/Moderator/moderator.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
-import { ERecipeStatus, INewRecipeFrom, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom } from "../../Schema/Recipe/recipe.type";
+import { ERecipeStatus, INewRecipeFrom, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
 import { RecipeSearchBuilder } from "../../Schema/Recipe/recipe.utils";
 import { newRecipeSchema, recipeSearchSchema, recipeUpdateSchema } from "../../Schema/Recipe/recipe.validation";
 import UserModel from "../../Schema/user/user.schema";
@@ -84,7 +84,7 @@ export default class RecipeController {
         }
     }
 
-    static async recommendation(user: IUser, { skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
+    static async recommendation(user: IUser, time: TPreferredMealTime, { skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
         const _user = await UserModel.getById(user.id as any)
         return {
             body: await RecipeModel.find({ user: _user?.id })

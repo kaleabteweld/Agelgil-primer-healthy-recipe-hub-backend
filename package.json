@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@datastax/astra-db-ts": "^1.4.1",
-    "@types/": "datastax/astra-db-ts",
     "axios": "^1.7.3",
     "bcrypt": "^5.1.1",
     "cohere-ai": "^7.12.0",

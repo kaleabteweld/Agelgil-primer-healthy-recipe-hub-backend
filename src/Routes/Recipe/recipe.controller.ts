@@ -85,7 +85,7 @@ export default class RecipeController {
     }
 
     static async search(searchFrom: IRecipeSearchFrom, page: number = 1): Promise<IResponseType<IRecipe[]>> {
-        RecipeModel.validator(searchFrom, recipeSearchSchema);
+        await RecipeModel.validator(searchFrom, recipeSearchSchema);
         return {
             body: await ((await RecipeSearchBuilder.fromJSON(searchFrom, recipeSearchSchema)).withPagination(page)).execute()
 

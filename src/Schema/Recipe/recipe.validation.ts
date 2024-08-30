@@ -51,7 +51,7 @@ export const moderatorRecipeUpdateSchema = Joi.object<IModeratorRecipeUpdateFrom
 });
 
 export const recipeSearchSchema = Joi.object<IRecipeSearchFrom>({
-    name: Joi.string().optional(),
+    name: Joi.string().min(0).optional(),
     preferredMealTime: Joi.array().items(Joi.string().valid(...Object.values(EPreferredMealTime)).optional()),
     preparationDifficulty: Joi.string().valid(...Object.values(EPreparationDifficulty)).optional(),
     cookingTime: Joi.number().optional(),
@@ -61,11 +61,10 @@ export const recipeSearchSchema = Joi.object<IRecipeSearchFrom>({
         order: Joi.string().valid('asc', 'desc').required(),
     })).optional(),
     medical_condition: Joi.object({
-        chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional()),
+        chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional().optional()),
         dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
         allergies: Joi.array().items(Joi.string().valid(...Object.values(EAllergies)).optional()),
     }).optional(),
-    status: Joi.string().valid(...Object.values(ERecipeStatus)).required(),
     rating: Joi.number().min(0).max(5).optional(),
 });
 

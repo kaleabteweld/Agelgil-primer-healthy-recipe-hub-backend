@@ -64,7 +64,7 @@ export enum EDietGoals {
 export type TDietGoals = "weight_loss" | "weight_gain" | "muscle_gain" | "maintain_weight" | "none";
 
 export interface IMedicalCondition extends mongoose.Document {
-    chronicDiseases: TChronicDisease[];
+    chronicDiseases: EChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
     allergies: EAllergies[];
     // diet_goals: EDietGoals;

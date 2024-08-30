@@ -38,7 +38,7 @@ export class RecipeSearchBuilder {
     }
 
     withIngredients(ingredients: string[]): this {
-        this.query["ingredients.Ingredient"] = { $in: ingredients };
+        this.query["ingredients.name"] = { $all: ingredients };
         return this;
     }
 
@@ -91,7 +91,7 @@ export class RecipeSearchBuilder {
 
     async execute(): Promise<IRecipe[]> {
         try {
-            console.log({ query: this.query })
+            console.log({ query: this.query, sort: this.sortCriteria });
             const skip = (this.page - 1) * this.pageSize;
             const result = await this.model
                 .find(this.query)

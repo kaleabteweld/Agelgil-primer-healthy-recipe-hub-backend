@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { MakeErrorHandler, userOnly } from "../../Util/middlewares";
+import { MakeErrorHandler, moderatorOnly, userOnly } from "../../Util/middlewares";
 import RecipeController from "./recipe.controller";
 import { IUser } from "../../Schema/user/user.type";
 
@@ -17,6 +17,13 @@ privateRecipeRouter.get("/:recipeId", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
         res.json(await RecipeController.getByIdWithUser(req.params.recipeId, _user.id));
+    }
+));
+
+privateRecipeRouter.get("/moderator/:recipeId", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _moderator: IUser = req['moderator'];
+        res.json(await RecipeController.getByIdWithModerator(req.params.recipeId, _moderator.id));
     }
 ));
 

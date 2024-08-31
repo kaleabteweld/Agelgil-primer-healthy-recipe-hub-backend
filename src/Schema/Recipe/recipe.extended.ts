@@ -85,18 +85,23 @@ export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, m
                 type: "Validation"
             }, "_id")
         }
-        recipe.moderator = {
-            moderator: {
-                moderator: moderator._id as mongoose.ObjectId,
-                full_name: moderator.full_name,
-                profile_img: moderator.profile_img as string,
-            },
-            Comment: body.Comment
-        }
-        recipe.status = body.status;
+
         const datasx = Datasx.getInstance();
         await datasx.EmbedAndSave(recipe)
-        return await recipe.save();
+
+        return await this.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(_id) }, {
+            status: body.status,
+            moderator: {
+                moderator: {
+                    moderator: moderator._id as mongoose.ObjectId,
+                    full_name: moderator.full_name,
+                    profile_img: moderator.profile_img
+                },
+                comment: body.comment
+
+            },
+        }, { new: true, overwrite: true }) as any;
+
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({

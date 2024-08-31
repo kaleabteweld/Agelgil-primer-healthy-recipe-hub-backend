@@ -150,7 +150,6 @@ export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: st
             select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
             options: { limit: pagination.limit }
         }).exec();
-        console.log({ moderated });
         if (moderated == null) {
             throw ValidationErrorFactory({
                 msg: "moderated not found",
@@ -171,3 +170,7 @@ export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: st
         throw error;
     }
 }
+
+export function hasModeratedRecipe(this: IModerator, recipeId: mongoose.Types.ObjectId): boolean {
+    return this.moderated_recipe.some((recipe) => (recipe.recipe as mongoose.Types.ObjectId).equals(recipeId))
+};

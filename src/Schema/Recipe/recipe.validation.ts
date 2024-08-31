@@ -47,7 +47,7 @@ export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
 
 export const moderatorRecipeUpdateSchema = Joi.object<IModeratorRecipeUpdateFrom>({
     status: Joi.string().valid(...Object.values(ERecipeStatus)).required(),
-    Comment: Joi.string().required(),
+    comment: Joi.string().required(),
 });
 
 export const recipeSearchSchema = Joi.object<IRecipeSearchFrom>({

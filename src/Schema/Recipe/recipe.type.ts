@@ -66,7 +66,7 @@ export interface IRecipe extends mongoose.Document {
             full_name: string,
             profile_img: string
         };
-        Comment: string;
+        comment: string;
     };
 
     user: {
@@ -112,7 +112,7 @@ export interface IRecipeUpdateFrom extends Partial<INewRecipeFrom> {
 
 export interface IModeratorRecipeUpdateFrom {
     status: TRecipeStatus;
-    Comment: string;
+    comment: string;
 }
 
 export interface IRecipeSearchFrom {

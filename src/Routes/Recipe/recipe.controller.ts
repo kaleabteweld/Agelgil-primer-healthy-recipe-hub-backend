@@ -1,3 +1,4 @@
+import ModeratorModel from "../../Schema/Moderator/moderator.schema";
 import { IModerator } from "../../Schema/Moderator/moderator.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import { ERecipeStatus, INewRecipeFrom, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
@@ -66,6 +67,13 @@ export default class RecipeController {
         const recipe = await RecipeModel.getById(recipeId, ["ingredients.ingredient", "reviews"]);
         const _recipe = recipe?.toJSON() as any;
         return { body: { ..._recipe, hasBookedRecipe: user.hasBookedRecipe(recipeId) } as any };
+    }
+
+    static async getByIdWithModerator(recipeId: string, userId: string): Promise<IResponseType<IRecipe | null>> {
+        const user = await ModeratorModel.getById(userId)
+        const recipe = await RecipeModel.getById(recipeId, ["ingredients.ingredient", "reviews"]);
+        const _recipe = recipe?.toJSON() as any;
+        return { body: { ..._recipe, isModeratedRecipe: user.hasModeratedRecipe(recipe._id as any) } as any };
     }
 
     static async removeById(recipeId: string, user: IUser): Promise<IResponseType<{} | null>> {

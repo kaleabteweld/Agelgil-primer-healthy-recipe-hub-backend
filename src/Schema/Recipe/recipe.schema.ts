@@ -97,19 +97,6 @@ recipeSchema.post('save', async function (doc) {
 
     try {
 
-        // mongoose.model('Moderator').findById(doc.moderator?.moderator.moderator).then((moderator) => {
-        //     console.log({ moderator });
-        //     if (moderator) {
-        //         moderator.recipes.addToSet(doc._id);
-        //         moderator.save();
-        //     } else {
-        //         throw new Error("Moderator not found");
-        //     }
-        // }).catch((error) => {
-        //     console.log("Error in saving moderator", error);
-        // });
-
-
         const user = await mongoose.model('User').findById(doc.user?.user);
         if (user) {
             user.my_recipes.addToSet(doc._id);
@@ -125,6 +112,39 @@ recipeSchema.post('save', async function (doc) {
     } catch (error) {
         console.log("recipe post save error", { error });
         throw error;
+    }
+
+});
+
+recipeSchema.pre('findOneAndUpdate', async function (next) {
+
+    const update: any = this.getUpdate();
+
+    try {
+        const status = update.status;
+        const _moderator: any = update?.moderator;
+        const comment: any = _moderator.comment;
+        const _id: mongoose.Types.ObjectId = this.getQuery()?._id;
+        if (status === ERecipeStatus.verified || status === ERecipeStatus.rejected) {
+            const moderator = await mongoose.model('Moderator').findById(_moderator?.moderator.moderator, { moderated_recipe: 1 });
+            if (moderator) {
+                moderator.moderated_recipe.addToSet({ recipe: _id, status, comment });
+                await moderator.save();
+                next();
+            } else {
+                update.status = ERecipeStatus.pending;
+                update.moderator = undefined;
+                next(ValidationErrorFactory({
+                    msg: "Moderator not found",
+                    statusCode: 404,
+                    type: "Validation"
+                }, "_id") as any);
+            }
+        }
+
+    } catch (error) {
+        console.log("recipe post save error", { error });
+        next(error as any);
     }
 
 });

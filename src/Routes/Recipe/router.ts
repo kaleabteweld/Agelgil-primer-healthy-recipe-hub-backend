@@ -41,10 +41,27 @@ publicRecipeRouter.get("/list/:skip/:limit", MakeErrorHandler(
     }
 ));
 
-publicRecipeRouter.post("/search/:page", MakeErrorHandler(
+privateRecipeRouter.get("/moderator/list/:skip/:limit/:filter", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const moderator = req['moderator'];
+        const skip = Number.parseInt(req.params.skip);
+        const limit = Number.parseInt(req.params.limit);
+        const filter = req.params.filter;
+        res.json(await RecipeController.moderatoList({ skip, limit }, filter));
+    }
+));
+
+publicRecipeRouter.post("/user/search/:page", MakeErrorHandler(
     async (req: any, res: Response) => {
         const page = Number.parseInt(req.params.page);
         res.json(await RecipeController.search(req.body, page));
+    }
+));
+
+publicRecipeRouter.post("/moderator/search/:page", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const page = Number.parseInt(req.params.page);
+        res.json(await RecipeController.moderatorSearch(req.body, page));
     }
 ));
 

@@ -1,7 +1,7 @@
 import ModeratorModel from "../../Schema/Moderator/moderator.schema";
 import { IModerator } from "../../Schema/Moderator/moderator.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
-import { ERecipeStatus, INewRecipeFrom, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
+import { EPreferredMealTime, ERecipeStatus, INewRecipeFrom, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
 import { RecipeSearchBuilder } from "../../Schema/Recipe/recipe.utils";
 import { newRecipeSchema, recipeSearchSchema, recipeUpdateSchema } from "../../Schema/Recipe/recipe.validation";
 import UserModel from "../../Schema/user/user.schema";
@@ -39,6 +39,33 @@ export default class RecipeController {
     static async list({ skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
         return {
             body: await RecipeModel.find()
+                .skip(skip ?? 0)
+                .limit(limit ?? 0)
+                .sort({ createdAt: -1 })
+                .exec()
+        }
+    }
+
+    static async moderatoList({ skip, limit }: IPagination, filter: EPreferredMealTime | "all" = "all"): Promise<IResponseType<IRecipe[]>> {
+
+        if (filter === "all") {
+            return {
+                body: await RecipeModel.find({
+                    status: ERecipeStatus.pending,
+                })
+                    .skip(skip ?? 0)
+                    .limit(limit ?? 0)
+                    .sort({ createdAt: -1 })
+                    .exec()
+            }
+        }
+        return {
+            body: await RecipeModel.find({
+                $and: [{
+                    preferredMealTime: filter,
+                    status: ERecipeStatus.pending
+                }]
+            })
                 .skip(skip ?? 0)
                 .limit(limit ?? 0)
                 .sort({ createdAt: -1 })
@@ -93,6 +120,14 @@ export default class RecipeController {
     }
 
     static async search(searchFrom: IRecipeSearchFrom, page: number = 1): Promise<IResponseType<IRecipe[]>> {
+        await RecipeModel.validator(searchFrom, recipeSearchSchema);
+        return {
+            body: await ((await RecipeSearchBuilder.fromJSON(searchFrom, recipeSearchSchema)).withPagination(page).withStatus(ERecipeStatus.verified)).execute()
+
+        }
+    }
+
+    static async moderatorSearch(searchFrom: IRecipeSearchFrom, page: number = 1): Promise<IResponseType<IRecipe[]>> {
         await RecipeModel.validator(searchFrom, recipeSearchSchema);
         return {
             body: await ((await RecipeSearchBuilder.fromJSON(searchFrom, recipeSearchSchema)).withPagination(page)).execute()

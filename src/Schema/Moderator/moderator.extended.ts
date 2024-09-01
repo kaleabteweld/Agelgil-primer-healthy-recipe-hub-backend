@@ -145,9 +145,9 @@ export async function setStatus(this: mongoose.Model<IModerator>, _id: string, s
 export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: string, pagination: IPagination, status: TRecipeStatus): Promise<IRecipe[]> {
 
     try {
-        const moderated = await this.findOne({ _id: new mongoose.Types.ObjectId(_id), moderated_recipe: { status } }).select('moderated_recipe').populate({
-            path: 'recipe',
-            select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
+        const moderated = await this.findOne({ _id: new mongoose.Types.ObjectId(_id) }).select('moderated_recipe').populate({
+            path: 'moderated_recipe.recipe',
+            select: ['name', 'description', 'imgs', 'preparationDifficulty', 'preferredMealTime', "rating"],
             options: { limit: pagination.limit }
         }).exec();
         if (moderated == null) {
@@ -158,7 +158,8 @@ export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: st
             }, "_id")
         }
         // TODO: test
-        return moderated.moderated_recipe as any;
+        return moderated.moderated_recipe.filter((recipe) => recipe.status === status).map((recipe) => recipe.recipe) as IRecipe[];
+        // return moderated.moderated_recipe as any
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({

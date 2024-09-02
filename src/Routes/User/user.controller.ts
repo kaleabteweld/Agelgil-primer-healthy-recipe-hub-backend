@@ -77,4 +77,8 @@ export default class UserController {
     static async myRecipes(userId: string, status: TRecipeStatus, pagination: IPagination): Promise<IResponseType<IRecipe[]>> {
         return { body: await UserModel.getMyRecipes(userId, pagination, status) };
     }
+
+    static async users(page: number, verified: boolean = false): Promise<IResponseType<IUser[]>> {
+        return { body: await UserModel.find({ verified }).skip(page * 10).limit(10).exec() };
+    }
 }

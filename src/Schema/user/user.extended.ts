@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import Joi from "joi";
 import { ValidationErrorFactory, errorFactory, isValidationError } from "../../Types/error"
 import { BSONError } from 'bson';
-import { EStatus, IUser, IUserUpdateFrom } from "./user.type";
+import { EStatus, IModeratorUserUpdateSchema, IUser, IUserUpdateFrom } from "./user.type";
 import { MakeValidator } from "../../Util";
 import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
@@ -232,3 +232,26 @@ export async function getMyRecipes(this: mongoose.Model<IUser>, _id: string, pag
 export function hasBookedRecipe(this: IUser, recipeId: any): boolean {
     return this.booked_recipes.includes(recipeId);
 };
+
+export async function updateUserStatus(this: mongoose.Model<IUser>, userId: string, body: IModeratorUserUpdateSchema): Promise<IUser> {
+    try {
+        const user = await this.findByIdAndUpdate(userId, { status: body.status }, { new: true, overwrite: true });
+        if (user == null) {
+            throw ValidationErrorFactory({
+                msg: "User not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        return user;
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}

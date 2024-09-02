@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, EChronicDisease, EDietaryPreferences, EAllergies, EDietGoals } from "./user.type";
+import { IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, EChronicDisease, EDietaryPreferences, EAllergies, IModeratorUserUpdateSchema, EStatus } from "./user.type";
 
 
 export const userSignUpSchema = Joi.object<IUserSignUpFrom>({
@@ -46,4 +46,8 @@ export const userUpdateSchema = Joi.object<IUserUpdateFrom>({
 });
 
 
+export const moderatorUserUpdateSchema = Joi.object<IModeratorUserUpdateSchema>({
+    status: Joi.string().valid(...Object.values(EStatus)).optional(),
+    verified: Joi.boolean().optional(),
+});
 

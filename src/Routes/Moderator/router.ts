@@ -35,6 +35,14 @@ privateModeratorRouter.patch("/updateRecipeStatus/:recipeId", moderatorOnly, Mak
     }
 ));
 
+privateModeratorRouter.patch("/updateUserStatus/:userId", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _moderator: IModerator = req['moderator'];
+        const userId = req.params.userId;
+        res.json(await moderatorController.updateUserStatus(userId, req.body, _moderator.id as any));
+    }
+));
+
 privateModeratorRouter.get("/moderatedRecipes/:status/:skip/:limit", moderatorOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _moderator: IModerator = req['moderator'];

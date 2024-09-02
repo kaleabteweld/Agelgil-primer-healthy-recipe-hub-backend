@@ -157,9 +157,7 @@ export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: st
                 type: "Validation"
             }, "_id")
         }
-        // TODO: test
         return moderated.moderated_recipe.filter((recipe) => recipe.status === status).map((recipe) => recipe.recipe) as IRecipe[];
-        // return moderated.moderated_recipe as any
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({
@@ -172,6 +170,7 @@ export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: st
     }
 }
 
+//TODO: add to recipe schema, check for overall if recipe is moderated
 export function hasModeratedRecipe(this: IModerator, recipeId: mongoose.Types.ObjectId): boolean {
     return this.moderated_recipe.some((recipe) => (recipe.recipe as mongoose.Types.ObjectId).equals(recipeId))
 };

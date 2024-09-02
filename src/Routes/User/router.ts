@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { MakeErrorHandler, userOnly } from "../../Util/middlewares";
+import { MakeErrorHandler, userOnly, moderatorOnly } from "../../Util/middlewares";
 import UserController from "./user.controller";
 import { IUser } from "../../Schema/user/user.type";
 
@@ -10,6 +10,7 @@ const privateUserRouter = express.Router();
 privateUserRouter.get("/", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
+        res.json(await UserController.getById(_user.id as any));
         res.json(await UserController.getById(_user.id as any));
     }
 ));
@@ -33,6 +34,7 @@ privateUserRouter.get("/bookedRecipes/:skip/:limit", userOnly, MakeErrorHandler(
         const skip = Number.parseInt(req.params.skip);
         const limit = Number.parseInt(req.params.limit);
         res.json(await UserController.bookedRecipes(_user.id as any, { skip, limit }));
+        res.json(await UserController.bookedRecipes(_user.id as any, { skip, limit }));
     }
 ));
 
@@ -51,6 +53,15 @@ privateUserRouter.patch("/bookedRecipes/toggle/:recipeId", userOnly, MakeErrorHa
         const _user: IUser = req['user'];
         const recipeId = req.params.recipeId;
         res.json(await UserController.toggleBookedRecipes(_user.id as any, recipeId));
+    }
+));
+
+privateUserRouter.get("/list/:page/:verified", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _moderator: IUser = req['moderator'];
+        const page = Number.parseInt(req.params.page);
+        const verified = req.params.verified;
+        res.json(await UserController.users(page, verified));
     }
 ));
 

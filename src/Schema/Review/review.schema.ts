@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
 import { IReview, IReviewMethods, IReviewModel } from './review.type';
 import { getById, removeByID, validator } from './review.extended';
+import { Datasx } from '../../Util/Datasx';
 
 
 const reviewSchema = new Schema<IReview, IReviewModel, IReviewMethods>({
@@ -31,8 +32,9 @@ reviewSchema.post('save', async function (doc) {
         recipe.reviews.addToSet(doc._id);
         recipe.rating = (recipe.rating + doc.rating) / recipe.reviews.length;
         recipe.totalReviews += 1;
-
         await recipe.save();
+
+        Datasx.getInstance().updateRecipe(recipe._id, recipe);
     }
 })
 

@@ -1,702 +1,2336 @@
-{
-  "ingredients": [
-    {
-      "name": "Salt",
-      "localName": "ጨው",
-      "type": "Seasoning",
-      "unit": "grams"
-    },
-    {
-      "name": "Sugar",
-      "localName": "ስኳር",
-      "type": "Sweetener",
-      "unit": "grams"
-    },
-    {
-      "name": "Olive Oil",
-      "localName": "የወይራ ዘይት",
-      "type": "Oil",
-      "unit": "milliliters"
-    },
-    {
-      "name": "Chicken Breast",
-      "localName": "የዶሮ መላላጫ",
-      "type": "Meat",
-      "unit": "grams"
-    },
-    {
-      "name": "Garlic",
-      "localName": "ነጭ ሽንኩርት",
-      "type": "Vegetable",
-      "unit": "cloves"
-    },
-    {
-      "name": "Onion",
-      "localName": "ሽንኩርት",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Tomato",
-      "localName": "ቲማቲም",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Basil",
-      "localName": "በሶ ቢላ",
-      "type": "Herb",
-      "unit": "grams"
-    },
-    {
-      "name": "Butter",
-      "localName": "ቅቤ",
-      "type": "Dairy",
-      "unit": "grams"
-    },
-    {
-      "name": "Milk",
-      "localName": "ወተት",
-      "type": "Dairy",
-      "unit": "milliliters"
-    },
-    {
-      "name": "Flour",
-      "localName": "ዱቄት",
-      "type": "Grain",
-      "unit": "grams"
-    },
-    {
-      "name": "Eggs",
-      "localName": "እንቁላል",
-      "type": "Dairy",
-      "unit": "pieces"
-    },
-    {
-      "name": "Cheese",
-      "localName": "አይብ",
-      "type": "Dairy",
-      "unit": "grams"
-    },
-    {
-      "name": "Black Pepper",
-      "localName": "ቁንዶ በርበሬ",
-      "type": "Seasoning",
-      "unit": "grams"
-    },
-    {
-      "name": "Carrot",
-      "localName": "ካሮት",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Potato",
-      "localName": "ድንች",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Lemon",
-      "localName": "ሎሚ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Soy Sauce",
-      "localName": "አኩሪ አተር",
-      "type": "Condiment",
-      "unit": "milliliters"
-    },
-    {
-      "name": "Honey",
-      "localName": "ማር",
-      "type": "Sweetener",
-      "unit": "grams"
-    },
-    {
-      "name": "Rice",
-      "localName": "ሩዝ",
-      "type": "Grain",
-      "unit": "grams"
-    },
-    {
-      "name": "Beef",
-      "localName": "የበሬ ሥጋ",
-      "type": "Meat",
-      "unit": "grams"
-    },
-    {
-      "name": "Pork",
-      "localName": "የአሳማ ሥጋ",
-      "type": "Meat",
-      "unit": "grams"
-    },
-    {
-      "name": "Fish",
-      "localName": "አሳ",
-      "type": "Seafood",
-      "unit": "grams"
-    },
-    {
-      "name": "Shrimp",
-      "localName": "ሽሪምፕ",
-      "type": "Seafood",
-      "unit": "grams"
-    },
-    {
-      "name": "Mushroom",
-      "localName": "እንጉዳይ",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Spinach",
-      "localName": "ስፒናች",
-      "type": "Vegetable",
-      "unit": "grams"
-    },
-    {
-      "name": "Broccoli",
-      "localName": "ብሮኮሊ",
-      "type": "Vegetable",
-      "unit": "grams"
-    },
-    {
-      "name": "Zucchini",
-      "localName": "ዙኪኒ",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Bell Pepper",
-      "localName": "የፈረንጅ ቃርያ",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Cucumber",
-      "localName": "ኩከምበር",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Coriander",
-      "localName": "ኮሪንደር",
-      "type": "Herb",
-      "unit": "grams"
-    },
-    {
-      "name": "Parsley",
-      "localName": "ፓርስሊ",
-      "type": "Herb",
-      "unit": "grams"
-    },
-    {
-      "name": "Chili Powder",
-      "localName": "ሚጥሚጣ",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Cumin",
-      "localName": "ከሙን",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Paprika",
-      "localName": "በርበሬ",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Cinnamon",
-      "localName": "ቀረፋ",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Nutmeg",
-      "localName": "ገዉዝ",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Vanilla Extract",
-      "localName": "ቫኒላ",
-      "type": "Flavoring",
-      "unit": "milliliters"
-    },
-    {
-      "name": "Baking Powder",
-      "localName": "መጋገር ዱቄት",
-      "type": "Leavening Agent",
-      "unit": "grams"
-    },
-    {
-      "name": "Baking Soda",
-      "localName": "ቤኪንግ ሶዳ",
-      "type": "Leavening Agent",
-      "unit": "grams"
-    },
-    {
-      "name": "Yeast",
-      "localName": "እርሾ",
-      "type": "Leavening Agent",
-      "unit": "grams"
-    },
-    {
-      "name": "Coconut Oil",
-      "localName": "የኮኮናት ዘይት",
-      "type": "Oil",
-      "unit": "milliliters"
-    },
-    {
-      "name": "Peanut Butter",
-      "localName": "የኦቾሎኒ ቅቤ",
-      "type": "Spread",
-      "unit": "grams"
-    },
-    {
-      "name": "Jam",
-      "localName": "ማርማላታ",
-      "type": "Spread",
-      "unit": "grams"
-    },
-    {
-      "name": "Almonds",
-      "localName": "ለውዝ",
-      "type": "Nut",
-      "unit": "grams"
-    },
-    {
-      "name": "Walnuts",
-      "localName": "ለውዝ",
-      "type": "Nut",
-      "unit": "grams"
-    },
-    {
-      "name": "Cashews",
-      "localName": "ለውዝ",
-      "type": "Nut",
-      "unit": "grams"
-    },
-    {
-      "name": "Raisins",
-      "localName": "ዘቢብ",
-      "type": "Dried Fruit",
-      "unit": "grams"
-    },
-    {
-      "name": "Dates",
-      "localName": "ቴምር",
-      "type": "Dried Fruit",
-      "unit": "grams"
-    },
-    {
-      "name": "Oats",
-      "localName": "አጃ",
-      "type": "Grain",
-      "unit": "grams"
-    },
-    {
-      "name": "Quinoa",
-      "localName": "ኪንዋ",
-      "type": "Grain",
-      "unit": "grams"
-    },
-    {
-      "name": "Blueberries",
-      "localName": "ሰማያዊ እንጆሪ ",
-      "type": "Fruit",
-      "unit": "grams"
-    },
-    {
-      "name": "Strawberries",
-      "localName": "እንጆሪ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Raspberries",
-      "localName": "ቀይ እንጆሪ",
-      "type": "Fruit",
-      "unit": "grams"
-    },
-    {
-      "name": "Avocado",
-      "localName": "አቮካዶ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Pineapple",
-      "localName": "አናናስ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Mango",
-      "localName": "ማንጎ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Peach",
-      "localName": "ኮክ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Cherry",
-      "localName": "ቼሪ",
-      "type": "Fruit",
-      "unit": "grams"
-    },
-    {
-      "name": "Pomegranate",
-      "localName": "ሮማን",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Mint",
-      "localName": "ናና",
-      "type": "Herb",
-      "unit": "grams"
-    },
-    {
-      "name": "Thyme",
-      "localName": "ጦስኝ",
-      "type": "Herb",
-      "unit": "grams"
-    },
-    {
-      "name": "Rosemary",
-      "localName": "ጥብስ ቅጠል",
-      "type": "Herb",
-      "unit": "grams"
-    },
-    {
-      "name": "Sage",
-      "localName": "ኮሰረት",
-      "type": "Herb",
-      "unit": "grams"
-    },
-    {
-      "name": "Tarragon",
-      "localName": "ችጉኝ",
-      "type": "Herb",
-      "unit": "grams"
-    },
-    {
-      "name": "Chives",
-      "localName": "",
-      "type": "Herb",
-      "unit": "grams"
-    },
-    {
-      "name": "Bay Leaf",
-      "localName": "ቤይ ቅጠል",
-      "type": "Herb",
-      "unit": "pieces"
-    },
-    {
-      "name": "Cloves",
-      "localName": "ቅርንፉድ",
-      "type": "Spice",
-      "unit": "pieces"
-    },
-    {
-      "name": "Cardamom",
-      "localName": "ሄል",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Ginger",
-      "localName": "ዝንጅብል",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Turmeric",
-      "localName": "እርድ",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Mustard Seeds",
-      "localName": "ሰናፍጭ ዘር",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Fennel Seeds",
-      "localName": "እንስላል ፍፌ",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Star Anise",
-      "localName": "",
-      "type": "Spice",
-      "unit": "pieces"
-    },
-    {
-      "name": "Saffron",
-      "localName": "ሳፍሮን",
-      "type": "Spice",
-      "unit": "grams"
-    },
-    {
-      "name": "Pistachios",
-      "localName": "ለውዝ",
-      "type": "Nut",
-      "unit": "grams"
-    },
-    {
-      "name": "Macadamia Nuts",
-      "localName": "ለውዝ",
-      "type": "Nut",
-      "unit": "grams"
-    },
-    {
-      "name": "Hazelnuts",
-      "localName": "ለውዝ",
-      "type": "Nut",
-      "unit": "grams"
-    },
-    {
-      "name": "Sunflower Seeds",
-      "localName": "ሱፍ ዘር",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Pumpkin Seeds",
-      "localName": "ዱባ ዘር",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Chia Seeds",
-      "localName": "ቺአ ዘር",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Sesame Seeds",
-      "localName": "ሰሊጥ ዘር",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Hemp Seeds",
-      "localName": "",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Linseed",
-      "localName": "",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Almond Milk",
-      "localName": "አልሞንድ ወተት",
-      "type": "Dairy Alternative",
-      "unit": "milliliters"
-    },
-    {
-      "name": "Soy Milk",
-      "localName": "አኩሪ አተር ወተት",
-      "type": "Dairy Alternative",
-      "unit": "milliliters"
-    },
-    {
-      "name": "Coconut Milk",
-      "localName": "ኮኮናት ወተት",
-      "type": "Dairy Alternative",
-      "unit": "milliliters"
-    },
-    {
-      "name": "Tofu",
-      "localName": "ቶፉ",
-      "type": "Dairy Alternative",
-      "unit": "grams"
-    },
-    {
-      "name": "Celery",
-      "localName": "የሾርባ ቅጠል",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Cabbage",
-      "localName": "ጥቅል ጎመን",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Cauliflower",
-      "localName": "የአበባ ጎመን",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Banana",
-      "localName": "ሙዝ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Orange",
-      "localName": "ቡርትኮን",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Corn",
-      "localName": "በቆሎ",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    
-    {
-      "name": "Chickpea ",
-      "localName": "ሽምብራ",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Red Lentil",
-      "localName": "ምስር",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Green Lentil",
-      "localName": "ድፍን ምስር",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Beans",
-      "localName": "ባቄላ",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Spring Onion",
-      "localName": "ባህሮ",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Pea",
-      "localName": "አተር",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Beet Root",
-      "localName": "ቀይ ስር",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Asparagus",
-      "localName": "አስፓራገስ",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Green Bean",
-      "localName": "ፎሶልያ",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-    {
-      "name": "Collard Greens",
-      "localName": "ጎመን",
-      "type": "Vegetable",
-      "unit": "pieces"
-    },
-
-    {
-      "name": "Black-eyed pea",
-      "localName": "ቦለቄ",
-      "type": "Seed",
-      "unit": "grams"
-    },
-    {
-      "name": "Teff",
-      "localName": "ጤፍ",
-      "type": "Grain",
-      "unit": "grams"
-    },
-    {
-      "name": "Grape",
-      "localName": "ወይን",
-      "type": "Fruit",
-      "unit": "grams"
-    },
-    {
-      "name": "Apple",
-      "localName": "ፖም",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Grapefruit",
-      "localName": "የባህር ሎሚ",
-      "type": "Fruit",
-      "unit": "grams"
-    },
-    {
-      "name": "Watermelon",
-      "localName": "ሐብሐብ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Papaya",
-      "localName": "ፓፓዬ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Pear",
-      "localName": "ፒር",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Cactus Fruit",
-      "localName": "ቁልቋል",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Kiwi",
-      "localName": "ኪዊ",
-      "type": "Fruit",
-      "unit": "grams"
-    },
-    {
-      "name": "wild apple custard",
-      "localName": "ግሽጣ",
-      "type": "Fruit",
-      "unit": "pieces"
-    },
-    {
-      "name": "Citron",
-      "localName": "ትርንጎ",
-      "type": "Fruit",
-      "unit": "pieces"
-    }
+[{
+  "name": "Salt",
+  "type": "Seasoning",
+  "localName": "ጨው",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
   ]
-}
+},
+{
+  "name": "Sugar",
+  "type": "Sweetener",
+  "localName": "ስኳር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Olive Oil",
+  "type": "Oil",
+  "localName": "የወይራ ዘይት",
+  "unitOptions": [
+    "milliliters",
+    "liters",
+    "cubic centimeters",
+    "cubic meters",
+    "teaspoons",
+    "tablespoons",
+    "fluid ounces",
+    "cups",
+    "pints",
+    "quarts",
+    "gallons",
+    "cubic inches",
+    "cubic feet",
+    "cubic yards"
+  ]
+},
+{
+  "name": "Chicken Breast",
+  "type": "Meat",
+  "localName": "የዶሮ መላላጫ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Garlic",
+  "type": "Vegetable",
+  "localName": "ነጭ ሽንኩርት",
+  "unitOptions": [
+    "cloves",
+    "bulbs",
+    "teaspoons",
+    "tablespoons",
+    "grams",
+    "ounces",
+    "cups",
+    "heads",
+    "pieces",
+    "milliliters"
+  ]
+},
+{
+  "name": "Onion",
+  "type": "Vegetable",
+  "localName": "ሽንኩርት",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Tomato",
+  "type": "Vegetable",
+  "localName": "ቲማቲም",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Basil",
+  "type": "Herb",
+  "localName": "በሶ ቢላ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Butter",
+  "type": "Dairy",
+  "localName": "ቅቤ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Milk",
+  "type": "Dairy",
+  "localName": "ወተት",
+  "unitOptions": [
+    "milliliters",
+    "liters",
+    "cubic centimeters",
+    "cubic meters",
+    "teaspoons",
+    "tablespoons",
+    "fluid ounces",
+    "cups",
+    "pints",
+    "quarts",
+    "gallons",
+    "cubic inches",
+    "cubic feet",
+    "cubic yards"
+  ]
+},
+{
+  "name": "Flour",
+  "type": "Grain",
+  "localName": "ዱቄት",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Eggs",
+  "type": "Dairy",
+  "localName": "እንቁላል",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Cheese",
+  "type": "Dairy",
+  "localName": "አይብ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Black Pepper",
+  "type": "Seasoning",
+  "localName": "ቁንዶ በርበሬ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Carrot",
+  "type": "Vegetable",
+  "localName": "ካሮት",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Potato",
+  "type": "Vegetable",
+  "localName": "ድንች",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Lemon",
+  "type": "Fruit",
+  "localName": "ሎሚ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Soy Sauce",
+  "type": "Condiment",
+  "localName": "አኩሪ አተር",
+  "unitOptions": [
+    "milliliters",
+    "liters",
+    "cubic centimeters",
+    "cubic meters",
+    "teaspoons",
+    "tablespoons",
+    "fluid ounces",
+    "cups",
+    "pints",
+    "quarts",
+    "gallons",
+    "cubic inches",
+    "cubic feet",
+    "cubic yards"
+  ]
+},
+{
+  "name": "Honey",
+  "type": "Sweetener",
+  "localName": "ማር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Rice",
+  "type": "Grain",
+  "localName": "ሩዝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Beef",
+  "type": "Meat",
+  "localName": "የበሬ ሥጋ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Pork",
+  "type": "Meat",
+  "localName": "የአሳማ ሥጋ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Fish",
+  "type": "Seafood",
+  "localName": "አሳ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Shrimp",
+  "type": "Seafood",
+  "localName": "ሽሪምፕ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Mushroom",
+  "type": "Vegetable",
+  "localName": "እንጉዳይ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Spinach",
+  "type": "Vegetable",
+  "localName": "ስፒናች",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Broccoli",
+  "type": "Vegetable",
+  "localName": "ብሮኮሊ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Zucchini",
+  "type": "Vegetable",
+  "localName": "ዙኪኒ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Bell Pepper",
+  "type": "Vegetable",
+  "localName": "የፈረንጅ ቃርያ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Cucumber",
+  "type": "Vegetable",
+  "localName": "ኩከምበር",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Coriander",
+  "type": "Herb",
+  "localName": "ኮሪንደር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Parsley",
+  "type": "Herb",
+  "localName": "ፓርስሊ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Chili Powder",
+  "type": "Spice",
+  "localName": "ሚጥሚጣ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Cumin",
+  "type": "Spice",
+  "localName": "ከሙን",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Paprika",
+  "type": "Spice",
+  "localName": "በርበሬ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Cinnamon",
+  "type": "Spice",
+  "localName": "ቀረፋ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Nutmeg",
+  "type": "Spice",
+  "localName": "ገዉዝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Vanilla Extract",
+  "type": "Flavoring",
+  "localName": "ቫኒላ",
+  "unitOptions": [
+    "milliliters",
+    "liters",
+    "cubic centimeters",
+    "cubic meters",
+    "teaspoons",
+    "tablespoons",
+    "fluid ounces",
+    "cups",
+    "pints",
+    "quarts",
+    "gallons",
+    "cubic inches",
+    "cubic feet",
+    "cubic yards"
+  ]
+},
+{
+  "name": "Baking Powder",
+  "type": "Leavening Agent",
+  "localName": "መጋገር ዱቄት",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Baking Soda",
+  "type": "Leavening Agent",
+  "localName": "ቤኪንግ ሶዳ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Yeast",
+  "type": "Leavening Agent",
+  "localName": "እርሾ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Coconut Oil",
+  "type": "Oil",
+  "localName": "የኮኮናት ዘይት",
+  "unitOptions": [
+    "milliliters",
+    "liters",
+    "cubic centimeters",
+    "cubic meters",
+    "teaspoons",
+    "tablespoons",
+    "fluid ounces",
+    "cups",
+    "pints",
+    "quarts",
+    "gallons",
+    "cubic inches",
+    "cubic feet",
+    "cubic yards"
+  ]
+},
+{
+  "name": "Peanut Butter",
+  "type": "Spread",
+  "localName": "የኦቾሎኒ ቅቤ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Jam",
+  "type": "Spread",
+  "localName": "ማርማላታ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Almonds",
+  "type": "Nut",
+  "localName": "ለውዝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Walnuts",
+  "type": "Nut",
+  "localName": "ለውዝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Cashews",
+  "type": "Nut",
+  "localName": "ለውዝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Raisins",
+  "type": "Dried Fruit",
+  "localName": "ዘቢብ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Dates",
+  "type": "Dried Fruit",
+  "localName": "ቴምር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Oats",
+  "type": "Grain",
+  "localName": "አጃ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Quinoa",
+  "type": "Grain",
+  "localName": "ኪንዋ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Blueberries",
+  "type": "Fruit",
+  "localName": "ሰማያዊ እንጆሪ ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Strawberries",
+  "type": "Fruit",
+  "localName": "እንጆሪ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Raspberries",
+  "type": "Fruit",
+  "localName": "ቀይ እንጆሪ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Avocado",
+  "type": "Fruit",
+  "localName": "አቮካዶ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Pineapple",
+  "type": "Fruit",
+  "localName": "አናናስ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Mango",
+  "type": "Fruit",
+  "localName": "ማንጎ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Peach",
+  "type": "Fruit",
+  "localName": "ኮክ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Cherry",
+  "type": "Fruit",
+  "localName": "ቼሪ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Pomegranate",
+  "type": "Fruit",
+  "localName": "ሮማን",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Mint",
+  "type": "Herb",
+  "localName": "ናና",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Thyme",
+  "type": "Herb",
+  "localName": "ጦስኝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Rosemary",
+  "type": "Herb",
+  "localName": "ጥብስ ቅጠል",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Sage",
+  "type": "Herb",
+  "localName": "ኮሰረት",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Tarragon",
+  "type": "Herb",
+  "localName": "ችጉኝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Chives",
+  "type": "Herb",
+  "localName": "",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Bay Leaf",
+  "type": "Herb",
+  "localName": "ቤይ ቅጠል",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Cloves",
+  "type": "Spice",
+  "localName": "ቅርንፉድ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Cardamom",
+  "type": "Spice",
+  "localName": "ሄል",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Ginger",
+  "type": "Spice",
+  "localName": "ዝንጅብል",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Turmeric",
+  "type": "Spice",
+  "localName": "እርድ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Mustard Seeds",
+  "type": "Spice",
+  "localName": "ሰናፍጭ ዘር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Fennel Seeds",
+  "type": "Spice",
+  "localName": "እንስላል ፍፌ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Star Anise",
+  "type": "Spice",
+  "localName": "",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Saffron",
+  "type": "Spice",
+  "localName": "ሳፍሮን",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Pistachios",
+  "type": "Nut",
+  "localName": "ለውዝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Macadamia Nuts",
+  "type": "Nut",
+  "localName": "ለውዝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Hazelnuts",
+  "type": "Nut",
+  "localName": "ለውዝ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Sunflower Seeds",
+  "type": "Seed",
+  "localName": "ሱፍ ዘር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Pumpkin Seeds",
+  "type": "Seed",
+  "localName": "ዱባ ዘር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Chia Seeds",
+  "type": "Seed",
+  "localName": "ቺአ ዘር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Sesame Seeds",
+  "type": "Seed",
+  "localName": "ሰሊጥ ዘር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Hemp Seeds",
+  "type": "Seed",
+  "localName": "",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Linseed",
+  "type": "Seed",
+  "localName": "",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Almond Milk",
+  "type": "Dairy Alternative",
+  "localName": "አልሞንድ ወተት",
+  "unitOptions": [
+    "milliliters",
+    "liters",
+    "cubic centimeters",
+    "cubic meters",
+    "teaspoons",
+    "tablespoons",
+    "fluid ounces",
+    "cups",
+    "pints",
+    "quarts",
+    "gallons",
+    "cubic inches",
+    "cubic feet",
+    "cubic yards"
+  ]
+},
+{
+  "name": "Soy Milk",
+  "type": "Dairy Alternative",
+  "localName": "አኩሪ አተር ወተት",
+  "unitOptions": [
+    "milliliters",
+    "liters",
+    "cubic centimeters",
+    "cubic meters",
+    "teaspoons",
+    "tablespoons",
+    "fluid ounces",
+    "cups",
+    "pints",
+    "quarts",
+    "gallons",
+    "cubic inches",
+    "cubic feet",
+    "cubic yards"
+  ]
+},
+{
+  "name": "Coconut Milk",
+  "type": "Dairy Alternative",
+  "localName": "ኮኮናት ወተት",
+  "unitOptions": [
+    "milliliters",
+    "liters",
+    "cubic centimeters",
+    "cubic meters",
+    "teaspoons",
+    "tablespoons",
+    "fluid ounces",
+    "cups",
+    "pints",
+    "quarts",
+    "gallons",
+    "cubic inches",
+    "cubic feet",
+    "cubic yards"
+  ]
+},
+{
+  "name": "Tofu",
+  "type": "Dairy Alternative",
+  "localName": "ቶፉ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Celery",
+  "type": "Vegetable",
+  "localName": "የሾርባ ቅጠል",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Cabbage",
+  "type": "Vegetable",
+  "localName": "ጥቅል ጎመን",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Cauliflower",
+  "type": "Vegetable",
+  "localName": "የአበባ ጎመን",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Banana",
+  "type": "Fruit",
+  "localName": "ሙዝ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Orange",
+  "type": "Fruit",
+  "localName": "ቡርትኮን",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Corn",
+  "type": "Vegetable",
+  "localName": "በቆሎ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Chickpea ",
+  "type": "Seed",
+  "localName": "ሽምብራ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Red Lentil",
+  "type": "Seed",
+  "localName": "ምስር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Green Lentil",
+  "type": "Seed",
+  "localName": "ድፍን ምስር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Beans",
+  "type": "Seed",
+  "localName": "ባቄላ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Spring Onion",
+  "type": "Vegetable",
+  "localName": "ባህሮ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Pea",
+  "type": "Seed",
+  "localName": "አተር",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Beet Root",
+  "type": "Vegetable",
+  "localName": "ቀይ ስር",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Asparagus",
+  "type": "Vegetable",
+  "localName": "አስፓራገስ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Green Bean",
+  "type": "Vegetable",
+  "localName": "ፎሶልያ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Collard Greens",
+  "type": "Vegetable",
+  "localName": "ጎመን",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Black-eyed pea",
+  "type": "Seed",
+  "localName": "ቦለቄ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Teff",
+  "type": "Grain",
+  "localName": "ጤፍ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Grape",
+  "type": "Fruit",
+  "localName": "ወይን",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Apple",
+  "type": "Fruit",
+  "localName": "ፖም",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Grapefruit",
+  "type": "Fruit",
+  "localName": "የባህር ሎሚ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "Watermelon",
+  "type": "Fruit",
+  "localName": "ሐብሐብ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Papaya",
+  "type": "Fruit",
+  "localName": "ፓፓዬ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Pear",
+  "type": "Fruit",
+  "localName": "ፒር",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Cactus Fruit",
+  "type": "Fruit",
+  "localName": "ቁልቋል",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Kiwi",
+  "type": "Fruit",
+  "localName": "ኪዊ",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+},
+{
+  "name": "wild apple custard",
+  "type": "Fruit",
+  "localName": "ግሽጣ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Citron",
+  "type": "Fruit",
+  "localName": "ትርንጎ",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "water",
+  "type": "Leavening Agent",
+  "unitOptions": [
+    "milliliters",
+    "liters",
+    "cubic centimeters",
+    "cubic meters",
+    "teaspoons",
+    "tablespoons",
+    "fluid ounces",
+    "cups",
+    "pints",
+    "quarts",
+    "gallons",
+    "cubic inches",
+    "cubic feet",
+    "cubic yards"
+  ]
+},
+{
+  "name": "jalapeño",
+  "type": "Spice",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Pepper",
+  "type": "Spice",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Oat bread",
+  "type": "Staple",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "jalapeño",
+  "type": "Spice",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Pepper",
+  "type": "Spice",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Kocho",
+  "type": "Staple",
+  "unitOptions": [
+    "pieces",
+    "items",
+    "units",
+    "dozens",
+    "pairs",
+    "sets",
+    "packs",
+    "bundles",
+    "boxes",
+    "cartons",
+    "sheets",
+    "batches",
+    "bags"
+  ]
+},
+{
+  "name": "Moringa",
+  "type": "Spice",
+  "unitOptions": [
+    "grams",
+    "kilograms",
+    "milligrams",
+    "pounds",
+    "ounces",
+    "tablespoons",
+    "teaspoons",
+    "cups",
+    "milliliters",
+    "liters",
+    "pinches"
+  ]
+}]

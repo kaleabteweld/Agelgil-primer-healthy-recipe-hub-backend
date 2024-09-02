@@ -10,7 +10,7 @@ const privateModeratorRouter = express.Router();
 privateModeratorRouter.get("/", moderatorOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _moderator: IModerator = req['moderator'];
-        res.json(await moderatorController.getById(_moderator._id as any));
+        res.json(await moderatorController.getById(_moderator.id as any));
     }
 ));
 
@@ -31,7 +31,15 @@ privateModeratorRouter.patch("/updateRecipeStatus/:recipeId", moderatorOnly, Mak
     async (req: any, res: Response) => {
         const _moderator: IModerator = req['moderator'];
         const recipeId = req.params.recipeId;
-        res.json(await moderatorController.updateRecipeStatus(recipeId, req.body, _moderator._id as any));
+        res.json(await moderatorController.updateRecipeStatus(recipeId, req.body, _moderator.id as any));
+    }
+));
+
+privateModeratorRouter.patch("/updateUserStatus/:userId", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _moderator: IModerator = req['moderator'];
+        const userId = req.params.userId;
+        res.json(await moderatorController.updateUserStatus(userId, req.body, _moderator.id as any));
     }
 ));
 

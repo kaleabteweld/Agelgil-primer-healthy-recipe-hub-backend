@@ -3,7 +3,7 @@ import Joi from "joi";
 import { ValidationErrorFactory } from "../../Types/error"
 import { BSONError } from 'bson';
 import { MakeValidator } from "../../Util";
-import { IIngredient } from "./ingredient.type";
+import { IIngredient, IngredientUpdateFrom } from "./ingredient.type";
 
 
 
@@ -45,6 +45,38 @@ export async function removeByID(this: mongoose.Model<IIngredient>, _id: string)
                 type: "Validation"
             }, "_id")
         }
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}
+
+export async function getUniqueType(this: mongoose.Model<IIngredient>): Promise<string[]> {
+    return this.distinct("type");
+}
+
+export async function getUniqueUnitOptions(this: mongoose.Model<IIngredient>): Promise<string[]> {
+    return this.distinct("unitOptions");
+}
+
+export async function updateIngredient(this: mongoose.Model<IIngredient>, _id: string, newIngredient: IngredientUpdateFrom): Promise<IIngredient> {
+    try {
+        const result = await this.findByIdAndUpdate(_id, newIngredient, { new: true });
+        if (result == null) {
+            throw ValidationErrorFactory({
+                msg: "ingredient not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        return result;
+
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({

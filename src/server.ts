@@ -3,6 +3,7 @@ import { makeServer } from './Util/Factories';
 import dotenv from 'dotenv';
 import RedisCache from "./Util/cache/redis";
 import { IngredientController } from "./Routes/Ingredient";
+import { Datasx } from "./Util/Datasx";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV?.trim()}` });
 console.log(`[+] running on ${process.env.NODE_ENV?.trim()} mode`)
@@ -26,4 +27,11 @@ redisCache.connect().catch((error) => {
     console.log("[-] Redis Connection Error", error);
 }).then(() => {
     console.log("[+] Redis Connected");
+});
+
+const datasx = Datasx.getInstance();
+datasx.initNvidiaCollection().catch((error) => {
+    console.log("[-] Error Initializing Vector Database", error);
+}).then(() => {
+    console.log("[+] Vector Database Initialized");
 });

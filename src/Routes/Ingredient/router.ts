@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { MakeErrorHandler, userOnly } from "../../Util/middlewares";
+import { MakeErrorHandler, moderatorOnly } from "../../Util/middlewares";
 import IngredientController from "./Ingredient.controller";
 import { IUser } from "../../Schema/user/user.type";
 
@@ -29,6 +29,31 @@ publicIngredientsRouter.get("/ingredientByName/:nameType/:name", MakeErrorHandle
     }
 ));
 
+publicIngredientsRouter.get("/unique/type", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        res.json(await IngredientController.getUniqueType());
+    }
+));
+
+publicIngredientsRouter.get("/unique/unitOptions", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        res.json(await IngredientController.getUnitOptions());
+    }
+));
+
+privateIngredientsRouter.post("/", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _moderator: IUser = req['moderator'];
+        res.json(await IngredientController.create(req.body, _moderator.id));
+    }
+));
+
+privateIngredientsRouter.patch("/:ingredientsId", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _moderator: IUser = req['moderator'];
+        res.json(await IngredientController.update(req.body, req.params.ingredientsId, _moderator.id));
+    }
+));
 
 
 

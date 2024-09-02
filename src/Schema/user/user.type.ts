@@ -2,7 +2,6 @@ import Joi from "joi";
 import mongoose from "mongoose";
 import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
-import e from "express";
 
 export enum EStatus {
     active = "active",
@@ -74,7 +73,7 @@ export interface IMedicalConditionInput {
     chronicDiseases: EChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
     allergies: EAllergies[];
-    diet_goals?: EDietGoals;
+    diet_goals: EDietGoals;
 }
 
 
@@ -87,19 +86,23 @@ export interface IUser extends mongoose.Document {
     full_name: string;
     phone_number: string;
     status: TStatus;
+    verified: boolean;
 
     medical_condition: IMedicalCondition;
 
     booked_recipes: mongoose.Types.ObjectId[] | IRecipe[];
     my_recipes: mongoose.Types.ObjectId[] | IRecipe[];
+
 }
 
 export interface IUserMethods {
     encryptPassword(this: IUser, password?: string): Promise<String>
     checkPassword(this: IUser, password: string): Promise<boolean>
+    hasBookedRecipe(this: IUser, recipeId: any): boolean
 }
 
-export interface IUserDocument extends IUser, IUserMethods, mongoose.Document { }
+export interface IUserDocument extends IUser, IUserMethods, mongoose.Document {
+}
 
 export interface IUserModel extends mongoose.Model<IUserDocument> {
     validator<T>(userInput: T, schema: Joi.ObjectSchema<T>): Promise<any>
@@ -111,6 +114,7 @@ export interface IUserModel extends mongoose.Model<IUserDocument> {
     getBookedRecipes(_id: string, pagination: IPagination): Promise<IRecipe[]>
     toggleBookedRecipes(_id: string, recipe: IRecipe): Promise<IRecipe[]>
     getMyRecipes(_id: string, pagination: IPagination, status: TRecipeStatus): Promise<IRecipe[]>
+    updateUserStatus(userId: string, body: IModeratorUserUpdateSchema): Promise<IUser>
 }
 
 export interface IUserLogInFrom {
@@ -133,3 +137,7 @@ export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {
 }
 
 
+export interface IModeratorUserUpdateSchema {
+    verified?: boolean;
+    status?: EStatus;
+}

@@ -1,19 +1,21 @@
 import Joi from "joi";
 import mongoose, { Schema } from "mongoose";
-import { IIngredient } from "../Ingredient/ingredient.type";
+import { IIngredient, INewIngredientFrom } from "../Ingredient/ingredient.type";
 import { IModerator } from "../Moderator/moderator.type";
 import { IReview } from "../Review/review.type";
 import { IMedicalCondition, IUser } from "../user/user.type";
 import { IPagination } from "../../Types";
+import { NutritionData } from "../../Util/calorieninjas/types";
 
 export enum EPreferredMealTime {
     breakfast = "breakfast",
     lunch = "lunch",
+    dinner = "dinner",
     snack = "snack",
     dessert = "dessert",
     other = "other",
 }
-export type TPreferredMealTime = "breakfast" | "lunch" | "snack" | "dessert" | "other";
+export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "other";
 
 
 export enum EPreparationDifficulty {
@@ -30,19 +32,15 @@ export enum ERecipeStatus {
     rejected = "rejected",
 }
 export type TRecipeStatus = "verified" | "pending" | "rejected";
-interface IngredientDetail {
-    ingredient: Schema.Types.ObjectId | IIngredient;
+interface IngredientDetail extends INewIngredientFrom {
     amount: number;
+    unit: string;
 }
-
 export interface IRecipe extends mongoose.Document {
-
-    recipeEmbedding: number[];
 
     name: string;
     description?: string;
     imgs: string[];
-    // category: string;
     preferredMealTime: TPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: number;
@@ -58,9 +56,15 @@ export interface IRecipe extends mongoose.Document {
 
     medical_condition: IMedicalCondition;
 
+    nutrition: NutritionData;
+
     moderator?: {
-        moderator: Schema.Types.ObjectId | IModerator;
-        Comment: string;
+        moderator: {
+            moderator: Schema.Types.ObjectId | IModerator,
+            full_name: string,
+            profile_img: string
+        };
+        comment: string;
     };
 
     user: {
@@ -77,10 +81,10 @@ export interface IRecipeDocument extends IRecipe, IRecipeMethods, mongoose.Docum
 
 export interface IRecipeModel extends mongoose.Model<IRecipeDocument> {
     validator<T>(userInput: T, schema: Joi.ObjectSchema<T>): Promise<any>
-    getById(_id: string): Promise<IRecipeDocument>
+    getById(_id: string, populate?: string | string[]): Promise<IRecipe>
     update(_id: string, newUser: IRecipeUpdateFrom, populatePath?: string | string[]): Promise<IRecipeDocument | null>
     removeByID(_id: string): Promise<void>
-    addModerator(this: mongoose.Model<IRecipe>, _id: string, moderatorId: string, body: IModeratorRecipeUpdateFrom): Promise<IRecipe>
+    addModerator(this: mongoose.Model<IRecipe>, _id: string, moderator: IModerator, body: IModeratorRecipeUpdateFrom): Promise<IRecipe>
     getRecipesReview(_id: string, pagination: IPagination): Promise<IReview[]>
     update(_id: string, newRecipe: IRecipeUpdateFrom, populatePath: string | string[]): Promise<IRecipe | null>
     similarRecipes(queryVector: number[], pagination: IPagination): Promise<IRecipe[]>
@@ -95,7 +99,11 @@ export interface INewRecipeFrom {
     preferredMealTime: TPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: number;
-    ingredients: IngredientDetail[];
+    ingredients: {
+        ingredient: Schema.Types.ObjectId | IIngredient,
+        amount: number,
+        unit: string
+    }[];
     instructions: string;
     medical_condition: IMedicalCondition;
     youtubeLink?: string;
@@ -106,7 +114,7 @@ export interface IRecipeUpdateFrom extends Partial<INewRecipeFrom> {
 
 export interface IModeratorRecipeUpdateFrom {
     status: TRecipeStatus;
-    Comment: string;
+    comment: string;
 }
 
 export interface IRecipeSearchFrom {
@@ -119,4 +127,5 @@ export interface IRecipeSearchFrom {
     medical_condition?: IMedicalCondition;
     status?: TRecipeStatus;
     rating?: number;
+    type?: string;
 }

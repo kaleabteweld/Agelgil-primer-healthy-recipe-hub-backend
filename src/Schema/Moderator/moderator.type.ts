@@ -33,6 +33,7 @@ export interface IModerator extends mongoose.Document {
 export interface IModeratorMethods {
     encryptPassword(this: IModerator, password?: string): Promise<String>
     checkPassword(this: IModerator, password: string): Promise<boolean>
+    hasModeratedRecipe(this: IModerator, recipeId: mongoose.Types.ObjectId): boolean
 }
 
 export interface IModeratorDocument extends IModerator, IModeratorMethods, mongoose.Document { }

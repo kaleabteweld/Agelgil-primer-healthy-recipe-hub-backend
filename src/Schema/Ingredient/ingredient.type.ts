@@ -5,7 +5,8 @@ import mongoose from "mongoose";
 export interface IIngredient extends mongoose.Document {
     name: string;
     type: string;
-    unit: string;
+    // unit: string;
+    unitOptions: string[];
     localName: string;
 }
 
@@ -17,15 +18,18 @@ export interface IIngredientDocument extends IIngredient, IIngredientMethods, mo
 export interface IIngredientModel extends mongoose.Model<IIngredientDocument> {
     validator<T>(userInput: T, schema: Joi.ObjectSchema<T>): Promise<any>
     getById(_id: string): Promise<IIngredientDocument>
-    update(_id: string, newUser: IngredientUpdateFrom, populatePath?: string | string[]): Promise<IIngredientDocument | null>
+    updateIngredient(_id: string, newIngredient: IngredientUpdateFrom): Promise<IIngredientDocument>
     removeByID(_id: string): Promise<void>
+    getUniqueType(): Promise<string[]>
+    getUniqueUnitOptions(): Promise<string[]>
 }
 
 export interface INewIngredientFrom {
     name: string;
     type: string;
-    unit: string;
+    // unit: string;
     localName: string;
+    unitOptions: string[];
 }
 
 export interface IngredientUpdateFrom extends Partial<INewIngredientFrom> {

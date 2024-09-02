@@ -1,22 +1,24 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
 import { IIngredient, IIngredientMethods, IIngredientModel } from './ingredient.type';
-import { getById, removeByID, validator, } from './ingredient.extended';
+import { getById, getUniqueType, getUniqueUnitOptions, removeByID, updateIngredient, validator, } from './ingredient.extended';
 
 
 const ingredientSchema = new Schema<IIngredient, IIngredientModel, IIngredientMethods>({
     name: { type: String, required: true },
     type: { type: String },
-    unit: { type: String },
     localName: { type: String },
-    // imgs: { type: [String] },
-    // nutritionalInformation: { type: Schema.Types.ObjectId, ref: 'NutritionalInformation' },
+    unitOptions: { type: [String] },
+
 }, {
     timestamps: true,
     statics: {
         validator,
         getById,
-        removeByID
+        removeByID,
+        getUniqueType,
+        getUniqueUnitOptions,
+        updateIngredient,
     }
 });
 

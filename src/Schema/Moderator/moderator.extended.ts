@@ -145,12 +145,11 @@ export async function setStatus(this: mongoose.Model<IModerator>, _id: string, s
 export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: string, pagination: IPagination, status: TRecipeStatus): Promise<IRecipe[]> {
 
     try {
-        const moderated = await this.findOne({ _id: new mongoose.Types.ObjectId(_id), moderated_recipe: { status } }).select('moderated_recipe').populate({
-            path: 'recipe',
-            select: 'name,description,imgs,preparationDifficulty,preferredMealTime',
+        const moderated = await this.findOne({ _id: new mongoose.Types.ObjectId(_id) }).select('moderated_recipe').populate({
+            path: 'moderated_recipe.recipe',
+            select: ['name', 'description', 'imgs', 'preparationDifficulty', 'preferredMealTime', "rating"],
             options: { limit: pagination.limit }
         }).exec();
-        console.log({ moderated });
         if (moderated == null) {
             throw ValidationErrorFactory({
                 msg: "moderated not found",
@@ -158,8 +157,7 @@ export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: st
                 type: "Validation"
             }, "_id")
         }
-        // TODO: test
-        return moderated.moderated_recipe as any;
+        return moderated.moderated_recipe.filter((recipe) => recipe.status === status).map((recipe) => recipe.recipe) as IRecipe[];
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({
@@ -171,3 +169,8 @@ export async function moderatedRecipes(this: mongoose.Model<IModerator>, _id: st
         throw error;
     }
 }
+
+//TODO: add to recipe schema, check for overall if recipe is moderated
+export function hasModeratedRecipe(this: IModerator, recipeId: mongoose.Types.ObjectId): boolean {
+    return this.moderated_recipe.some((recipe) => (recipe.recipe as mongoose.Types.ObjectId).equals(recipeId))
+};

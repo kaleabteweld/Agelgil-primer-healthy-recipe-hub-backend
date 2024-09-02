@@ -1,5 +1,6 @@
 import { DataAPIClient, Db, UUID } from "@datastax/astra-db-ts";
 import { IRecipe } from '../../Schema/Recipe/recipe.type';
+import { IIngredient } from "../../Schema/Ingredient/ingredient.type";
 
 export class Datasx {
     private static instance: Datasx;
@@ -74,6 +75,7 @@ export class Datasx {
     }
 
     async EmbedAndSave(recipe: IRecipe,): Promise<void> {
+        console.log('Embedding and saving recipe:', { recipe });
         try {
             await this.db.collection('recipes').insertOne({
                 _id: UUID.v7(),
@@ -86,7 +88,7 @@ export class Datasx {
                 rating: recipe.rating,
                 $vectorize: `${recipe.name} ${recipe.description}
             ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
-            ${recipe.ingredients.map(ingredientDetail => ingredientDetail.name).join(' ')}
+            ${recipe.ingredients.map(ingredientDetail => `${ingredientDetail.name} ${(ingredientDetail as any).type}`).join(' ')}
             ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
             ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')}`
             });
@@ -107,7 +109,7 @@ export class Datasx {
                 sort: {
                     $vectorize: `${recipe.name} ${recipe.description}
             ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
-            ${recipe.ingredients.map(ingredientDetail => ingredientDetail.name).join(' ')}
+            ${recipe.ingredients.map(ingredientDetail => `${ingredientDetail.name} (${ingredientDetail.type})`).join(' ')}
             ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
             ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')}`.trim()
                 },

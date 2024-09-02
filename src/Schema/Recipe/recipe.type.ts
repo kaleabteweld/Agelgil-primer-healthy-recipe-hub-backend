@@ -1,6 +1,6 @@
 import Joi from "joi";
 import mongoose, { Schema } from "mongoose";
-import { IIngredient } from "../Ingredient/ingredient.type";
+import { IIngredient, INewIngredientFrom } from "../Ingredient/ingredient.type";
 import { IModerator } from "../Moderator/moderator.type";
 import { IReview } from "../Review/review.type";
 import { IMedicalCondition, IUser } from "../user/user.type";
@@ -32,12 +32,10 @@ export enum ERecipeStatus {
     rejected = "rejected",
 }
 export type TRecipeStatus = "verified" | "pending" | "rejected";
-interface IngredientDetail {
-    ingredient: Schema.Types.ObjectId | IIngredient;
-    name: string;
+interface IngredientDetail extends INewIngredientFrom {
     amount: number;
+    unit: string;
 }
-
 export interface IRecipe extends mongoose.Document {
 
     name: string;
@@ -101,7 +99,11 @@ export interface INewRecipeFrom {
     preferredMealTime: TPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: number;
-    ingredients: IngredientDetail[];
+    ingredients: {
+        ingredient: Schema.Types.ObjectId | IIngredient,
+        amount: number,
+        unit: string
+    }[];
     instructions: string;
     medical_condition: IMedicalCondition;
     youtubeLink?: string;
@@ -125,4 +127,5 @@ export interface IRecipeSearchFrom {
     medical_condition?: IMedicalCondition;
     status?: TRecipeStatus;
     rating?: number;
+    type?: string;
 }

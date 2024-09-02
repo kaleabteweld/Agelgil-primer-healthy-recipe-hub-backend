@@ -15,8 +15,10 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
     preparationDifficulty: { type: String, enum: Object.values(EPreparationDifficulty) },
     cookingTime: { type: Number },
     ingredients: [{
-        ingredient: { type: Schema.Types.ObjectId, ref: 'Ingredient' },
+        type: { type: String },
         name: { type: String },
+        localName: { type: String },
+        unit: { type: String },
         amount: { type: Number },
         //TODo: remark: { type: String }
     }],

@@ -1,3 +1,5 @@
+import IngredientModel from "../../Schema/Ingredient/ingredient.schema";
+import { IIngredient } from "../../Schema/Ingredient/ingredient.type";
 import ModeratorModel from "../../Schema/Moderator/moderator.schema";
 import { IModerator } from "../../Schema/Moderator/moderator.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
@@ -19,10 +21,23 @@ export default class RecipeController {
         const _user = await UserModel.getById(user.id as any)
         await RecipeModel.validator(_recipe, newRecipeSchema);
 
+        const ingredients: {
+            name?: string,
+            type?: string,
+            localName?: string,
+            amount: number
+            unit: string
+        }[] = await Promise.all(_recipe.ingredients.map(async ({ ingredient, amount, unit }) => {
+            return { ...(await IngredientModel.findById(ingredient, { name: 1, type: 1, localName: 1 })), amount, unit }
+        }))
+
         _recipe = {
             ..._recipe,
             nutrition: await (new Calorieninjas({ apiKey: process.env.CALORIENINJAS_API_KEY ?? "" }))
-                .getTotalNutrition(_recipe.ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(",")),
+                .getTotalNutrition(ingredients
+                    .map((ingredient) => `${ingredient.amount} ${ingredient.name}`).join(",")),
+
+            ingredients: ingredients,
             user: {
                 user: _user?._id,
                 profile_img: _user?.profile_img,
@@ -62,7 +77,7 @@ export default class RecipeController {
         return {
             body: await RecipeModel.find({
                 $and: [{
-                    preferredMealTime: filter,
+                    preferredMealTime: { $in: filter },
                     status: ERecipeStatus.pending
                 }]
             })
@@ -86,19 +101,19 @@ export default class RecipeController {
     }
 
     static async getById(recipeId: string = ""): Promise<IResponseType<IRecipe | null>> {
-        return { body: ((await RecipeModel.getById(recipeId, ["ingredients.ingredient", "reviews"]))?.toJSON() as any) };
+        return { body: ((await RecipeModel.getById(recipeId, ["reviews"]))?.toJSON() as any) };
     }
 
     static async getByIdWithUser(recipeId: string, userId: string): Promise<IResponseType<IRecipe | null>> {
         const user = await UserModel.getById(userId)
-        const recipe = await RecipeModel.getById(recipeId, ["ingredients.ingredient", "reviews"]);
+        const recipe = await RecipeModel.getById(recipeId, ["reviews"]);
         const _recipe = recipe?.toJSON() as any;
         return { body: { ..._recipe, hasBookedRecipe: user.hasBookedRecipe(recipeId) } as any };
     }
 
     static async getByIdWithModerator(recipeId: string, userId: string): Promise<IResponseType<IRecipe | null>> {
         const user = await ModeratorModel.getById(userId)
-        const recipe = await RecipeModel.getById(recipeId, ["ingredients.ingredient", "reviews"]);
+        const recipe = await RecipeModel.getById(recipeId, ["reviews"]);
         const _recipe = recipe?.toJSON() as any;
         return { body: { ..._recipe, isModeratedRecipe: user.hasModeratedRecipe(recipe._id as any) } as any };
     }

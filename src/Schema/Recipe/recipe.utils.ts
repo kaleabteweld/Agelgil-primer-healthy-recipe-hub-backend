@@ -89,6 +89,11 @@ export class RecipeSearchBuilder {
         return this
     }
 
+    withIngredientType(type: string): this {
+        this.query["ingredients.type"] = type;
+        return this;
+    }
+
     async execute(): Promise<IRecipe[]> {
         try {
             console.log({ query: this.query, sort: this.sortCriteria });

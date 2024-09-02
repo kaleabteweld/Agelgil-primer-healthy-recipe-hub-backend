@@ -1,7 +1,5 @@
 import { DataAPIClient, Db, UUID } from "@datastax/astra-db-ts";
 import { IRecipe } from '../../Schema/Recipe/recipe.type';
-import { IIngredient } from "../../Schema/Ingredient/ingredient.type";
-
 export class Datasx {
     private static instance: Datasx;
     private client: DataAPIClient;
@@ -75,8 +73,11 @@ export class Datasx {
     }
 
     async EmbedAndSave(recipe: IRecipe,): Promise<void> {
-        console.log('Embedding and saving recipe:', { recipe });
         try {
+            const _recipe = await this.db.collection('recipes').findOne({ recipeId: (recipe as any)._id })
+            if (_recipe) {
+                return;
+            }
             await this.db.collection('recipes').insertOne({
                 _id: UUID.v7(),
                 recipeId: (recipe as any)._id,
@@ -120,6 +121,42 @@ export class Datasx {
             return await cursor.toArray();
         } catch (error) {
             console.error('Error getting recipe suggestions:', error);
+            throw error;
+        }
+    }
+
+    async removeRecipe(recipe: IRecipe): Promise<void> {
+        try {
+            await this.db.collection('recipes').deleteMany({
+                recipeId: (recipe as any)._id
+            });
+        } catch (error) {
+            console.error('Error removing recipe:', error);
+            throw error;
+        }
+    }
+
+    async updateRecipe(recipeId: string, recipe: IRecipe): Promise<void> {
+        try {
+            await this.db.collection('recipes').updateOne({
+                recipeId: recipeId
+            }, {
+                $set: {
+                    name: recipe.name,
+                    description: recipe.description,
+                    preferredMealTime: recipe.preferredMealTime,
+                    preparationDifficulty: recipe.preparationDifficulty,
+                    imgs: recipe.imgs,
+                    rating: recipe.rating,
+                    $vectorize: `${recipe.name} ${recipe.description}
+            ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
+            ${recipe.ingredients.map(ingredientDetail => `${ingredientDetail.name} ${(ingredientDetail as any).type}`).join(' ')}
+            ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
+            ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')}`
+                }
+            });
+        } catch (error) {
+            console.error('Error updating recipe:', error);
             throw error;
         }
     }

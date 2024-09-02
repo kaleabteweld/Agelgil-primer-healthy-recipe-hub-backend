@@ -146,6 +146,7 @@ export async function update(this: mongoose.Model<IRecipe>, _id: string, newReci
     try {
         const newDoc = await this.findByIdAndUpdate(_id, newRecipe, { new: true, overwrite: true });
         await newDoc?.populate(populatePath)
+        Datasx.getInstance().updateRecipe(_id, newDoc as any)
         return newDoc;
     } catch (error) {
         throw error;

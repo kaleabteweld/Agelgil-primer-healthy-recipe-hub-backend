@@ -7,11 +7,9 @@ import { getById, getUniqueType, getUniqueUnitOptions, removeByID, updateIngredi
 const ingredientSchema = new Schema<IIngredient, IIngredientModel, IIngredientMethods>({
     name: { type: String, required: true },
     type: { type: String },
-    // unit: { type: String },
     localName: { type: String },
     unitOptions: { type: [String] },
-    // imgs: { type: [String] },
-    // nutritionalInformation: { type: Schema.Types.ObjectId, ref: 'NutritionalInformation' },
+
 }, {
     timestamps: true,
     statics: {

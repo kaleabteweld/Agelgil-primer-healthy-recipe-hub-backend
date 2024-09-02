@@ -8,6 +8,9 @@ import { IModerator, IModeratorLogInFrom, IModeratorSignUpFrom, IModeratorUpdate
 import { moderatorLogInSchema, moderatorSignUpSchema, moderatorUpdateSchema } from "../../Schema/Moderator/moderator.validation";
 import { UserType } from "../../Util/jwt/jwt.types";
 import { moderatorRecipeUpdateSchema } from "../../Schema/Recipe/recipe.validation";
+import { moderatorUserUpdateSchema } from "../../Schema/user/user.validation";
+import UserModel from "../../Schema/user/user.schema";
+import { IModeratorUserUpdateSchema } from "../../Schema/user/user.type";
 
 
 export default class ModeratorController {
@@ -72,6 +75,13 @@ export default class ModeratorController {
         const moderator = await ModeratorModel.getById(moderatorId);
         await RecipeModel.validator(body, moderatorRecipeUpdateSchema);
         return { body: (await RecipeModel.addModerator(recipeId, moderator, body)).toJSON() }
+    }
+
+    static async updateUserStatus(userId: string, body: IModeratorUserUpdateSchema, moderatorId: string): Promise<IResponseType<IRecipe | null>> {
+
+        await ModeratorModel.getById(moderatorId);
+        await UserModel.validator(body, moderatorUserUpdateSchema);
+        return { body: (await UserModel.updateUserStatus(userId, body)).toJSON() }
     }
 
     static async moderatedRecipes(moderatorId: string, status: TRecipeStatus, pagination: IPagination): Promise<IResponseType<IRecipe>> {

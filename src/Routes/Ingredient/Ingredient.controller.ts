@@ -1,28 +1,19 @@
 import IngredientModel from "../../Schema/Ingredient/ingredient.schema";
-import { IIngredient, INewIngredientFrom } from "../../Schema/Ingredient/ingredient.type";
-import { newIngredientSchema } from "../../Schema/Ingredient/ingredient.validation";
+import { IIngredient, INewIngredientFrom, IngredientUpdateFrom } from "../../Schema/Ingredient/ingredient.type";
+import { ingredientUpdateSchema, newIngredientSchema } from "../../Schema/Ingredient/ingredient.validation";
 import UserModel from "../../Schema/user/user.schema";
 import { IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
 import Ingredients from "../../Schema/Ingredient/ingredient.json"
+import ModeratorModel from "../../Schema/Moderator/moderator.schema";
 
 
 export default class IngredientController {
 
-    static async create(_ingredient: INewIngredientFrom, user: IUser): Promise<IResponseType<IIngredient>> {
+    static async create(_ingredient: INewIngredientFrom, userId: string = ""): Promise<IResponseType<IIngredient>> {
 
-        const _user = await UserModel.getById(user._id as any)
+        const _user = await ModeratorModel.getById(userId)
         await IngredientModel.validator(_ingredient, newIngredientSchema);
-
-        _ingredient = {
-            ..._ingredient,
-            user: {
-                user: _user?._id,
-                profile_img: _user?.profile_img,
-                full_name: _user?.full_name
-            }
-        } as any;
-
         const Ingredient = await new IngredientModel((_ingredient));
         await Ingredient.save();
 
@@ -53,13 +44,28 @@ export default class IngredientController {
     static async seed(): Promise<IResponseType<{}>> {
         const ingredientCount = await IngredientModel.countDocuments();
         if (ingredientCount === 0) {
-            await IngredientModel.insertMany(Ingredients.ingredients);
+            await IngredientModel.insertMany(Ingredients);
         }
         return { body: {} };
     }
 
     static async getIngredientByName(name: string = "", nameType: "name" | "localName"): Promise<IResponseType<IIngredient[]>> {
         return { body: await IngredientModel.find({ [nameType]: new RegExp(name, "i") }) }
+    }
+
+    static async getUniqueType(): Promise<IResponseType<string[]>> {
+        return { body: await IngredientModel.getUniqueType() }
+    }
+
+    static async getUnitOptions(): Promise<IResponseType<string[]>> {
+        return { body: await IngredientModel.getUniqueUnitOptions() }
+    }
+
+    static async update(_ingredient: IngredientUpdateFrom, ingredientId: string, userId: string = ""): Promise<IResponseType<IIngredient | null>> {
+
+        await ModeratorModel.getById(userId)
+        await IngredientModel.validator(_ingredient, ingredientUpdateSchema);
+        return { body: (await IngredientModel.updateIngredient(ingredientId, _ingredient) as any).toJSON() }
     }
 
 

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { INewIngredientFrom, IngredientUpdateFrom } from "./ingredient.type";
+import { IIngredientSearchFrom, INewIngredientFrom, IngredientUpdateFrom } from "./ingredient.type";
 
 
 export const newIngredientSchema = Joi.object<INewIngredientFrom>({
@@ -18,4 +18,13 @@ export const ingredientUpdateSchema = Joi.object<IngredientUpdateFrom>({
 
 
 
-
+export const ingredientSearchSchema = Joi.object<IIngredientSearchFrom>({
+    name: Joi.string().optional(),
+    type: Joi.string().optional(),
+    localName: Joi.string().optional(),
+    unitOptions: Joi.array().items(Joi.string()).optional(),
+    sort: Joi.array().items(Joi.object({
+        field: Joi.string().required(),
+        order: Joi.string().valid('asc', 'desc').required(),
+    })).optional(),
+});

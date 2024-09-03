@@ -63,6 +63,12 @@ privateUserRouter.get("/list/:page/:verified", moderatorOnly, MakeErrorHandler(
     }
 ));
 
+publicUserRouter.post("/search/:page", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const page = Number.parseInt(req.params.page);
+        res.json(await UserController.usersSearch(req.body, page));
+    }
+));
 publicUserRouter.use("/user", publicUserRouter);
 privateUserRouter.use("/user", privateUserRouter);
 

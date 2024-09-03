@@ -33,11 +33,12 @@ publicRecipeRouter.get("/carbs/:recipeId", MakeErrorHandler(
     }
 ));
 
-publicRecipeRouter.get("/list/:skip/:limit", MakeErrorHandler(
+publicRecipeRouter.get("/list/:filter/:skip/:limit", MakeErrorHandler(
     async (req: any, res: Response) => {
         const skip = Number.parseInt(req.params.skip);
         const limit = Number.parseInt(req.params.limit);
-        res.json(await RecipeController.list({ skip, limit }));
+        const filter = req.params.filter;
+        res.json(await RecipeController.list({ skip, limit }, filter));
     }
 ));
 

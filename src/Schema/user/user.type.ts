@@ -134,3 +134,12 @@ export interface IModeratorUserUpdateSchema {
     verified?: boolean;
     status?: EStatus;
 }
+
+
+export interface IUserSearchFrom {
+    fullName?: string;
+    sort?: { field: string, order: mongoose.SortOrder }[];
+    medical_condition?: IMedicalCondition;
+    status: TStatus;
+    verified: boolean;
+}

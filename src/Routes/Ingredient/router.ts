@@ -55,6 +55,12 @@ privateIngredientsRouter.patch("/:ingredientsId", moderatorOnly, MakeErrorHandle
     }
 ));
 
+publicIngredientsRouter.post("/search/:page", MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const page = Number.parseInt(req.params.page);
+        res.json(await IngredientController.ingredientSearch(req.body, page));
+    }
+));
 
 
 

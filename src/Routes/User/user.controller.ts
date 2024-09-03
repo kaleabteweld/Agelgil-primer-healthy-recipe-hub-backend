@@ -1,11 +1,12 @@
-import { IUser, IUserLogInFrom, IUserSignUpFrom, IUserUpdateFrom } from "../../Schema/user/user.type";
+import { IUser, IUserLogInFrom, IUserSearchFrom, IUserSignUpFrom, IUserUpdateFrom } from "../../Schema/user/user.type";
 import UserModel from "../../Schema/user/user.schema";
 import { IListResponseType, IPagination, IResponseType, IResponseWithHeaderType } from "../../Types";
 import { MakeTokens, removeRefreshToken, verifyAccessToken, verifyRefreshToken } from "../../Util/jwt";
 import { UserType } from "../../Util/jwt/jwt.types";
-import { userLogInSchema, userSignUpSchema, userUpdateSchema } from "../../Schema/user/user.validation";
+import { userLogInSchema, userSearchSchema, userSignUpSchema, userUpdateSchema } from "../../Schema/user/user.validation";
 import { IRecipe, TRecipeStatus } from "../../Schema/Recipe/recipe.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
+import { UserSearchBuilder } from "../../Schema/user/user.utils";
 
 
 export default class UserController {
@@ -27,7 +28,7 @@ export default class UserController {
         await user!.checkPassword(from.password);
 
         const { accessToken, refreshToken } = await MakeTokens(user!.toJSON(), UserType.user);
-        return { body: user!.toJSON(), header: { accessToken, refreshToken } }
+        return { body: user!.toJSON() as any, header: { accessToken, refreshToken } }
 
     }
 
@@ -80,5 +81,10 @@ export default class UserController {
 
     static async users(page: number, verified: boolean = false): Promise<IResponseType<IUser[]>> {
         return { body: await UserModel.find({ verified }).skip(page * 10).limit(10).exec() };
+    }
+
+    static async usersSearch(query: IUserSearchFrom, page: number): Promise<IResponseType<IUser[]>> {
+        UserModel.validator(query, userSearchSchema);
+        return { body: await (await UserSearchBuilder.fromJSON(query)).withPagination(page).execute() };
     }
 }

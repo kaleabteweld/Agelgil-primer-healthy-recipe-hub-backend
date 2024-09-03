@@ -51,14 +51,25 @@ export default class RecipeController {
         return { body: (recipe.toJSON() as any) }
     }
 
-    static async list({ skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
-        return {
-            body: await RecipeModel.find()
-                .skip(skip ?? 0)
-                .limit(limit ?? 0)
-                .sort({ createdAt: -1 })
-                .exec()
-        }
+    static async list({ skip, limit }: IPagination, filter: EPreferredMealTime | "all" = "all"): Promise<IResponseType<IRecipe[]>> {
+        if (filter === "all") {
+            return {
+                body: await RecipeModel.find()
+                    .skip(skip ?? 0)
+                    .limit(limit ?? 0)
+                    .sort({ createdAt: -1 })
+                    .exec()
+            }
+        } else
+            return {
+                body: await RecipeModel.find({
+                    preferredMealTime: { $in: filter },
+                })
+                    .skip(skip ?? 0)
+                    .limit(limit ?? 0)
+                    .sort({ createdAt: -1 })
+                    .exec()
+            }
     }
 
     static async moderatoList({ skip, limit }: IPagination, filter: EPreferredMealTime | "all" = "all"): Promise<IResponseType<IRecipe[]>> {

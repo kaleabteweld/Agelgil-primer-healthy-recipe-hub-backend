@@ -1,11 +1,12 @@
 import IngredientModel from "../../Schema/Ingredient/ingredient.schema";
-import { IIngredient, INewIngredientFrom, IngredientUpdateFrom } from "../../Schema/Ingredient/ingredient.type";
-import { ingredientUpdateSchema, newIngredientSchema } from "../../Schema/Ingredient/ingredient.validation";
+import { IIngredient, IIngredientSearchFrom, INewIngredientFrom, IngredientUpdateFrom } from "../../Schema/Ingredient/ingredient.type";
+import { ingredientSearchSchema, ingredientUpdateSchema, newIngredientSchema } from "../../Schema/Ingredient/ingredient.validation";
 import UserModel from "../../Schema/user/user.schema";
 import { IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
 import Ingredients from "../../Schema/Ingredient/ingredient.json"
 import ModeratorModel from "../../Schema/Moderator/moderator.schema";
+import { IngredientSearchBuilder } from "../../Schema/Ingredient/ingredient.utils";
 
 
 export default class IngredientController {
@@ -66,6 +67,11 @@ export default class IngredientController {
         await ModeratorModel.getById(userId)
         await IngredientModel.validator(_ingredient, ingredientUpdateSchema);
         return { body: (await IngredientModel.updateIngredient(ingredientId, _ingredient) as any).toJSON() }
+    }
+
+    static async ingredientSearch(query: IIngredientSearchFrom, page: number): Promise<IResponseType<IIngredient[]>> {
+        UserModel.validator(query, ingredientSearchSchema);
+        return { body: await (await IngredientSearchBuilder.fromJSON(query)).withPagination(page).execute() };
     }
 
 

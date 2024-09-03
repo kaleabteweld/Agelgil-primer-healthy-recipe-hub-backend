@@ -7,25 +7,26 @@ import { IUser } from "../../Schema/user/user.type";
 const publicRecipeRouter = express.Router();
 const privateRecipeRouter = express.Router();
 
+// get recipes Details
 publicRecipeRouter.get("/:recipeId", MakeErrorHandler(
     async (req: any, res: Response) => {
         res.json(await RecipeController.getById(req.params.recipeId));
     }
 ));
-
-privateRecipeRouter.get("/:recipeId", userOnly, MakeErrorHandler(
+privateRecipeRouter.get("/details/user/:recipeId", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
-        res.json(await RecipeController.getByIdWithUser(req.params.recipeId, _user.id));
+        const recipeId = req.params.recipeId;
+        res.json(await RecipeController.getByIdWithUser(recipeId, _user.id));
     }
 ));
-
-privateRecipeRouter.get("/moderator/:recipeId", moderatorOnly, MakeErrorHandler(
+privateRecipeRouter.get("/details/moderator/:recipeId", moderatorOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _moderator: IUser = req['moderator'];
         res.json(await RecipeController.getByIdWithModerator(req.params.recipeId, _moderator.id));
     }
 ));
+
 
 publicRecipeRouter.get("/carbs/:recipeId", MakeErrorHandler(
     async (req: any, res: Response) => {
@@ -33,6 +34,7 @@ publicRecipeRouter.get("/carbs/:recipeId", MakeErrorHandler(
     }
 ));
 
+// list recipes
 publicRecipeRouter.get("/list/:filter/:skip/:limit", MakeErrorHandler(
     async (req: any, res: Response) => {
         const skip = Number.parseInt(req.params.skip);
@@ -41,7 +43,6 @@ publicRecipeRouter.get("/list/:filter/:skip/:limit", MakeErrorHandler(
         res.json(await RecipeController.list({ skip, limit }, filter));
     }
 ));
-
 privateRecipeRouter.get("/moderator/list/:skip/:limit/:filter", moderatorOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const moderator = req['moderator'];
@@ -52,13 +53,14 @@ privateRecipeRouter.get("/moderator/list/:skip/:limit/:filter", moderatorOnly, M
     }
 ));
 
+
+// search recipes
 publicRecipeRouter.post("/user/search/:page", MakeErrorHandler(
     async (req: any, res: Response) => {
         const page = Number.parseInt(req.params.page);
         res.json(await RecipeController.search(req.body, page));
     }
 ));
-
 publicRecipeRouter.post("/moderator/search/:page", MakeErrorHandler(
     async (req: any, res: Response) => {
         const page = Number.parseInt(req.params.page);
@@ -66,6 +68,7 @@ publicRecipeRouter.post("/moderator/search/:page", MakeErrorHandler(
     }
 ));
 
+// get user Ai recommendation
 privateRecipeRouter.get("/recommendation/:time/:skip/:limit", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const user: IUser = req['user'];
@@ -75,7 +78,6 @@ privateRecipeRouter.get("/recommendation/:time/:skip/:limit", userOnly, MakeErro
         res.json(await RecipeController.recommendation(user, time, { skip, limit }));
     }
 ));
-
 publicRecipeRouter.get("/similar/:recipeId/:page", MakeErrorHandler(
     async (req: any, res: Response) => {
         const recipeId = req.params.recipeId;

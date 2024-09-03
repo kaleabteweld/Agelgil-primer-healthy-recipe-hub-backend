@@ -92,6 +92,7 @@ export interface IUserMethods {
     encryptPassword(this: IUser, password?: string): Promise<String>
     checkPassword(this: IUser, password: string): Promise<boolean>
     hasBookedRecipe(this: IUser, recipeId: any): boolean
+    ownsRecipe(this: IUser, recipeId: any): boolean
 }
 
 export interface IUserDocument extends IUser, IUserMethods, mongoose.Document {

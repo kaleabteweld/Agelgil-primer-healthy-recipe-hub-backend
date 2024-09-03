@@ -255,3 +255,7 @@ export async function updateUserStatus(this: mongoose.Model<IUser>, userId: stri
         throw error;
     }
 }
+
+export function ownsRecipe(this: IUser, recipeId: any): boolean {
+    return this.my_recipes.includes(recipeId);
+}

@@ -119,14 +119,25 @@ export default class RecipeController {
         const user = await UserModel.getById(userId)
         const recipe = await RecipeModel.getById(recipeId, ["reviews"]);
         const _recipe = recipe?.toJSON() as any;
-        return { body: { ..._recipe, hasBookedRecipe: user.hasBookedRecipe(recipeId) } as any };
+        return {
+            body: {
+                ..._recipe,
+                hasBookedRecipe: user.hasBookedRecipe(recipeId),
+                ownsRecipe: user.ownsRecipe(recipeId)
+            } as any
+        };
     }
 
     static async getByIdWithModerator(recipeId: string, userId: string): Promise<IResponseType<IRecipe | null>> {
         const user = await ModeratorModel.getById(userId)
         const recipe = await RecipeModel.getById(recipeId, ["reviews"]);
         const _recipe = recipe?.toJSON() as any;
-        return { body: { ..._recipe, isModeratedRecipe: user.hasModeratedRecipe(recipe._id as any) } as any };
+        return {
+            body: {
+                ..._recipe,
+                isModeratedRecipe: user.hasModeratedRecipe(recipe._id as any)
+            } as any
+        };
     }
 
     static async removeById(recipeId: string, user: IUser): Promise<IResponseType<{} | null>> {

@@ -12,7 +12,7 @@ export default class ShareableLink {
     private constructor({ key, baseUrl, domain }: { key?: string, baseUrl?: string, domain?: string }) {
         this.CIPHERIV_SECRET_KEY = key ?? process.env.CIPHERIV_SECRET_KEY ?? "koloHere";
         this.SHAREABLE_LINK_BASE_URL = baseUrl ?? process.env.SHAREABLE_LINK_BASE_URL ?? "http://localhost:3000";
-        this.Domain = domain ?? "recipe-detail";
+        this.Domain = domain ?? "user/recipe-detail";
     }
 
     public static getInstance({ key, baseUrl, domain }: { key?: string, baseUrl?: string, domain?: string }): ShareableLink {

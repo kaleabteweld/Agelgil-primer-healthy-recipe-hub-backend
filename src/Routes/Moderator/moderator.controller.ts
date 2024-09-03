@@ -32,7 +32,7 @@ export default class ModeratorController {
         await Moderator!.checkPassword(from.password);
 
         const { accessToken, refreshToken } = await MakeTokens(Moderator!.toJSON(), UserType.moderator);
-        return { body: (Moderator as any)!.toJSON(), header: { accessToken, refreshToken } }
+        return { body: Moderator!.toJSON() as any, header: { accessToken, refreshToken } }
 
     }
 
@@ -74,14 +74,14 @@ export default class ModeratorController {
 
         const moderator = await ModeratorModel.getById(moderatorId);
         await RecipeModel.validator(body, moderatorRecipeUpdateSchema);
-        return { body: (await RecipeModel.addModerator(recipeId, moderator, body) as any).toJSON() }
+        return { body: (await RecipeModel.addModerator(recipeId, moderator, body)).toJSON() as any }
     }
 
     static async updateUserStatus(userId: string, body: IModeratorUserUpdateSchema, moderatorId: string): Promise<IResponseType<IRecipe | null>> {
 
         await ModeratorModel.getById(moderatorId);
         await UserModel.validator(body, moderatorUserUpdateSchema);
-        return { body: (await UserModel.updateUserStatus(userId, body) as any).toJSON() }
+        return { body: (await UserModel.updateUserStatus(userId, body)).toJSON() as any }
     }
 
     static async moderatedRecipes(moderatorId: string, status: TRecipeStatus, pagination: IPagination): Promise<IResponseType<IRecipe>> {

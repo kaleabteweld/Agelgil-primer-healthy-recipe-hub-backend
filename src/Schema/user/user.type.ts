@@ -99,6 +99,7 @@ export interface IUserMethods {
     encryptPassword(this: IUser, password?: string): Promise<String>
     checkPassword(this: IUser, password: string): Promise<boolean>
     hasBookedRecipe(this: IUser, recipeId: any): boolean
+    ownsRecipe(this: IUser, recipeId: any): boolean
 }
 
 export interface IUserDocument extends IUser, IUserMethods, mongoose.Document {
@@ -140,4 +141,13 @@ export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {
 export interface IModeratorUserUpdateSchema {
     verified?: boolean;
     status?: EStatus;
+}
+
+
+export interface IUserSearchFrom {
+    fullName?: string;
+    sort?: { field: string, order: mongoose.SortOrder }[];
+    medical_condition?: IMedicalCondition;
+    status: TStatus;
+    verified: boolean;
 }

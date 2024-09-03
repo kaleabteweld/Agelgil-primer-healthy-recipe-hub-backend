@@ -36,3 +36,11 @@ export interface IngredientUpdateFrom extends Partial<INewIngredientFrom> {
 }
 
 
+
+export interface IIngredientSearchFrom {
+    name?: string;
+    type?: string;
+    localName?: string;
+    unitOptions?: string[];
+    sort?: { field: string, order: mongoose.SortOrder }[];
+}

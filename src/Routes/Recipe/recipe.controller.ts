@@ -51,14 +51,25 @@ export default class RecipeController {
         return { body: (recipe.toJSON() as any) }
     }
 
-    static async list({ skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
-        return {
-            body: await RecipeModel.find()
-                .skip(skip ?? 0)
-                .limit(limit ?? 0)
-                .sort({ createdAt: -1 })
-                .exec()
-        }
+    static async list({ skip, limit }: IPagination, filter: EPreferredMealTime | "all" = "all"): Promise<IResponseType<IRecipe[]>> {
+        if (filter === "all") {
+            return {
+                body: await RecipeModel.find()
+                    .skip(skip ?? 0)
+                    .limit(limit ?? 0)
+                    .sort({ createdAt: -1 })
+                    .exec()
+            }
+        } else
+            return {
+                body: await RecipeModel.find({
+                    preferredMealTime: { $in: filter },
+                })
+                    .skip(skip ?? 0)
+                    .limit(limit ?? 0)
+                    .sort({ createdAt: -1 })
+                    .exec()
+            }
     }
 
     static async moderatoList({ skip, limit }: IPagination, filter: EPreferredMealTime | "all" = "all"): Promise<IResponseType<IRecipe[]>> {
@@ -108,14 +119,25 @@ export default class RecipeController {
         const user = await UserModel.getById(userId)
         const recipe = await RecipeModel.getById(recipeId, ["reviews"]);
         const _recipe = recipe?.toJSON() as any;
-        return { body: { ..._recipe, hasBookedRecipe: user.hasBookedRecipe(recipeId) } as any };
+        return {
+            body: {
+                ..._recipe,
+                hasBookedRecipe: user.hasBookedRecipe(recipeId),
+                ownsRecipe: user.ownsRecipe(recipeId)
+            } as any
+        };
     }
 
     static async getByIdWithModerator(recipeId: string, userId: string): Promise<IResponseType<IRecipe | null>> {
         const user = await ModeratorModel.getById(userId)
         const recipe = await RecipeModel.getById(recipeId, ["reviews"]);
         const _recipe = recipe?.toJSON() as any;
-        return { body: { ..._recipe, isModeratedRecipe: user.hasModeratedRecipe(recipe._id as any) } as any };
+        return {
+            body: {
+                ..._recipe,
+                isModeratedRecipe: user.hasModeratedRecipe(recipe._id as any)
+            } as any
+        };
     }
 
     static async removeById(recipeId: string, user: IUser): Promise<IResponseType<{} | null>> {

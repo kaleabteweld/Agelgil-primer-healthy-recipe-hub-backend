@@ -3,7 +3,8 @@ import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
 import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals, EStatus, IUser, IUserMethods, IUserModel } from './user.type';
 import {
     checkPassword, encryptPassword, getBookedRecipes, getByEmail, getById, getMyRecipes,
-    removeByID, setStatus, toggleBookedRecipes, update, validator, hasBookedRecipe, updateUserStatus
+    removeByID, setStatus, toggleBookedRecipes, update, validator, hasBookedRecipe, updateUserStatus,
+    ownsRecipe
 } from './user.extended';
 
 export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
@@ -50,6 +51,7 @@ export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
         encryptPassword,
         checkPassword,
         hasBookedRecipe,
+        ownsRecipe,
     }
 });
 

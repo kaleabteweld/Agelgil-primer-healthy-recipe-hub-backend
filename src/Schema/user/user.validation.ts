@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, EChronicDisease, EDietaryPreferences, EAllergies, IModeratorUserUpdateSchema, EStatus } from "./user.type";
+import { IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, EChronicDisease, EDietaryPreferences, EAllergies, IModeratorUserUpdateSchema, EStatus, IUserSearchFrom } from "./user.type";
 
 
 export const userSignUpSchema = Joi.object<IUserSignUpFrom>({
@@ -51,3 +51,18 @@ export const moderatorUserUpdateSchema = Joi.object<IModeratorUserUpdateSchema>(
     verified: Joi.boolean().optional(),
 });
 
+
+export const userSearchSchema = Joi.object<IUserSearchFrom>({
+    fullName: Joi.string().min(0).optional(),
+    status: Joi.string().valid(...Object.values(EStatus)).optional(),
+    verified: Joi.boolean().optional(),
+    sort: Joi.array().items(Joi.object({
+        field: Joi.string().required(),
+        order: Joi.string().valid('asc', 'desc').required(),
+    })).optional(),
+    medical_condition: Joi.object({
+        chronicDiseases: Joi.array().items(Joi.string().valid(...Object.values(EChronicDisease)).optional().optional()),
+        dietary_preferences: Joi.array().items(Joi.string().valid(...Object.values(EDietaryPreferences)).optional()),
+        allergies: Joi.array().items(Joi.string().valid(...Object.values(EAllergies)).optional()),
+    }).optional(),
+});

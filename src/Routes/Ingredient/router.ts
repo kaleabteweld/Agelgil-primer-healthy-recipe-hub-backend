@@ -7,7 +7,7 @@ import { IUser } from "../../Schema/user/user.type";
 const publicIngredientsRouter = express.Router();
 const privateIngredientsRouter = express.Router();
 
-publicIngredientsRouter.get("/:ingredientsId", MakeErrorHandler(
+publicIngredientsRouter.get("/byId/:ingredientsId", MakeErrorHandler(
     async (req: any, res: Response) => {
         res.json(await IngredientController.getById(req.params.ingredientsId));
     }
@@ -59,6 +59,14 @@ publicIngredientsRouter.post("/search/:page", MakeErrorHandler(
     async (req: any, res: Response) => {
         const page = Number.parseInt(req.params.page);
         res.json(await IngredientController.ingredientSearch(req.body, page));
+    }
+));
+
+privateIngredientsRouter.delete("/remove/:ingredientId", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _moderator: any = req['moderator'];
+        const ingredientId = req.params.ingredientId;
+        res.json(await IngredientController.removeById(ingredientId, _moderator.id));
     }
 ));
 

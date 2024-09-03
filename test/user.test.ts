@@ -4,7 +4,7 @@ import request from "supertest";
 import { makeServer } from '../src/Util/Factories';
 import RedisCache from '../src/Util/cache/redis';
 import { IUser } from '../src/Schema/user/user.type';
-import { createUser, expectError, loginUrl, newValidModeratorSignUp, newValidUser, sighupUrl, userPrivateUrl } from './common';
+import { createUsers, expectError, loginUrl, newValidModeratorSignUp, newValidUser, sighupUrl, userPrivateUrl } from './common';
 import { UserType } from '../src/Util/jwt/jwt.types';
 
 const redisCache = RedisCache.getInstance();
@@ -32,7 +32,7 @@ describe('User', () => {
         var accessTokens: string[];
 
         beforeEach(async () => {
-            const { accessTokens: ats, users: usrs } = await createUser(request, app, [newValidUser]);
+            const { accessTokens: ats, users: usrs } = await createUsers(request, app, [newValidUser]);
             accessTokens = ats;
             users = usrs
 
@@ -80,7 +80,7 @@ describe('User', () => {
         var accessTokens: string[];
 
         beforeEach(async () => {
-            const { accessTokens: ats, users: usrs } = await createUser(request, app, [newValidUser]);
+            const { accessTokens: ats, users: usrs } = await createUsers(request, app, [newValidUser]);
             accessTokens = ats;
             users = usrs
 
@@ -143,7 +143,7 @@ describe('User', () => {
                 expectError(response, 401);
             });
 
-            describe("WHEN Login in as a Organizer", () => {
+            describe("WHEN Login in as a Moderator", () => {
 
                 var user: IUser;
                 var organizerAccessToken: string;
@@ -171,7 +171,7 @@ describe('User', () => {
     //     var organizerAccessTokens: string[];
 
     //     beforeEach(async () => {
-    //         const { accessTokens: ats, users: usrs } = await createUser(request, app, [newValidUser]);
+    //         const { accessTokens: ats, users: usrs } = await createUsers(request, app, [newValidUser]);
     //         const { accessTokens: ats2, organizers: orgs } = await createOrganizer(request, app, [newValidModeratorSignUp]);
     //         userAccessTokens = ats;
     //         users = usrs
@@ -253,7 +253,7 @@ describe('User', () => {
     //     var events: IEvent[] = [];
 
     //     beforeEach(async () => {
-    //         const { accessTokens: ats, users: usrs } = await createUser(request, app, [newValidUser, newValidUser2]);
+    //         const { accessTokens: ats, users: usrs } = await createUsers(request, app, [newValidUser, newValidUser2]);
     //         const { accessTokens: ats2, organizers: orgs } = await createOrganizer(request, app, [newValidModeratorSignUp]);
     //         userAccessTokens = ats;
     //         users = usrs

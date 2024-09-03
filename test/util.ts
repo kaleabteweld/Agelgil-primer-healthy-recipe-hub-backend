@@ -11,7 +11,7 @@ export const connectDB = async () => {
     mongo = await MongoMemoryServer.create();
     const uri = mongo.getUri();
     await mongoose.connect(uri);
-    await IngredientController.seed()
+    // await IngredientController.seed()
 };
 
 export const dropDB = async () => {
@@ -30,7 +30,7 @@ export const dropCollections = async () => {
             await collection.drop();
         }
 
-        await IngredientController.seed()
+        // await IngredientController.seed()
     }
 };
 

@@ -34,7 +34,8 @@ export default class IngredientController {
         return { body: ((await IngredientModel.getById(ingredientId))?.toJSON() as any) };
     }
 
-    static async removeById(ingredientId: string, user: IIngredient): Promise<IResponseType<{} | null>> {
+    static async removeById(ingredientId: string, userId: string = ""): Promise<IResponseType<{} | null>> {
+        await ModeratorModel.getById(userId);
         const Ingredient = await IngredientModel.getById(ingredientId);
         await IngredientModel.removeByID(Ingredient?.id)
 

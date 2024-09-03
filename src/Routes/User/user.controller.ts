@@ -27,7 +27,7 @@ export default class UserController {
         await user!.checkPassword(from.password);
 
         const { accessToken, refreshToken } = await MakeTokens(user!.toJSON(), UserType.user);
-        return { body: user!.toJSON(), header: { accessToken, refreshToken } }
+        return { body: (user as any)!.toJSON(), header: { accessToken, refreshToken } }
 
     }
 

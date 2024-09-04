@@ -1,13 +1,23 @@
-name: Run Tests
+name: Run Jest Tests with Redis and MongoDB
 
 on:
   push:
+    branches:
+      - jest
+  pull_request:
     branches:
       - jest
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
 
     steps:
       - name: Checkout code
@@ -16,12 +26,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "node"
+          node-version: "node" # Use the latest Node.js version
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
-      - name: Run tests
-        run: npm test
+      - name: Run Jest Tests and Collect Coverage
+        uses: willcaul/jest-github-action@v4
         env:
-          CI: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REDIS_URL: redis://localhost:6379 # Set the Redis URL for your application
+        with:
+          test-command: "yarn test" # Command to run Jest tests
+          coverage-comment: true # Set to true to report coverage

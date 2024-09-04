@@ -3,15 +3,16 @@ import { NutritionData } from "./types";
 export default class Calorieninjas {
 
     private static instance: Calorieninjas;
-    private _passive: boolean = false;
+    private _passive: boolean | null = null;
     apiKey: string;
 
-    private constructor(apiKey?: string, _passive: boolean = false) {
+    private constructor(apiKey?: string, _passive?: boolean) {
         this.apiKey = apiKey ?? process.env.CALORIENINJAS_API_KEY ?? "";
-        this._passive = _passive;
+        if (_passive) this._passive = _passive;
+        else this._passive = process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID !== undefined;
     }
 
-    public static getInstance(apiKey?: string, _passive: boolean = false): Calorieninjas {
+    public static getInstance(apiKey?: string, _passive?: boolean): Calorieninjas {
         if (!Calorieninjas.instance) {
             Calorieninjas.instance = new Calorieninjas(apiKey, _passive);
         }

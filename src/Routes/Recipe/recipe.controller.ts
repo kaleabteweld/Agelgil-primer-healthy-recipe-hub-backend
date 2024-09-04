@@ -79,6 +79,7 @@ export default class RecipeController {
                     .skip(skip ?? 0)
                     .limit(limit ?? 0)
                     .sort({ createdAt: -1 })
+                    .select({ name: 1, description: 1, imgs: 1, preparationDifficulty: 1, preferredMealTime: 1, rating: 1, status: 1 })
                     .exec()
             }
         }
@@ -91,6 +92,7 @@ export default class RecipeController {
             })
                 .skip(skip ?? 0)
                 .limit(limit ?? 0)
+                .select({ name: 1, description: 1, imgs: 1, preparationDifficulty: 1, preferredMealTime: 1, rating: 1, status: 1 })
                 .sort({ createdAt: -1 })
                 .exec()
         }
@@ -101,7 +103,8 @@ export default class RecipeController {
         await RecipeModel.validator(_recipe, recipeUpdateSchema);
         const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, await UserModel.getById(user.id as any));
         const updateRecipe: any = await RecipeModel.update(recipe.id, _recipe)
-        if (recipe.status === ERecipeStatus.rejected) {
+        //TODO: add a test here
+        if (recipe.status === ERecipeStatus.verified) {
             updateRecipe.status = ERecipeStatus.pending
             await updateRecipe.save()
         }

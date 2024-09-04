@@ -4,7 +4,7 @@ import { UserType } from "../src/Util/jwt/jwt.types";
 import { EAllergies, EChronicDisease, EDietaryPreferences, IUser, IUserLogInFrom, IUserSignUpFrom } from "../src/Schema/user/user.type";
 import { IModerator, IModeratorLogInFrom, IModeratorSignUpFrom } from "../src/Schema/Moderator/moderator.type";
 import { IIngredient, INewIngredientFrom } from "../src/Schema/Ingredient/ingredient.type";
-import { INewRecipeFrom, IRecipe } from "../src/Schema/Recipe/recipe.type";
+import { EPreferredMealTime, EPreparationDifficulty, INewRecipeFrom, IngredientDetail, IRecipe } from "../src/Schema/Recipe/recipe.type";
 
 
 export const sighupUrl = (user: UserType) => `/Api/v1/public/authentication/${user}/signUp`;
@@ -92,6 +92,36 @@ export const validIngredients: INewIngredientFrom[] = [{
     unitOptions: ["kg", "g"]
 }];
 
+export const validRecipes: Omit<INewRecipeFrom, "ingredients">[] = [{
+    name: "beef stew",
+    description: "beef stew description",
+    cookingTime: 30,
+    imgs: ["image1", "image2", "image3"],
+    instructions: "step 1, step 2, step 3",
+    medical_condition: {
+        allergies: [EAllergies.dairy],
+        chronicDiseases: [EChronicDisease.diabetes, EChronicDisease.obesity],
+        dietary_preferences: [EDietaryPreferences.vegan, EDietaryPreferences.LowSugar],
+    },
+    preferredMealTime: [EPreferredMealTime.breakfast, EPreferredMealTime.lunch],
+    preparationDifficulty: EPreparationDifficulty.easy,
+    youtubeLink: "https://www.youtube.com/watch?v=A5w-dEgIU1M",
+}, {
+    name: "apple pie",
+    description: "apple pie description",
+    cookingTime: 30,
+    imgs: ["image1", "image2", "image3"],
+    instructions: "step 1, step 2, step 3",
+    medical_condition: {
+        allergies: [EAllergies.dairy],
+        chronicDiseases: [EChronicDisease.diabetes, EChronicDisease.obesity],
+        dietary_preferences: [EDietaryPreferences.vegan, EDietaryPreferences.LowSugar],
+    },
+    preferredMealTime: [EPreferredMealTime.breakfast, EPreferredMealTime.lunch],
+    preparationDifficulty: EPreparationDifficulty.easy,
+    youtubeLink: "https://www.youtube.com/watch?v=A5w-dEgIU1M",
+}];
+
 export const expectError = async (response: Response, code: number) => {
 
     if (code == 400) {
@@ -145,13 +175,17 @@ export const createIngredients = async (request: Function, app: any, newValidIng
     return ingredients;
 }
 
-export const createRecipes = async (request: Function, app: any, newValidRecipes: INewRecipeFrom[], accessToken: string): Promise<IRecipe[]> => {
+export const createRecipes = async (request: Function, app: any, newValidRecipes: Omit<INewRecipeFrom, "ingredients">[], ingredients: IIngredient[], accessToken: string): Promise<IRecipe[]> => {
 
     const recipes: any[] = [];
 
     for (let index = 0; index < newValidRecipes.length; index++) {
-        const response = await request(app).post(recipePrivateUrl()).set("authorization", `Bearer ${accessToken}`).send(newValidRecipes[index]);
-        recipes.push(response.body);
+        const response = await request(app).post(`${recipePrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send(
+            {
+                ...newValidRecipes[index],
+                ingredients: ingredients.map(ingredient => ({ ingredient: ingredient._id, amount: 1, unit: "kg" }))
+            });
+        recipes.push(response.body.body);
     }
 
     return recipes;
@@ -188,5 +222,95 @@ export const expectValidListIngredient = async (response: Response, inputIngredi
             updatedAt: expect.any(String),
             ...matchers
         }));
+    });
+}
+
+export const expectValidRecipe = (response: Response, input: INewRecipeFrom, matchers?: Record<string, unknown> | Record<string, unknown>[]) => {
+    expect(response.status).toBe(200);
+    expect(response.body.body).toMatchObject({
+        _id: expect.any(String),
+        name: input.name,
+        description: input.description,
+        ingredients: expect.any(Array),
+        cookingTime: input.cookingTime,
+        imgs: input.imgs,
+        instructions: input.instructions,
+        medical_condition: expect.objectContaining({
+            allergies: input.medical_condition.allergies,
+            chronicDiseases: input.medical_condition.chronicDiseases,
+            dietary_preferences: input.medical_condition.dietary_preferences,
+        }),
+        preferredMealTime: input.preferredMealTime,
+        preparationDifficulty: input.preparationDifficulty,
+        youtubeLink: input.youtubeLink,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        __v: expect.any(Number),
+        ...matchers
+    });
+
+    response.body.body.ingredients.forEach((ingredient: IngredientDetail, index: number) => {
+        expect(ingredient).toMatchObject({
+            _id: expect.any(String),
+            id: expect.any(String),
+            amount: input.ingredients[index].amount,
+            localName: input.ingredients[index].localName,
+            name: input.ingredients[index].name,
+            type: input.ingredients[index].type,
+            unit: input.ingredients[index].unit,
+        });
+    });
+
+}
+
+export const expectValidRecipeList = async (response: Response, inputRecipes: Omit<INewRecipeFrom, "ingredients">[], minLen: number, maxLen?: number, matchers?: Record<string, unknown> | Record<string, unknown>[]) => {
+
+    expect(response.status).toBe(200)
+
+    expect(response.body.body.length).toBeGreaterThanOrEqual(minLen)
+    maxLen && expect(response.body.body.length).toBeLessThanOrEqual(maxLen)
+
+    response.body.body.forEach((recipe: IRecipe, index: number) => {
+        expect(recipe).toMatchObject(expect.objectContaining({
+            _id: expect.any(String),
+            name: expect.any(String),
+            description: expect.any(String),
+            cookingTime: expect.any(Number),
+            imgs: expect.any(Array),
+            instructions: expect.any(String),
+            medical_condition: expect.objectContaining({
+                allergies: expect.any(Array),
+                chronicDiseases: expect.any(Array),
+                dietary_preferences: expect.any(Array),
+            }),
+            preferredMealTime: expect.any(Array),
+            preparationDifficulty: expect.any(String),
+            youtubeLink: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+            __v: expect.any(Number),
+            ...matchers
+        }));
+    });
+}
+
+export const expectValidRecipeCardList = async (response: Response, minLen: number, maxLen?: number, matchers?: Record<string, unknown> | Record<string, unknown>[]) => {
+
+    expect(response.status).toBe(200)
+
+    expect(response.body.body.length).toBeGreaterThanOrEqual(minLen)
+    maxLen && expect(response.body.body.length).toBeLessThanOrEqual(maxLen)
+
+    response.body.body.forEach((recipe: IRecipe) => {
+        expect(recipe).toMatchObject({
+            _id: expect.any(String),
+            id: expect.any(String),
+            name: expect.any(String),
+            description: expect.any(String),
+            imgs: expect.any(Array),
+            preferredMealTime: expect.any(Array),
+            preparationDifficulty: expect.any(String),
+            ...matchers
+        });
     });
 }

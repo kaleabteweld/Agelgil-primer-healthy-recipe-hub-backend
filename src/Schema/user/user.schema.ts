@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals, EStatus, IUser, IUserMethods, IUserModel } from './user.type';
+import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals, EStatus, EVerified, IUser, IUserMethods, IUserModel } from './user.type';
 import {
     checkPassword, encryptPassword, getBookedRecipes, getByEmail, getById, getMyRecipes,
     removeByID, setStatus, toggleBookedRecipes, update, validator, hasBookedRecipe, updateUserStatus,
@@ -17,7 +17,7 @@ export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
     status: { type: String, enum: Object.values(EStatus), default: EStatus.active },
     booked_recipes: [{ type: mongoose.Types.ObjectId, ref: "Recipe" }],
     my_recipes: [{ type: mongoose.Types.ObjectId, ref: "Recipe" }],
-    verified: { type: Boolean, default: false },
+    verified: { type: String, enum: Object.values(EVerified), default: EVerified.pending },
 
     medical_condition: {
         chronicDiseases: { type: [String], enum: Object.values(EChronicDisease) },

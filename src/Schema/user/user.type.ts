@@ -2,13 +2,19 @@ import Joi from "joi";
 import mongoose from "mongoose";
 import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
-import e from "express";
 
 export enum EStatus {
     active = "active",
     disabled = "disabled",
     blocked = "blocked",
 }
+
+export enum EVerified {
+    pending = "pending",
+    verified = "verified",
+}
+
+export type TVerified = "pending" | "verified";
 
 export type TStatus = "active" | "disabled" | "blocked";
 
@@ -79,7 +85,7 @@ export interface IUser extends mongoose.Document {
     full_name: string;
     phone_number: string;
     status: TStatus;
-    verified: boolean;
+    verified: EVerified;
 
     medical_condition: IMedicalCondition;
 
@@ -132,7 +138,7 @@ export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {
 
 
 export interface IModeratorUserUpdateSchema {
-    verified?: boolean;
+    verified?: EVerified;
     status?: EStatus;
 }
 
@@ -142,5 +148,5 @@ export interface IUserSearchFrom {
     sort?: { field: string, order: mongoose.SortOrder }[];
     medical_condition?: IMedicalCondition;
     status: TStatus;
-    verified: boolean;
+    verified: EVerified;
 }

@@ -10,6 +10,7 @@
         "Datasx",
         "keyspace",
         "Spoonacular",
+        "tdee",
         "vectorize",
         "virtuals"
     ]

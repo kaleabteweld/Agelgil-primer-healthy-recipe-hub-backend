@@ -1,4 +1,4 @@
-import { IUser, IUserLogInFrom, IUserSearchFrom, IUserSignUpFrom, IUserUpdateFrom } from "../../Schema/user/user.type";
+import { EVerified, IUser, IUserLogInFrom, IUserSearchFrom, IUserSignUpFrom, IUserUpdateFrom } from "../../Schema/user/user.type";
 import UserModel from "../../Schema/user/user.schema";
 import { IListResponseType, IPagination, IResponseType, IResponseWithHeaderType } from "../../Types";
 import { MakeTokens, removeRefreshToken, verifyAccessToken, verifyRefreshToken } from "../../Util/jwt";
@@ -79,8 +79,8 @@ export default class UserController {
         return { body: await UserModel.getMyRecipes(userId, pagination, status) };
     }
 
-    static async users(page: number, verified: boolean = false): Promise<IResponseType<IUser[]>> {
-        return { body: await UserModel.find({ verified }).skip(page * 10).limit(10).exec() };
+    static async users(page: number, verified: EVerified = EVerified.pending): Promise<IResponseType<IUser[]>> {
+        return { body: await UserModel.find({ verified: verified }).skip(page * 10).limit(10).exec() };
     }
 
     static async usersSearch(query: IUserSearchFrom, page: number): Promise<IResponseType<IUser[]>> {

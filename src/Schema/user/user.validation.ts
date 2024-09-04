@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, EChronicDisease, EDietaryPreferences, EAllergies, IModeratorUserUpdateSchema, EStatus, IUserSearchFrom } from "./user.type";
+import { IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, EChronicDisease, EDietaryPreferences, EAllergies, IModeratorUserUpdateSchema, EStatus, IUserSearchFrom, EVerified } from "./user.type";
 
 
 export const userSignUpSchema = Joi.object<IUserSignUpFrom>({
@@ -48,14 +48,14 @@ export const userUpdateSchema = Joi.object<IUserUpdateFrom>({
 
 export const moderatorUserUpdateSchema = Joi.object<IModeratorUserUpdateSchema>({
     status: Joi.string().valid(...Object.values(EStatus)).optional(),
-    verified: Joi.boolean().optional(),
+    verified: Joi.string().valid(...Object.values(EVerified)).optional(),
 });
 
 
 export const userSearchSchema = Joi.object<IUserSearchFrom>({
     fullName: Joi.string().min(0).optional(),
     status: Joi.string().valid(...Object.values(EStatus)).optional(),
-    verified: Joi.boolean().optional(),
+    verified: Joi.string().valid(...Object.values(EVerified)).optional(),
     sort: Joi.array().items(Joi.object({
         field: Joi.string().required(),
         order: Joi.string().valid('asc', 'desc').required(),

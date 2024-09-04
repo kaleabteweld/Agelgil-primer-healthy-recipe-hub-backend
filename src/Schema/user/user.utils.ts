@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { ValidationErrorFactory } from "../../Types/error";
 import Joi from "joi";
 import { BSONError } from 'bson';
-import { EAllergies, EChronicDisease, EDietaryPreferences, IMedicalCondition, IUser, IUserDocument, IUserSearchFrom, TStatus } from "./user.type";
+import { EAllergies, EChronicDisease, EDietaryPreferences, EVerified, IMedicalCondition, IUser, IUserDocument, IUserSearchFrom, TStatus } from "./user.type";
 import UserModel from "./user.schema";
 
 
@@ -60,7 +60,7 @@ export class UserSearchBuilder {
         return this
     }
 
-    withVerified(verified: boolean): this {
+    withVerified(verified: EVerified): this {
         this.query.verified = verified
         return this
     }

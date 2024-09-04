@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.14% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>69/84</span>
+                <span class='fraction'>72/90</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.54% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/11</span>
+                <span class='fraction'>6/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.14% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>69/84</span>
+                <span class='fraction'>72/90</span>
             </div>
         
             
@@ -147,7 +147,13 @@
 <a name='L82'></a><a href='#L82'>82</a>
 <a name='L83'></a><a href='#L83'>83</a>
 <a name='L84'></a><a href='#L84'>84</a>
-<a name='L85'></a><a href='#L85'>85</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -160,15 +166,16 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">40x</span>
-<span class="cline-any cline-yes">40x</span>
-<span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">55x</span>
+<span class="cline-any cline-yes">55x</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">14x</span>
@@ -203,8 +210,8 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -231,14 +238,20 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { IUser, IUserLogInFrom, IUserSignUpFrom, IUserUpdateFrom } from "../../Schema/user/user.type";
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { IUser, IUserLogInFrom, IUserSearchFrom, IUserSignUpFrom, IUserUpdateFrom } from "../../Schema/user/user.type";
 import UserModel from "../../Schema/user/user.schema";
 import { IListResponseType, IPagination, IResponseType, IResponseWithHeaderType } from "../../Types";
 import { MakeTokens, removeRefreshToken, verifyAccessToken, verifyRefreshToken } from "../../Util/jwt";
 import { UserType } from "../../Util/jwt/jwt.types";
-import { userLogInSchema, userSignUpSchema, userUpdateSchema } from "../../Schema/user/user.validation";
+import { userLogInSchema, userSearchSchema, userSignUpSchema, userUpdateSchema } from "../../Schema/user/user.validation";
 import { IRecipe, TRecipeStatus } from "../../Schema/Recipe/recipe.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
+import { UserSearchBuilder } from "../../Schema/user/user.utils";
 &nbsp;
 &nbsp;
 export default class UserController {
@@ -260,7 +273,7 @@ export default class UserController {
         await user!.checkPassword(from.password);
 &nbsp;
         const { accessToken, refreshToken } = await MakeTokens(user!.toJSON(), UserType.user);
-        return { body: (user as any)!.toJSON(), header: { accessToken, refreshToken } }
+        return { body: user!.toJSON() as any, header: { accessToken, refreshToken } }
 &nbsp;
     }
 &nbsp;
@@ -314,6 +327,11 @@ export default class UserController {
     static async <span class="fstat-no" title="function not covered" >users(page: number, verified: boolean = false): Promise&lt;IResponseType&lt;IUser[]&gt;&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        return { body: await UserModel.find({ verified }).skip(page * 10).limit(10).exec() };</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+    static async <span class="fstat-no" title="function not covered" >usersSearch(query: IUserSearchFrom, page: number): Promise&lt;IResponseType&lt;IUser[]&gt;&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        UserModel.validator(query, userSearchSchema);</span>
+<span class="cstat-no" title="statement not covered" >        return { body: await (await UserSearchBuilder.fromJSON(query)).withPagination(page).execute() };</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -322,7 +340,7 @@ export default class UserController {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-04T09:38:20.689Z
+                at 2024-09-04T15:20:08.685Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

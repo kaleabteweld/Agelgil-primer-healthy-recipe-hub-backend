@@ -30,8 +30,8 @@ jobs:
 
       - name: Install MongoDB Binary
         run: |
-          wget -qO- https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-6.0.5.tgz | tar -zx
-          sudo mv mongodb-linux-x86_64-ubuntu2004-6.0.5/bin/* /usr/local/bin/
+          wget -qO- https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-7.0.11.tgz | tar -zx
+          sudo mv mongodb-linux-x86_64-ubuntu2004-7.0.11/bin/* /usr/local/bin/
 
       - name: Install dependencies
         run: npm install
@@ -40,4 +40,10 @@ jobs:
         run: npm test
         env:
           REDIS_URL: redis://localhost:6379
-          MONGOMS_SYSTEM_BINARY: /usr/local/bin/mongod # Path to the MongoDB binary
+          MONGOMS_SYSTEM_BINARY: /usr/local/bin/mongod
+
+      - name: Upload Jest coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage

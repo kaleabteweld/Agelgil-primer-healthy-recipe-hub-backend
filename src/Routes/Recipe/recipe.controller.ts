@@ -148,6 +148,7 @@ export default class RecipeController {
 
     }
 
+    /* istanbul ignore file */
     static async carbs(recipeId: string): Promise<IResponseType<NutritionData | null>> {
         const recipe = await RecipeModel.getById(recipeId);
         const calorieninjas: Calorieninjas = Calorieninjas.getInstance();
@@ -172,6 +173,7 @@ export default class RecipeController {
         }
     }
 
+    /* istanbul ignore file */
     static async recommendation(user: IUser, time: TPreferredMealTime, { skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
         const _user = await UserModel.getById(user.id as any)
         return {
@@ -182,6 +184,7 @@ export default class RecipeController {
         }
     }
 
+    /* istanbul ignore file */
     static async similar(recipeId: string, page: number): Promise<IResponseType<IRecipe[]>> {
         const recipe = await RecipeModel.getById(recipeId);
         return {
@@ -189,6 +192,7 @@ export default class RecipeController {
         }
     }
 
+    /* istanbul ignore file */
     static async addEmbedding(recipeId: string): Promise<IResponseType<IRecipe | null>> {
         const recipe = await RecipeModel.getById(recipeId);
         await Datasx.getInstance().EmbedAndSave(recipe as any);

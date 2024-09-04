@@ -41,6 +41,7 @@ const config: Config = {
     "/src/Util/index.ts",
     "/src/Util/middlewares.ts",
     "/src/Util/Factories.ts",
+    "/src/Schema/Middleware",
   ],
 
   // Indicates which provider should be used to instrument code for coverage

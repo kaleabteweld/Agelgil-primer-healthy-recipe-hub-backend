@@ -15,7 +15,6 @@ jobs:
         image: redis:latest
         ports:
           - 6379:6379
-        options: --appendonly yes
 
     env:
       REDIS_URL: redis://localhost:6379

@@ -1,1 +1,0 @@
-export type TModels = "embed-english-v3.0" | "embed-multilingual-v3.0" | "embed-english-light-v3.0" | "embed-multilingual-light-v3.0 " | "embed-english-v2.0" | "embed-english-light-v2.0" | "embed-multilingual-v2.0";

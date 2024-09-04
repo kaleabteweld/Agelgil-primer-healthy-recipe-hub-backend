@@ -47,3 +47,16 @@ jobs:
         with:
           name: coverage-report
           path: coverage
+
+      - name: Generate Jest coverage badge
+        run: npm run generate-coverage-badge
+
+      - name: Commit coverage badge
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m "Update Jest coverage badge"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

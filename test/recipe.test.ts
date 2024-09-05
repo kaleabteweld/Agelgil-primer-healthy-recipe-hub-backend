@@ -7,7 +7,7 @@ import {
     createRecipes, createModerators, createUsers, expectError, newValidModeratorSignUp, newValidUser2, validRecipes, recipePrivateUrl, expectValidRecipe,
     createIngredients, validIngredients, userPublicUrl, recipePublicUrl, expectValidRecipeList, expectValidRecipeCardList
 } from './common';
-import { IUser } from '../src/Schema/user/user.type';
+import { IUser } from '../src/Schema/User/user.type';
 import { IIngredient } from '../src/Schema/Ingredient/ingredient.type';
 import { EPreferredMealTime, ERecipeStatus, INewRecipeFrom, IRecipe } from '../src/Schema/Recipe/recipe.type';
 import { UserType } from '../src/Util/jwt/jwt.types';
@@ -208,7 +208,7 @@ describe('Recipe', () => {
                     describe("WHEN trying to get [user protected] Recipe As a User", () => {
 
                         it("SHOULD return 200 with Recipe obj With an isModeratedRecipe attribute", async () => {
-                            const response = await request(app).get(`${recipePrivateUrl()}details/user/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken}`).send();
+                            const response = await request(app).get(`${recipePrivateUrl()}details/User/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken}`).send();
                             expectValidRecipe(response, ({
                                 ...validRecipes[0],
                                 ingredients: ingredients.map(ingredient => ({

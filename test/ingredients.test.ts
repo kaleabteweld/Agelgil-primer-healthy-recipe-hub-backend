@@ -5,7 +5,7 @@ import { makeServer } from '../src/Util/Factories';
 import RedisCache from '../src/Util/cache/redis';
 import { IModerator } from '../src/Schema/Moderator/moderator.type';
 import { createIngredients, createModerators, createUsers, expectError, expectValidIngredient, expectValidListIngredient, ingredientPrivateUrl, ingredientPublicUrl, newValidModeratorSignUp, newValidUser2, validIngredients } from './common';
-import { IUser } from '../src/Schema/user/user.type';
+import { IUser } from '../src/Schema/User/user.type';
 import { IIngredient, IngredientUpdateFrom } from '../src/Schema/Ingredient/ingredient.type';
 
 const redisCache = RedisCache.getInstance();

@@ -2,9 +2,9 @@ name: CI - Jest Tests
 
 on:
   push:
-    branches: [jest]
+    branches: [main]
   pull_request:
-    branches: [jest]
+    branches: [main]
 
 jobs:
   test:

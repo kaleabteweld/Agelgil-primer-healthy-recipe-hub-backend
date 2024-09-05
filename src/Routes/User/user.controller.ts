@@ -1,12 +1,12 @@
-import { EVerified, IUser, IUserLogInFrom, IUserSearchFrom, IUserSignUpFrom, IUserUpdateFrom } from "../../Schema/user/user.type";
-import UserModel from "../../Schema/user/user.schema";
+import { EVerified, IUser, IUserLogInFrom, IUserSearchFrom, IUserSignUpFrom, IUserUpdateFrom } from "../../Schema/User/user.type";
+import UserModel from "../../Schema/User/user.schema";
 import { IListResponseType, IPagination, IResponseType, IResponseWithHeaderType } from "../../Types";
 import { MakeTokens, removeRefreshToken, verifyAccessToken, verifyRefreshToken } from "../../Util/jwt";
 import { UserType } from "../../Util/jwt/jwt.types";
-import { userLogInSchema, userSearchSchema, userSignUpSchema, userUpdateSchema } from "../../Schema/user/user.validation";
+import { userLogInSchema, userSearchSchema, userSignUpSchema, userUpdateSchema } from "../../Schema/User/user.validation";
 import { IRecipe, TRecipeStatus } from "../../Schema/Recipe/recipe.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
-import { UserSearchBuilder } from "../../Schema/user/user.utils";
+import { UserSearchBuilder } from "../../Schema/User/user.utils";
 
 
 export default class UserController {

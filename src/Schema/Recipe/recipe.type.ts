@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 import { IIngredient, INewIngredientFrom } from "../Ingredient/ingredient.type";
 import { IModerator } from "../Moderator/moderator.type";
 import { IReview } from "../Review/review.type";
-import { IMedicalCondition, IUser } from "../user/user.type";
+import { IMedicalCondition, IUser } from "../User/user.type";
 import { IPagination } from "../../Types";
 import { NutritionData } from "../../Util/calorieninjas/types";
 

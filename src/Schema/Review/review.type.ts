@@ -1,6 +1,6 @@
 import Joi from "joi";
 import mongoose, { Schema } from "mongoose";
-import { IUser } from "../user/user.type";
+import { IUser } from "../User/user.type";
 import { IRecipe } from "../Recipe/recipe.type";
 
 export interface IReview extends mongoose.Document {

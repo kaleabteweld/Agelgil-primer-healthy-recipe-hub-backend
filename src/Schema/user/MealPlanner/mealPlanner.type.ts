@@ -1,26 +1,24 @@
 import Joi from "joi";
 import mongoose, { Schema } from "mongoose";
-import { IUser } from "../user/user.type";
-import { EPreferredMealTime, IRecipe, TPreferredMealTime } from "../Recipe/recipe.type";
+import { IUser } from "../user.type";
+import { EPreferredMealTime, IRecipe, TPreferredMealTime } from "../../Recipe/recipe.type";
+import { NutritionData } from "../../../Util/calorieninjas/types";
 
-export enum ETimeRange {
-    week = "week",
-    day = "day"
+export interface INutritionGoal {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
 }
 
-export type TTimeRange = "week" | "day";
-
 export interface IMealPlanner extends mongoose.Document {
-    timeRange: {
-        start: Date;
-        end: Date;
-        type: ETimeRange;
-    },
-    user: Schema.Types.ObjectId | IUser;
-    meals: {
-        mealTime: TPreferredMealTime;
-        recipe: Schema.Types.ObjectId | IRecipe;
-    }[];
+    nutritionGoal: INutritionGoal,
+    recipes: {
+        [key in EPreferredMealTime]: {
+            recipe: mongoose.Schema.Types.ObjectId[] | IRecipe[],
+            nutrition: NutritionData;
+        }
+    }
 }
 
 export interface IMealPlannerMethods {

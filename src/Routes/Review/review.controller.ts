@@ -3,8 +3,8 @@ import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import ReviewModel from "../../Schema/Review/review.schema";
 import { INewReviewFrom, IReview, IReviewUpdateFrom } from "../../Schema/Review/review.type";
 import { newReviewSchema, reviewUpdateSchema } from "../../Schema/Review/review.validation";
-import UserModel from "../../Schema/user/user.schema";
-import { IUser } from "../../Schema/user/user.type";
+import UserModel from "../../Schema/User/user.schema";
+import { IUser } from "../../Schema/User/user.type";
 import { IPagination, IResponseType } from "../../Types";
 
 

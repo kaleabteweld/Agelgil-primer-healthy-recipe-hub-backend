@@ -2,6 +2,7 @@ import Joi from "joi";
 import mongoose from "mongoose";
 import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
+import { IMealPlanner } from "./MealPlanner/mealPlanner.type";
 
 export enum EStatus {
     active = "active",
@@ -69,12 +70,41 @@ export enum EDietGoals {
 
 export type TDietGoals = "weight_loss" | "weight_gain" | "muscle_gain" | "maintain_weight" | "none";
 
+export enum EGender {
+    male = "male",
+    female = "female"
+}
+
+export type tGender = "male" | "female"
+
+export enum EActivityLevel {
+    sedentary = "sedentary",
+    light = "light",
+    moderate = "moderate",
+    active = "active",
+    veryActive = "veryActive"
+}
+
+export type TActivityLevel = "sedentary" | "light" | "moderate" | "active" | "veryActive"
+
 export interface IMedicalCondition extends mongoose.Document {
     chronicDiseases: EChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
     allergies: EAllergies[];
-    // diet_goals: EDietGoals;
 }
+export interface IUserStats {
+    weights: {
+        date: Date;
+        value: number;
+    };
+    weight: number;
+    height: number;
+    age: number
+    gender: EGender;
+    activityLevel: EActivityLevel
+    diet_goals: EDietGoals;
+}
+
 
 export interface IUser extends mongoose.Document {
     profile_img?: string;
@@ -88,6 +118,9 @@ export interface IUser extends mongoose.Document {
     verified: EVerified;
 
     medical_condition: IMedicalCondition;
+
+    userStats?: IUserStats,
+    mealPlanner?: mongoose.Types.ObjectId | IMealPlanner;
 
     booked_recipes: mongoose.Types.ObjectId[] | IRecipe[];
     my_recipes: mongoose.Types.ObjectId[] | IRecipe[];

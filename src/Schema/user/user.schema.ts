@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals, EStatus, EVerified, IUser, IUserMethods, IUserModel } from './user.type';
+import { EActivityLevel, EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals, EGender, EStatus, EVerified, IUser, IUserMethods, IUserModel } from './user.type';
 import {
     checkPassword, encryptPassword, getBookedRecipes, getByEmail, getById, getMyRecipes,
     removeByID, setStatus, toggleBookedRecipes, update, validator, hasBookedRecipe, updateUserStatus,
@@ -23,8 +23,18 @@ export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
         chronicDiseases: { type: [String], enum: Object.values(EChronicDisease) },
         dietary_preferences: { type: [String], enum: Object.values(EDietaryPreferences) },
         allergies: { type: [String], enum: Object.values(EAllergies) },
-        // diet_goals: { type: [String], enum: Object.values(EDietGoals) },
-    }
+    },
+
+    userStats: {
+        weights: { type: { date: Date, value: Number } },
+        weight: Number,
+        height: Number,
+        age: Number,
+        gender: { type: String, enum: Object.values(EGender) },
+        activityLevel: { type: String, enum: Object.values(EActivityLevel) },
+        diet_goals: { type: String, enum: Object.values(EDietGoals) },
+    },
+    mealPlanner: { type: mongoose.Types.ObjectId, ref: "MealPlanner" },
 
 }, {
     timestamps: true,

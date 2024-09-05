@@ -1,8 +1,8 @@
 import IngredientModel from "../../Schema/Ingredient/ingredient.schema";
 import { IIngredient, IIngredientSearchFrom, INewIngredientFrom, IngredientUpdateFrom } from "../../Schema/Ingredient/ingredient.type";
 import { ingredientSearchSchema, ingredientUpdateSchema, newIngredientSchema } from "../../Schema/Ingredient/ingredient.validation";
-import UserModel from "../../Schema/user/user.schema";
-import { IUser } from "../../Schema/user/user.type";
+import UserModel from "../../Schema/User/user.schema";
+import { IUser } from "../../Schema/User/user.type";
 import { IPagination, IResponseType } from "../../Types";
 import Ingredients from "../../Schema/Ingredient/ingredient.json"
 import ModeratorModel from "../../Schema/Moderator/moderator.schema";

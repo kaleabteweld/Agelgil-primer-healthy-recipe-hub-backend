@@ -4,7 +4,7 @@ import { addModerator, checkIfUserOwnsRecipe, getById, getRecipeByShareableLink,
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
 import CohereAI from '../../Util/cohere';
 import ShareableLink from '../../Util/ShareableLink';
-import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals } from '../user/user.type';
+import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals } from '../User/user.type';
 import { ValidationErrorFactory } from '../../Types/error';
 
 const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({

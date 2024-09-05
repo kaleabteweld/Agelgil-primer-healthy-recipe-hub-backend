@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IModeratorRecipeUpdateFrom, INewRecipeFrom, IRecipeSearchFrom, IRecipeUpdateFrom } from "./recipe.type";
-import { EAllergies, EChronicDisease, EDietaryPreferences } from "../user/user.type";
+import { EAllergies, EChronicDisease, EDietaryPreferences } from "../User/user.type";
 
 
 export const newRecipeSchema = Joi.object<INewRecipeFrom>({

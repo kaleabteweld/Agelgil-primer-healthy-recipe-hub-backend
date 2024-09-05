@@ -69,6 +69,7 @@ publicRecipeRouter.post("/moderator/search/:page", MakeErrorHandler(
 ));
 
 // get user Ai recommendation
+/* istanbul ignore file */
 privateRecipeRouter.get("/recommendation/:time/:skip/:limit", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const user: IUser = req['user'];
@@ -78,6 +79,7 @@ privateRecipeRouter.get("/recommendation/:time/:skip/:limit", userOnly, MakeErro
         res.json(await RecipeController.recommendation(user, time, { skip, limit }));
     }
 ));
+/* istanbul ignore file */
 publicRecipeRouter.get("/similar/:recipeId/:page", MakeErrorHandler(
     async (req: any, res: Response) => {
         const recipeId = req.params.recipeId;

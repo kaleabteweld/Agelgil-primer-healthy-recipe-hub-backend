@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 import { IIngredient, INewIngredientFrom } from "../Ingredient/ingredient.type";
 import { IModerator } from "../Moderator/moderator.type";
 import { IReview } from "../Review/review.type";
-import { IMedicalCondition, IUser } from "../User/user.type";
+import { IMedicalCondition, IMedicalConditionInput, IUser } from "../User/user.type";
 import { IPagination } from "../../Types";
 import { NutritionData } from "../../Util/calorieninjas/types";
 
@@ -32,7 +32,8 @@ export enum ERecipeStatus {
     rejected = "rejected",
 }
 export type TRecipeStatus = "verified" | "pending" | "rejected";
-interface IngredientDetail extends INewIngredientFrom {
+export interface IngredientDetail extends INewIngredientFrom {
+    ingredient: Schema.Types.ObjectId | IIngredient;
     amount: number;
     unit: string;
 }
@@ -99,13 +100,9 @@ export interface INewRecipeFrom {
     preferredMealTime: TPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: number;
-    ingredients: {
-        ingredient: Schema.Types.ObjectId | IIngredient,
-        amount: number,
-        unit: string
-    }[];
+    ingredients: Omit<IngredientDetail, "unitOptions">[];
     instructions: string;
-    medical_condition: IMedicalCondition;
+    medical_condition: IMedicalConditionInput;
     youtubeLink?: string;
 }
 

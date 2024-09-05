@@ -91,6 +91,20 @@ export interface IMedicalCondition extends mongoose.Document {
     chronicDiseases: EChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
     allergies: EAllergies[];
+    // diet_goals?: EDietGoals;
+}
+
+export interface IMedicalConditionInput {
+    chronicDiseases: EChronicDisease[];
+    dietary_preferences: EDietaryPreferences[];
+    allergies: EAllergies[];
+
+}
+
+export interface IMedicalConditionInput {
+    chronicDiseases: EChronicDisease[];
+    dietary_preferences: EDietaryPreferences[];
+    allergies: EAllergies[];
 }
 export interface IUserStats {
     weights: {
@@ -104,6 +118,7 @@ export interface IUserStats {
     activityLevel: EActivityLevel
     diet_goals: EDietGoals;
 }
+
 
 
 export interface IUser extends mongoose.Document {
@@ -163,7 +178,7 @@ export interface IUserSignUpFrom {
     phone_number: string;
     profile_img?: string;
 
-    medical_condition: IMedicalCondition;
+    medical_condition: IMedicalConditionInput;
 }
 
 export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {

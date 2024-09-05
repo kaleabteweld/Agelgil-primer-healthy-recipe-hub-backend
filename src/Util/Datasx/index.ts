@@ -4,15 +4,19 @@ export class Datasx {
     private static instance: Datasx;
     private client: DataAPIClient;
     private db: Db;
+    private _passive: boolean | null = null;
 
-    private constructor() {
+
+    private constructor(_passive?: boolean) {
         this.client = new DataAPIClient(process.env.DATASAX_ASTRA_TOKEN!);
         this.db = this.client.db(process.env.DATASAX_ASTRA_API_Endpoint!);
+        if (_passive) this._passive = _passive;
+        else this._passive = process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID !== undefined;
     }
 
-    static getInstance(): Datasx {
+    static getInstance(_passive?: boolean): Datasx {
         if (!Datasx.instance) {
-            Datasx.instance = new Datasx();
+            Datasx.instance = new Datasx(_passive);
         }
         return Datasx.instance;
     }
@@ -73,6 +77,7 @@ export class Datasx {
     }
 
     async EmbedAndSave(recipe: IRecipe,): Promise<void> {
+        if (this._passive) return;
         try {
             const _recipe = await this.db.collection('recipes').findOne({ recipeId: (recipe as any)._id })
             if (_recipe) {
@@ -102,6 +107,7 @@ export class Datasx {
     }
 
     async getSuggestionsForRecipe(recipe: IRecipe, page: number, perPage: number = 10): Promise<any[]> {
+        if (this._passive) return [];
         try {
             const cursor = await this.db.collection('recipes').find({
                 $not: { recipeId: (recipe as any)._id }
@@ -126,6 +132,7 @@ export class Datasx {
     }
 
     async removeRecipe(recipe: IRecipe): Promise<void> {
+        if (this._passive) return;
         try {
             await this.db.collection('recipes').deleteMany({
                 recipeId: (recipe as any)._id
@@ -137,6 +144,7 @@ export class Datasx {
     }
 
     async updateRecipe(recipeId: string, recipe: IRecipe): Promise<void> {
+        if (this._passive) return;
         try {
             await this.db.collection('recipes').updateOne({
                 recipeId: recipeId

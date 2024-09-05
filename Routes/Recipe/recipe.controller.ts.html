@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.54% </span>
+                <span class="strong">70.14% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>137/197</span>
+                <span class='fraction'>141/201</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.54% </span>
+                <span class="strong">70.14% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>137/197</span>
+                <span class='fraction'>141/201</span>
             </div>
         
             
@@ -260,7 +260,11 @@
 <a name='L195'></a><a href='#L195'>195</a>
 <a name='L196'></a><a href='#L196'>196</a>
 <a name='L197'></a><a href='#L197'>197</a>
-<a name='L198'></a><a href='#L198'>198</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -411,13 +415,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -441,15 +438,26 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -607,6 +615,7 @@ export default class RecipeController {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
+    /* istanbul ignore file */
     static async <span class="fstat-no" title="function not covered" >carbs(recipeId: string): Promise&lt;IResponseType&lt;NutritionData | null&gt;&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        const recipe = await RecipeModel.getById(recipeId);</span>
 <span class="cstat-no" title="statement not covered" >        const calorieninjas: Calorieninjas = Calorieninjas.getInstance();</span>
@@ -631,6 +640,7 @@ export default class RecipeController {
 <span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
+    /* istanbul ignore file */
     static async <span class="fstat-no" title="function not covered" >recommendation(user: IUser, time: TPreferredMealTime, { skip, limit }: IPagination): Promise&lt;IResponseType&lt;IRecipe[]&gt;&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        const _user = await UserModel.getById(user.id as any)</span>
 <span class="cstat-no" title="statement not covered" >        return {</span>
@@ -641,6 +651,7 @@ export default class RecipeController {
 <span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
+    /* istanbul ignore file */
     static async <span class="fstat-no" title="function not covered" >similar(recipeId: string, page: number): Promise&lt;IResponseType&lt;IRecipe[]&gt;&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        const recipe = await RecipeModel.getById(recipeId);</span>
 <span class="cstat-no" title="statement not covered" >        return {</span>
@@ -648,6 +659,7 @@ export default class RecipeController {
 <span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
+    /* istanbul ignore file */
     static async <span class="fstat-no" title="function not covered" >addEmbedding(recipeId: string): Promise&lt;IResponseType&lt;IRecipe | null&gt;&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        const recipe = await RecipeModel.getById(recipeId);</span>
 <span class="cstat-no" title="statement not covered" >        await Datasx.getInstance().EmbedAndSave(recipe as any);</span>
@@ -661,7 +673,7 @@ export default class RecipeController {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-04T15:42:51.774Z
+                at 2024-09-05T20:10:04.801Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

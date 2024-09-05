@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for Schema/MealPlanner/mealPlanner.schema.ts</title>
+    <title>Code coverage report for Schema/user/MealPlanner/mealPlanner.schema.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../prettify.css" />
-    <link rel="stylesheet" href="../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../sort-arrow-sprite.png);
+            background-image: url(../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">Schema/MealPlanner</a> mealPlanner.schema.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">Schema/user/MealPlanner</a> mealPlanner.schema.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>44/44</span>
+                <span class='fraction'>56/56</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>44/44</span>
+                <span class='fraction'>56/56</span>
             </div>
         
             
@@ -107,7 +107,31 @@
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -152,47 +176,59 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import mongoose, { Schema } from 'mongoose';
-import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { removeFromMealPlanner, addToMealPlanner, checkIfUserOwnsMealPlanner, generateWeekPlanRecipes, getById, removeByID, validator } from './mealPlanner.extended';
-import { ETimeRange, IMealPlanner, IMealPlannerMethods, IMealPlannerModel } from './mealPlanner.type';
-import { EPreferredMealTime } from '../Recipe/recipe.type';
+import { mongooseErrorPlugin } from '../../Middleware/errors.middleware';
+import { getById, removeByID, validator } from './mealPlanner.extended';
+import { IMealPlanner, IMealPlannerMethods, IMealPlannerModel } from './mealPlanner.type';
+&nbsp;
+const nutritionSchema = {
+    sugar_g: { type: Number },
+    fiber_g: { type: Number },
+    serving_size_g: { type: Number },
+    sodium_mg: { type: Number },
+    potassium_mg: { type: Number },
+    fat_saturated_g: { type: Number },
+    fat_total_g: { type: Number },
+    calories: { type: Number },
+    cholesterol_mg: { type: Number },
+    protein_g: { type: Number },
+    carbohydrates_total_g: { type: Number },
+}
 &nbsp;
 const mealPlannerSchema = new Schema&lt;IMealPlanner, IMealPlannerModel, IMealPlannerMethods&gt;({
-    timeRange: {
-        start: { type: Date, required: true },
-        end: { type: Date, required: true },
-        type: { type: String, enum: Object.values(ETimeRange), default: ETimeRange.day }
-    },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    meals: [{
-        mealTime: { type: [String], enum: Object.values(EPreferredMealTime) },
-        recipe: {
-            type: Schema.Types.ObjectId,
-            ref: 'Recipe',
-            required: true,
+&nbsp;
+    nutritionGoal: nutritionSchema,
+    recipes: {
+        breakfast: {
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe' }],
+            nutrition: nutritionSchema,
+        },
+        lunch: {
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe' }],
+            nutrition: nutritionSchema,
+        },
+        dinner: {
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe' }],
+            nutrition: nutritionSchema,
+        },
+        snacks: {
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe' }],
+            nutrition: nutritionSchema,
         }
-    }]
+    }
 &nbsp;
 }, {
     timestamps: true,
-    methods: {
-        addToMealPlanner,
-        removeFromMealPlanner,
-    },
     statics: {
         validator,
         getById,
         removeByID,
-        generateWeekPlanRecipes,
-        checkIfUserOwnsMealPlanner,
     }
 });
 &nbsp;
 &nbsp;
 mealPlannerSchema.plugin&lt;any&gt;(mongooseErrorPlugin);
 &nbsp;
-&nbsp;
-const MealPlannerModel = mongoose.model&lt;IMealPlanner, IMealPlannerModel&gt;('mealPlanner', mealPlannerSchema);
+const MealPlannerModel = mongoose.model&lt;IMealPlanner, IMealPlannerModel&gt;('MealPlanner', mealPlannerSchema);
 &nbsp;
 export default MealPlannerModel;
 &nbsp;</pre></td></tr></table></pre>
@@ -202,16 +238,16 @@ export default MealPlannerModel;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-04T15:42:51.774Z
+                at 2024-09-05T20:10:04.801Z
             </div>
-        <script src="../../prettify.js"></script>
+        <script src="../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../sorter.js"></script>
-        <script src="../../block-navigation.js"></script>
+        <script src="../../../sorter.js"></script>
+        <script src="../../../block-navigation.js"></script>
     </body>
 </html>
     

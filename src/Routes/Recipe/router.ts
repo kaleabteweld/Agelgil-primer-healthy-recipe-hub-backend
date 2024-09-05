@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { MakeErrorHandler, moderatorOnly, userOnly } from "../../Util/middlewares";
 import RecipeController from "./recipe.controller";
-import { IUser } from "../../Schema/User/user.type";
+import { IUser } from "../../Schema/user/user.type";
 
 
 const publicRecipeRouter = express.Router();

@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { MakeErrorHandler, userOnly, moderatorOnly } from "../../Util/middlewares";
 import UserController from "./user.controller";
-import { IUser } from "../../Schema/User/user.type";
+import { IUser } from "../../Schema/user/user.type";
 
 
 const publicUserRouter = express.Router();

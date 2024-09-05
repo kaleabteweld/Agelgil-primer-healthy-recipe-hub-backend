@@ -7,7 +7,7 @@ import {
     createRecipes, createModerators, createUsers, expectError, newValidModeratorSignUp, newValidUser2, validRecipes, recipePrivateUrl, expectValidRecipe,
     createIngredients, validIngredients, userPublicUrl, recipePublicUrl, expectValidRecipeList, expectValidRecipeCardList
 } from './common';
-import { IUser } from '../src/Schema/User/user.type';
+import { IUser } from '../src/Schema/user/user.type';
 import { IIngredient } from '../src/Schema/Ingredient/ingredient.type';
 import { EPreferredMealTime, ERecipeStatus, INewRecipeFrom, IRecipe } from '../src/Schema/Recipe/recipe.type';
 import { UserType } from '../src/Util/jwt/jwt.types';

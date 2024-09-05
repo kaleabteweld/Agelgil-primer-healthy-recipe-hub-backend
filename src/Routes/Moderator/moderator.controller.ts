@@ -8,9 +8,9 @@ import { IModerator, IModeratorLogInFrom, IModeratorSignUpFrom, IModeratorUpdate
 import { moderatorLogInSchema, moderatorSignUpSchema, moderatorUpdateSchema } from "../../Schema/Moderator/moderator.validation";
 import { UserType } from "../../Util/jwt/jwt.types";
 import { moderatorRecipeUpdateSchema } from "../../Schema/Recipe/recipe.validation";
-import { moderatorUserUpdateSchema } from "../../Schema/User/user.validation";
-import UserModel from "../../Schema/User/user.schema";
-import { IModeratorUserUpdateSchema } from "../../Schema/User/user.type";
+import { moderatorUserUpdateSchema } from "../../Schema/user/user.validation";
+import UserModel from "../../Schema/user/user.schema";
+import { IModeratorUserUpdateSchema } from "../../Schema/user/user.type";
 
 
 export default class ModeratorController {

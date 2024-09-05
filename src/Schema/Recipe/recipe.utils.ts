@@ -4,7 +4,7 @@ import RecipeModel from "./recipe.schema";
 import { ValidationErrorFactory } from "../../Types/error";
 import Joi from "joi";
 import { BSONError } from 'bson';
-import { EAllergies, EChronicDisease, EDietaryPreferences, IMedicalCondition } from "../User/user.type";
+import { EAllergies, EChronicDisease, EDietaryPreferences, IMedicalCondition } from "../user/user.type";
 
 
 export class RecipeSearchBuilder {

@@ -6,7 +6,7 @@ import { makeServer } from "../src/Util/Factories";
 import RedisCache from "../src/Util/cache/redis";
 import { UserType } from "../src/Util/jwt/jwt.types";
 import { verifyAccessToken, verifyRefreshToken } from "../src/Util/jwt";
-import { IUser, IUserSignUpFrom } from "../src/Schema/User/user.type";
+import { IUser, IUserSignUpFrom } from "../src/Schema/user/user.type";
 
 const app = makeServer();
 const redisCache = RedisCache.getInstance();

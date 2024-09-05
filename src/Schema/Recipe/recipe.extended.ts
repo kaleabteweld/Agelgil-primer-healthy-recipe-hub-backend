@@ -6,7 +6,7 @@ import { MakeValidator } from "../../Util";
 import { IModeratorRecipeUpdateFrom, IRecipe, IRecipeUpdateFrom } from "./recipe.type";
 import { IPagination } from "../../Types";
 import { IReview } from "../Review/review.type";
-import { IUser } from "../User/user.type";
+import { IUser } from "../user/user.type";
 import ShareableLink from "../../Util/ShareableLink";
 import { IModerator } from "../Moderator/moderator.type";
 import { Datasx } from "../../Util/Datasx";

@@ -3,7 +3,7 @@ import { connectDB, dropCollections, dropDB } from './util';
 import request from "supertest";
 import { makeServer } from '../src/Util/Factories';
 import RedisCache from '../src/Util/cache/redis';
-import { IUser } from '../src/Schema/User/user.type';
+import { IUser } from '../src/Schema/user/user.type';
 import { createUsers, expectError, loginUrl, newValidModeratorSignUp, newValidUser, sighupUrl, userPrivateUrl } from './common';
 import { UserType } from '../src/Util/jwt/jwt.types';
 

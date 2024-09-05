@@ -1,8 +1,8 @@
-import MealPlannerModel from "../../Schema/User/MealPlanner/mealPlanner.schema";
-import { IMealPlanner } from "../../Schema/User/MealPlanner/mealPlanner.type";
+import MealPlannerModel from "../../Schema/user/MealPlanner/mealPlanner.schema";
+import { IMealPlanner } from "../../Schema/user/MealPlanner/mealPlanner.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import { EPreferredMealTime } from "../../Schema/Recipe/recipe.type";
-import { IUser } from "../../Schema/User/user.type";
+import { IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
 
 

@@ -1,7 +1,7 @@
 import { Response } from "supertest";
 import { expect } from '@jest/globals';
 import { UserType } from "../src/Util/jwt/jwt.types";
-import { EAllergies, EChronicDisease, EDietaryPreferences, IUser, IUserLogInFrom, IUserSignUpFrom } from "../src/Schema/User/user.type";
+import { EAllergies, EChronicDisease, EDietaryPreferences, IUser, IUserLogInFrom, IUserSignUpFrom } from "../src/Schema/user/user.type";
 import { IModerator, IModeratorLogInFrom, IModeratorSignUpFrom } from "../src/Schema/Moderator/moderator.type";
 import { IIngredient, INewIngredientFrom } from "../src/Schema/Ingredient/ingredient.type";
 import { EPreferredMealTime, EPreparationDifficulty, INewRecipeFrom, IngredientDetail, IRecipe } from "../src/Schema/Recipe/recipe.type";

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "set NODE_ENV=development && nodemon src/server.ts",
     "build": "npm i && tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "test": "jest",
     "generate-coverage-badge": "jest-coverage-badges"
   },

@@ -102,6 +102,23 @@ export default class RecipeController {
 
         await RecipeModel.validator(_recipe, recipeUpdateSchema);
         const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, await UserModel.getById(user.id as any));
+
+        const ingredients: {
+            name?: string,
+            type?: string,
+            localName?: string,
+            amount: number
+            unit: string
+        }[] = await Promise.all(_recipe?.ingredients ?? [].map(async ({ ingredient, amount, unit }) => {
+            return { ...(await IngredientModel.findById(ingredient, { name: 1, type: 1, localName: 1 })), amount, unit }
+        }))
+
+        _recipe = {
+            ..._recipe,
+            nutrition: await Calorieninjas.getInstance().getNutrition(ingredients),
+            ingredients: ingredients,
+        } as any;
+
         const updateRecipe: any = await RecipeModel.update(recipe.id, _recipe)
         //TODO: add a test here
         if (recipe.status === ERecipeStatus.verified) {

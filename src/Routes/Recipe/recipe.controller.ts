@@ -45,6 +45,7 @@ export default class RecipeController {
         const recipe = await new RecipeModel((_recipe));
         await recipe.save();
 
+
         return { body: (recipe.toJSON() as any) }
     }
 

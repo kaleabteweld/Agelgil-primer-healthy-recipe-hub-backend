@@ -1,5 +1,6 @@
 import neo4j, { Session } from "neo4j-driver";
-import { IUser } from "../../Schema/user/user.type";
+import { EAllergies, EChronicDisease, EDietaryPreferences, IUser } from "../../Schema/user/user.type";
+import { IRecipe } from "../../Schema/Recipe/recipe.type";
 
 export default class Neo4jClient {
 
@@ -47,17 +48,13 @@ export default class Neo4jClient {
         });
 
         return recommendations;
-    } catch(error: any) {
-        console.error('Error fetching recipe recommendations:', error);
-        throw error;
     }
 
     async addUser(user: IUser) {
         if (this._passive) return;
         try {
-            console.log('Adding user to Neo4j:', user);
             await this.session.run(
-                `CREATE (u:User { 
+                /* cypher */`CREATE (u:User { 
                     id: $id,
                     email: $email, 
                     first_name: $first_name, 
@@ -72,49 +69,165 @@ export default class Neo4jClient {
             );
 
             for (const medicalCondition of user.medical_condition.chronicDiseases) {
-                await this.session.run(
-                    `MERGE (c:MedicalCondition {name: $medicalCondition}) 
-WITH c
-                     MATCH (u:User {id: $id})
-                     CREATE (u)-[:HAS_CONDITION]->(c)`,
-                    {
-                        id: (user as any)._id.toString(),
-                        medicalCondition: medicalCondition
-                    }
-                );
+                if (medicalCondition != EChronicDisease.none)
+                    await this.session.run(
+                    /* cypher */`MERGE (c:MedicalCondition {name: $medicalCondition}) 
+                    WITH c
+                    MATCH (u:User {id: $id})
+                    CREATE (u)-[:HAS_CONDITION]->(c)`,
+                        {
+                            id: (user as any)._id.toString(),
+                            medicalCondition: medicalCondition
+                        }
+                    );
             }
 
             for (const dietaryPreference of user.medical_condition.dietary_preferences) {
-                await this.session.run(
-                    `MERGE (d:DietaryPreference {name: $dietaryPreference}) 
-                                         WITH d
-                     MATCH (u:User {id: $id})
-                     CREATE (u)-[:PREFERS]->(d)`,
-                    {
-                        id: (user as any)._id.toString(),
-                        dietaryPreference: dietaryPreference
-                    }
-                );
+                if (dietaryPreference != EDietaryPreferences.none)
+                    await this.session.run(
+                    /* cypher */`MERGE (d:DietaryPreference {name: $dietaryPreference}) 
+                    WITH d
+                    MATCH (u:User {id: $id})
+                    CREATE (u)-[:PREFERS]->(d)`,
+                        {
+                            id: (user as any)._id.toString(),
+                            dietaryPreference: dietaryPreference
+                        }
+                    );
             }
 
             for (const allergy of user.medical_condition.allergies) {
-                await this.session.run(
-                    `MERGE (a:Allergy {name: $allergy}) 
-                                         WITH a
-                     MATCH (u:User {id: $id})
-                     CREATE (u)-[:ALLERGIC_TO]->(a)`,
-                    {
-                        id: (user as any)._id.toString(),
-                        allergy: allergy
-                    }
-                );
+                if (allergy != EAllergies.none)
+                    await this.session.run(
+                    /* cypher */`MERGE (a:Allergy {name: $allergy}) 
+                    WITH a
+                    MATCH (u:User {id: $id})
+                    CREATE (u)-[:ALLERGIC_TO]->(a)`,
+                        {
+                            id: (user as any)._id.toString(),
+                            allergy: allergy
+                        }
+                    );
             }
-
-            console.log('User added successfully.');
         } catch (error) {
             console.error('Error adding user:', error);
             throw error;
         }
     }
 
+    async addRecipe(recipe: IRecipe) {
+        if (this._passive) return;
+        try {
+            await this.session.run(
+                /* cypher */ `
+                CREATE (r:Recipe { 
+                    id: $id,
+                    name: $name, 
+                    description: $description, 
+                    instructions: $instructions,
+                    cookingTime: $cookingTime
+                })`,
+                {
+                    id: (recipe as any)._id.toString(),
+                    name: recipe.name,
+                    description: recipe.description,
+                    instructions: recipe.instructions,
+                    cookingTime: recipe.cookingTime,
+                    //TODO add to user - user reviews and rating -> recipe
+
+
+                }
+            );
+
+            for (const ingredient of recipe.ingredients) {
+                await this.session.run(
+                    /* cypher */ `MERGE (i:Ingredient {name: $ingredient}) 
+                    WITH i
+                    MATCH (r:Recipe {id: $id})
+                    CREATE (r)-[:CONTAINS {amount: $amount}]->(i)`,
+                    {
+                        id: (recipe as any)._id.toString(),
+                        ingredient: ingredient.name,
+                        amount: ingredient.amount
+                    }
+                );
+            }
+
+            for (const preferredMealTime of recipe.preferredMealTime) {
+                await this.session.run(
+                    /* cypher */ `
+                    MERGE (p:PreferredMealTime {name: $preferredMealTime}) 
+                    WITH p
+                    MATCH (r:Recipe {id: $id})
+                    CREATE (r)-[:PREFERRED_MEAL_TIME]->(p)`,
+                    {
+                        id: (recipe as any)._id.toString(),
+                        preferredMealTime: preferredMealTime
+                    }
+                );
+            }
+
+            for (const medicalCondition of recipe.medical_condition.chronicDiseases) {
+                if (medicalCondition != EChronicDisease.none)
+                    await this.session.run(
+                    /* cypher */`
+                    MERGE (c:MedicalCondition {name: $medicalCondition}) 
+                    WITH c
+                    MATCH (u:Recipe {id: $id})
+                    CREATE (u)-[:HAS_CONDITION]->(c)`,
+                        {
+                            id: (recipe as any)._id.toString(),
+                            medicalCondition: medicalCondition
+                        }
+                    );
+            }
+
+            for (const dietaryPreference of recipe.medical_condition.dietary_preferences) {
+                if (dietaryPreference != EDietaryPreferences.none)
+                    await this.session.run(
+                    /* cypher */`
+                    MERGE (d:DietaryPreference {name: $dietaryPreference}) 
+                    WITH d
+                    MATCH (u:Recipe {id: $id})
+                    CREATE (u)-[:PREFERS]->(d)`,
+                        {
+                            id: (recipe as any)._id.toString(),
+                            dietaryPreference: dietaryPreference
+                        }
+                    );
+            }
+
+            for (const allergy of recipe.medical_condition.allergies) {
+                if (allergy != EAllergies.none)
+                    await this.session.run(
+                    /* cypher */`
+                    MERGE (a:Allergy {name: $allergy}) 
+                    WITH a
+                    MATCH (u:Recipe {id: $id})
+                    CREATE (u)-[:ALLERGIC_TO]->(a)`,
+                        {
+                            id: (recipe as any)._id.toString(),
+                            allergy: allergy
+                        }
+                    );
+            }
+
+            await this.session.run(
+                /* cypher */ `
+                MERGE (u:User {id: $userId, full_name: $fullName, profile_img: $profileImg}) 
+                WITH u
+                MATCH (r:Recipe {id: $id})
+                CREATE (r)-[:CREATED_BY]->(u)`,
+                {
+                    id: recipe._id,
+                    userId: recipe.user.user.toString(),
+                    fullName: recipe.user.full_name,
+                    profileImg: recipe.user.profile_img
+                }
+            );
+        } catch (error) {
+            console.error('Error adding recipe:', error);
+            throw error;
+        }
+    }
 }

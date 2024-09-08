@@ -12,6 +12,7 @@ import { IPagination, IResponseType } from "../../Types";
 import Calorieninjas from "../../Util/calorieninjas";
 import { NutritionData } from "../../Util/calorieninjas/types";
 import { Datasx } from "../../Util/Datasx";
+import Neo4jClient from "../../Util/Neo4j/neo4jClient";
 
 
 export default class RecipeController {
@@ -175,12 +176,12 @@ export default class RecipeController {
     }
 
     /* istanbul ignore file */
-    static async recommendation(user: IUser, time: TPreferredMealTime, { skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
+    static async recommendation(user: IUser, time: TPreferredMealTime, pagination: IPagination): Promise<IResponseType<IRecipe[]>> {
         const _user = await UserModel.getById(user.id as any)
+        const recommendations = await Neo4jClient.getInstance({}).recommendRecipesForUser(_user?.id as any, pagination)
+        console.log({ recommendations })
         return {
             body: await RecipeModel.find({ user: _user?.id })
-                .skip(skip ?? 0)
-                .limit(limit ?? 0)
                 .exec()
         }
     }

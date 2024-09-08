@@ -2,6 +2,7 @@ import neo4j, { Session } from "neo4j-driver";
 import { EAllergies, EChronicDisease, EDietaryPreferences, IUser } from "../../Schema/user/user.type";
 import { IRecipe } from "../../Schema/Recipe/recipe.type";
 import { IReview } from "../../Schema/Review/review.type";
+import { IPagination } from "../../Types";
 
 export default class Neo4jClient {
 
@@ -29,27 +30,62 @@ export default class Neo4jClient {
         return Neo4jClient.instance;
     }
 
-    async recommendRecipesForUser(userId: string) {
+    async recommendRecipesForUser(userId: string, { skip, limit }: IPagination) {
         const result = await this.session.run(
-            `
-            MATCH (u:User {id: $userId})-[:HAS_DIETARY_PREFERENCE]->(dp:DietaryPreference)<-[:HAS_DIETARY_PREFERENCE]-(r:Recipe)
-            WHERE NOT (u)-[:DISLIKES]->(r)
-            OPTIONAL MATCH (u)-[likes:LIKES]->(r)
-            RETURN r, COUNT(likes) AS likesCount
-            ORDER BY likesCount DESC
-            LIMIT 10
+             /* cypher */`
+             MATCH (u:User {id: $userId})-[:PREFERS]->(dp:DietaryPreference)
+             MATCH (u)-[:HAS_CONDITION]->(mc:MedicalCondition)
+             MATCH (u)-[:ALLERGIC_TO]->(a:Allergy)
+     
+             // Match recipes that match user preferences and do not have disliked attributes
+             MATCH (r:Recipe)
+             WHERE 
+                 (r)-[:PREFERS]->(dp) AND 
+                 NOT EXISTS((r)-[:ALLERGIC_TO]->(a)) AND
+                 (r)-[:HAS_CONDITION]->(mc)
+             
+             // Calculate the probability of the user liking a recipe based on reviews
+             OPTIONAL MATCH (u)-[review:REVIEWED]->(r)
+             
+             // Count the number of positive and negative reviews
+             WITH r, 
+             COUNT(CASE WHEN review.rating >= 3 THEN 1 ELSE null END) AS userPositiveReviews,  // Positive reviews by the user (rating >= 3)
+             COUNT(CASE WHEN review.rating < 3 THEN 1 ELSE null END) AS userNegativeReviews,  // Negative reviews by the user (rating < 3)
+             COUNT { MATCH (:User)-[reviewPos:REVIEWED]->(r) WHERE reviewPos.rating >= 3 RETURN 1 } AS totalPositiveReviews, // Total positive reviews for the recipe
+             COUNT { MATCH (:User)-[reviewNeg:REVIEWED]->(r) WHERE reviewNeg.rating < 3 RETURN 1 } AS totalNegativeReviews  // Total negative reviews for the recipe
+
+        // Calculate the probabilities using Naive Bayes formula components
+        WITH r, 
+             userPositiveReviews,
+             userNegativeReviews,
+             totalPositiveReviews, 
+             totalNegativeReviews,
+             toFloat(totalPositiveReviews) / NULLIF((totalPositiveReviews + totalNegativeReviews), 0) AS P_Like, // Prior probability P(Like) with division by zero check
+             toFloat(userPositiveReviews + 1) / (NULLIF(totalPositiveReviews, 0) + 2) AS P_UserLikesGivenRecipe,  // Conditional probability with Laplace smoothing and division by zero check for user liking the recipe
+             toFloat(userNegativeReviews + 1) / (NULLIF(totalNegativeReviews, 0) + 2) AS P_UserDislikesGivenRecipe // Conditional probability with Laplace smoothing and division by zero check for user disliking the recipe
+
+             // Calculate the Naive Bayes score
+             WITH r, 
+                  P_Like * P_UserLikesGivenRecipe AS score
+             
+             RETURN r, score
+             ORDER BY score DESC
+             SKIP $skip
+             LIMIT $limit
             `,
-            { userId }
+            { userId, limit }
         );
 
+        // Process and return the recommendations
         const recommendations = result.records.map((record) => {
             const recipe = record.get('r').properties;
-            const likesCount = record.get('likesCount').toInt();
-            return { ...recipe, likesCount };
+            const score = record.get('score');
+            return { ...recipe, skip, score };
         });
 
         return recommendations;
     }
+
 
     async addUser(user: IUser) {
         if (this._passive) return;
@@ -210,20 +246,21 @@ export default class Neo4jClient {
                 /* cypher */ `
                 CREATE (r:Recipe { 
                     id: $id,
+                    img: 
                     name: $name, 
+                    preparationDifficulty: $preparationDifficulty,
                     description: $description, 
-                    instructions: $instructions,
-                    cookingTime: $cookingTime
+                    preferredMealTime: $preferredMealTime,
+                    rating: $rating,
                 })`,
                 {
                     id: (recipe as any)._id.toString(),
+                    img: recipe.imgs,
                     name: recipe.name,
+                    preparationDifficulty: recipe.preparationDifficulty,
                     description: recipe.description,
-                    instructions: recipe.instructions,
-                    cookingTime: recipe.cookingTime,
-                    //TODO add to user - user reviews and rating -> recipe
-
-
+                    preferredMealTime: recipe.preferredMealTime,
+                    rating: recipe.rating
                 }
             );
 

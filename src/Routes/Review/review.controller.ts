@@ -29,7 +29,7 @@ export default class ReviewController {
         const review = await new ReviewModel((_review));
         await review.save();
 
-        await Neo4jClient.getInstance({}).addReviewToRecipe(_review.recipe, (_user as any)?._id.toString(), review.id.toString())
+        await Neo4jClient.getInstance({}).addReviewToRecipe(_review.recipe, (_user as any)?._id.toString(), review)
 
         return { body: (review.toJSON() as any) }
     }

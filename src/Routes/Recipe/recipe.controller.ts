@@ -124,6 +124,8 @@ export default class RecipeController {
         if (recipe.status === ERecipeStatus.verified) {
             updateRecipe.status = ERecipeStatus.pending
             await updateRecipe.save()
+        } else {
+            await Datasx.getInstance().updateRecipe(recipeId, updateRecipe);
         }
         return { body: updateRecipe.toJSON() }
     }

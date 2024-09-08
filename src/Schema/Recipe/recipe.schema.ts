@@ -99,7 +99,7 @@ recipeSchema.post('save', async function (doc) {
     try {
         const user = await mongoose.model('User').findById(doc.user?.user);
         if (user) {
-            user.my_recipes.addToSet(doc._id);
+            user.my_recipes.includes(doc._id) || user.my_recipes.addToSet(doc._id);
             user.save();
         } else {
             throw ValidationErrorFactory({
@@ -128,7 +128,6 @@ recipeSchema.pre('findOneAndUpdate', async function (next) {
                 const _moderator: any = update?.moderator;
                 const comment: any = _moderator.comment;
                 const _id: mongoose.Types.ObjectId = this.getQuery()?._id;
-                console.log({ status });
 
                 const moderator = await mongoose.model('Moderator').findById(_moderator?.moderator.moderator, { moderated_recipe: 1 });
                 if (moderator) {

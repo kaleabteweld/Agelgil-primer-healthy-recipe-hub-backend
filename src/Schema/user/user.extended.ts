@@ -186,8 +186,14 @@ export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: stri
         }
 
         const recipeIndex = user.booked_recipes.indexOf(recipe._id as any);
-        if (recipeIndex !== -1) user.booked_recipes.splice(recipeIndex, 1);
-        else user.booked_recipes.push(recipe._id as any);
+        if (recipeIndex !== -1) {
+            user.booked_recipes.splice(recipeIndex, 1);
+            await Neo4jClient.getInstance({}).removeBookedRecipe(_id, recipe._id as any);
+        }
+        else {
+            user.booked_recipes.push(recipe._id as any);
+            await Neo4jClient.getInstance({}).addBookRecipe(_id, recipe._id as any);
+        }
 
         await user.save();
         return user.booked_recipes as IRecipe[];

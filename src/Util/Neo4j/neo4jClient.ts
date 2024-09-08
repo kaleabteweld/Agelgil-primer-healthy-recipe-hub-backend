@@ -1,6 +1,7 @@
 import neo4j, { Session } from "neo4j-driver";
 import { EAllergies, EChronicDisease, EDietaryPreferences, IUser } from "../../Schema/user/user.type";
 import { IRecipe } from "../../Schema/Recipe/recipe.type";
+import { IReview } from "../../Schema/Review/review.type";
 
 export default class Neo4jClient {
 
@@ -397,6 +398,67 @@ export default class Neo4jClient {
             );
         } catch (error) {
             console.error('Error updating recipe:', error);
+            throw error;
+        }
+    }
+
+    async addReviewToRecipe(recipeId: string, userId: string, review: IReview) {
+        if (this._passive) return;
+        try {
+            await this.session.run(
+                /* cypher */ `
+                MATCH (r:Recipe {id: $recipeId})
+                MERGE (u:User {id: $userId})
+                CREATE (u)-[:REVIEWED {rating: $rating, comment: $comment}]->(r)
+                `,
+                {
+                    recipeId,
+                    userId,
+                    rating: review.rating,
+                    comment: review.comment
+                }
+            );
+        } catch (error) {
+            console.error('Error adding review to recipe:', error);
+            throw error;
+        }
+    }
+
+    async addBookRecipe(userId: string, recipeId: string) {
+        if (this._passive) return;
+        try {
+            await this.session.run(
+                /* cypher */ `
+                MATCH (u:User {id: $userId})
+                MERGE (r:Recipe {id: $recipeId})
+                CREATE (u)-[:BOOKED]->(r)
+                `,
+                {
+                    userId,
+                    recipeId
+                }
+            );
+        } catch (error) {
+            console.error('Error booking recipe:', error);
+            throw error;
+        }
+    }
+
+    async removeBookedRecipe(userId: string, recipeId: string) {
+        if (this._passive) return;
+        try {
+            await this.session.run(
+                /* cypher */ `
+                MATCH (u:User {id: $userId})-[b:BOOKED]->(r:Recipe {id: $recipeId})
+                DELETE b
+                `,
+                {
+                    userId,
+                    recipeId
+                }
+            );
+        } catch (error) {
+            console.error('Error removing booked recipe:', error);
             throw error;
         }
     }

@@ -6,6 +6,7 @@ import { newReviewSchema, reviewUpdateSchema } from "../../Schema/Review/review.
 import UserModel from "../../Schema/user/user.schema";
 import { IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
+import Neo4jClient from "../../Util/Neo4j/neo4jClient";
 
 
 export default class ReviewController {
@@ -13,6 +14,7 @@ export default class ReviewController {
     static async create(_review: INewReviewFrom, user: IUser): Promise<IResponseType<IReview>> {
 
         const _user = await UserModel.getById(user.id as any)
+        await RecipeModel.getById(_review.recipe as any)
         await ReviewModel.validator(_review, newReviewSchema);
 
         _review = {
@@ -26,6 +28,8 @@ export default class ReviewController {
 
         const review = await new ReviewModel((_review));
         await review.save();
+
+        await Neo4jClient.getInstance({}).addReviewToRecipe(_review.recipe, (_user as any)?._id.toString(), review.id.toString())
 
         return { body: (review.toJSON() as any) }
     }

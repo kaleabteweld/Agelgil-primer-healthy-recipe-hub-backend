@@ -152,6 +152,7 @@ export async function update(this: mongoose.Model<IRecipe>, _id: string, newReci
         populatePath && await newDoc?.populate(populatePath);
 
         Datasx.getInstance().updateRecipe(_id, newDoc as any)
+        await Neo4jClient.getInstance({}).updateRecipe(newDoc as any)
         return newDoc;
     } catch (error) {
         throw error;

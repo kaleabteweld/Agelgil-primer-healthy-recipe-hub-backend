@@ -7,6 +7,7 @@ import { EStatus, IModeratorUserUpdateSchema, IUser, IUserUpdateFrom } from "./u
 import { MakeValidator } from "../../Util";
 import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
+import Neo4jClient from "../../Util/Neo4j/neo4jClient";
 
 
 export async function encryptPassword(this: IUser, password?: string): Promise<String> {
@@ -126,6 +127,8 @@ export async function update(this: mongoose.Model<IUser>, _id: string, newUser: 
             newDoc = await this.findByIdAndUpdate(_id, newUser, { new: true, overwrite: true });
         }
         if (populatePath) await newDoc?.populate(populatePath)
+
+        await Neo4jClient.getInstance({}).updateUser(newDoc as any)
         return newDoc;
     } catch (error) {
         throw error;

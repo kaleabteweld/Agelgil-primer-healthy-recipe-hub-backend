@@ -239,6 +239,108 @@ export default class Neo4jClient {
         }
     }
 
+
+    async updateRecipe(recipe: IRecipe) {
+        if (this._passive) return;
+        try {
+            await this.session.run(
+                /* cypher */ `
+                MATCH (r:Recipe {id: $id})
+                SET r.name = $name, 
+                    r.description = $description, 
+                    r.instructions = $instructions,
+                    r.cookingTime = $cookingTime
+                `,
+                {
+                    id: (recipe as any)._id.toString(),
+                    name: recipe.name,
+                    description: recipe.description,
+                    instructions: recipe.instructions,
+                    cookingTime: recipe.cookingTime
+                }
+            );
+
+            await this.session.run(
+                /* cypher */ `
+                MATCH (r:Recipe {id: $id})-[c:CONTAINS]->(i:Ingredient)
+                DELETE c
+                `,
+                {
+                    id: (recipe as any)._id.toString()
+                }
+            );
+
+            for (const ingredient of recipe.ingredients) {
+                await this.session.run(
+                    /* cypher */ `MERGE (i:Ingredient {name: $ingredient}) 
+                    WITH i
+                    MATCH (r:Recipe {id: $id})
+                    CREATE (r)-[:CONTAINS {amount: $amount}]->(i)`,
+                    {
+                        id: (recipe as any)._id.toString(),
+                        ingredient: ingredient.name,
+                        amount: ingredient.amount
+                    }
+                );
+            }
+
+            await this.session.run(
+                /* cypher */ `
+                MATCH (r:Recipe {id: $id})-[p:PREFERRED_MEAL_TIME]->(t:PreferredMealTime)
+                DELETE p
+                `,
+                {
+                    id: (recipe as any)._id.toString()
+                }
+            );
+
+            for (const preferredMealTime of recipe.preferredMealTime) {
+                await this.session.run(
+                    /* cypher */ `
+                    MERGE (p:PreferredMealTime {name: $preferredMealTime}) 
+                    WITH p
+                    MATCH (r:Recipe {id: $id})
+                    CREATE (r)-[:PREFERRED_MEAL_TIME]->(p)`,
+                    {
+                        id: (recipe as any)._id.toString(),
+                        preferredMealTime: preferredMealTime
+                    }
+                );
+            }
+
+            await this.session.run(
+                /* cypher */ `
+                MATCH (r:Recipe {id: $id})-[c:HAS_CONDITION]->(m:MedicalCondition)
+                DELETE c
+                `,
+                {
+                    id: (recipe as any)._id.toString()
+                }
+            );
+        } catch (error) {
+            console.error('Error updating recipe:', error);
+            throw error;
+        }
+    }
+
+    async removeRecipe(recipeId: string) {
+        if (this._passive) return;
+        try {
+            await this.session.run(
+                /* cypher */ `
+                MATCH (r:Recipe {id: $id})
+                DETACH DELETE r
+                `,
+                {
+                    id: recipeId
+                }
+            );
+        } catch (error) {
+            console.error('Error removing recipe:', error);
+            throw error;
+        }
+    }
+
     async addRecipe(recipe: IRecipe) {
         if (this._passive) return;
         try {
@@ -352,89 +454,6 @@ export default class Neo4jClient {
             );
         } catch (error) {
             console.error('Error adding recipe:', error);
-            throw error;
-        }
-    }
-
-    async updateRecipe(recipe: IRecipe) {
-        if (this._passive) return;
-        try {
-            await this.session.run(
-                /* cypher */ `
-                MATCH (r:Recipe {id: $id})
-                SET r.name = $name, 
-                    r.description = $description, 
-                    r.instructions = $instructions,
-                    r.cookingTime = $cookingTime
-                `,
-                {
-                    id: (recipe as any)._id.toString(),
-                    name: recipe.name,
-                    description: recipe.description,
-                    instructions: recipe.instructions,
-                    cookingTime: recipe.cookingTime
-                }
-            );
-
-            await this.session.run(
-                /* cypher */ `
-                MATCH (r:Recipe {id: $id})-[c:CONTAINS]->(i:Ingredient)
-                DELETE c
-                `,
-                {
-                    id: (recipe as any)._id.toString()
-                }
-            );
-
-            for (const ingredient of recipe.ingredients) {
-                await this.session.run(
-                    /* cypher */ `MERGE (i:Ingredient {name: $ingredient}) 
-                    WITH i
-                    MATCH (r:Recipe {id: $id})
-                    CREATE (r)-[:CONTAINS {amount: $amount}]->(i)`,
-                    {
-                        id: (recipe as any)._id.toString(),
-                        ingredient: ingredient.name,
-                        amount: ingredient.amount
-                    }
-                );
-            }
-
-            await this.session.run(
-                /* cypher */ `
-                MATCH (r:Recipe {id: $id})-[p:PREFERRED_MEAL_TIME]->(t:PreferredMealTime)
-                DELETE p
-                `,
-                {
-                    id: (recipe as any)._id.toString()
-                }
-            );
-
-            for (const preferredMealTime of recipe.preferredMealTime) {
-                await this.session.run(
-                    /* cypher */ `
-                    MERGE (p:PreferredMealTime {name: $preferredMealTime}) 
-                    WITH p
-                    MATCH (r:Recipe {id: $id})
-                    CREATE (r)-[:PREFERRED_MEAL_TIME]->(p)`,
-                    {
-                        id: (recipe as any)._id.toString(),
-                        preferredMealTime: preferredMealTime
-                    }
-                );
-            }
-
-            await this.session.run(
-                /* cypher */ `
-                MATCH (r:Recipe {id: $id})-[c:HAS_CONDITION]->(m:MedicalCondition)
-                DELETE c
-                `,
-                {
-                    id: (recipe as any)._id.toString()
-                }
-            );
-        } catch (error) {
-            console.error('Error updating recipe:', error);
             throw error;
         }
     }

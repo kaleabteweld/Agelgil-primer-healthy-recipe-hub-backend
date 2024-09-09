@@ -5,6 +5,7 @@ import { EAllergies, EChronicDisease, EDietaryPreferences, IUser, IUserLogInFrom
 import { IModerator, IModeratorLogInFrom, IModeratorSignUpFrom } from "../src/Schema/Moderator/moderator.type";
 import { IIngredient, INewIngredientFrom } from "../src/Schema/Ingredient/ingredient.type";
 import { EPreferredMealTime, EPreparationDifficulty, INewRecipeFrom, IngredientDetail, IRecipe } from "../src/Schema/Recipe/recipe.type";
+import { INewReviewFrom } from "../src/Schema/Review/review.type";
 
 
 export const sighupUrl = (user: UserType) => `/Api/v1/public/authentication/${user}/signUp`;
@@ -21,6 +22,9 @@ export const ingredientPublicUrl = () => `/Api/v1/public/ingredients/`;
 
 export const recipePrivateUrl = () => `/Api/v1/private/recipe/`;
 export const recipePublicUrl = () => `/Api/v1/public/recipe/`;
+
+export const reviewPrivateUrl = () => `/Api/v1/private/review/`;
+export const reviewPublicUrl = () => `/Api/v1/public/review/`;
 
 
 
@@ -121,6 +125,11 @@ export const validRecipes: Omit<INewRecipeFrom, "ingredients">[] = [{
     preparationDifficulty: EPreparationDifficulty.easy,
     youtubeLink: "https://www.youtube.com/watch?v=A5w-dEgIU1M",
 }];
+
+export const validReview: Omit<INewReviewFrom, "recipe"> = {
+    comment: "this is a comment",
+    rating: 4,
+}
 
 export const expectError = async (response: Response, code: number) => {
 
@@ -312,5 +321,38 @@ export const expectValidRecipeCardList = async (response: Response, minLen: numb
             preparationDifficulty: expect.any(String),
             ...matchers
         });
+    });
+}
+
+export const expectValidReview = (response: Response, input: INewReviewFrom, matchers?: Record<string, unknown> | Record<string, unknown>[]) => {
+    expect(response.status).toBe(200);
+    expect(response.body.body).toMatchObject({
+        _id: expect.any(String),
+        comment: input.comment,
+        rating: input.rating,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        __v: expect.any(Number),
+        ...matchers
+    });
+}
+
+export const expectValidReviewList = async (response: Response, inputReviews: INewReviewFrom[], minLen: number, maxLen?: number, matchers?: Record<string, unknown> | Record<string, unknown>[]) => {
+
+    expect(response.status).toBe(200)
+
+    expect(response.body.body.length).toBeGreaterThanOrEqual(minLen)
+    maxLen && expect(response.body.body.length).toBeLessThanOrEqual(maxLen)
+
+    response.body.body.forEach((review: any, index: number) => {
+        expect(review).toMatchObject(expect.objectContaining({
+            _id: expect.any(String),
+            comment: inputReviews[index].comment,
+            rating: inputReviews[index].rating,
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+            __v: expect.any(Number),
+            ...matchers
+        }));
     });
 }

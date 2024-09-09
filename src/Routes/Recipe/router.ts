@@ -108,6 +108,13 @@ privateRecipeRouter.patch("/update/:recipeId", userOnly, MakeErrorHandler(
     }
 ));
 
+privateRecipeRouter.delete("/remove/:recipeId", userOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _user: IUser = req['user'];
+        res.json(await RecipeController.removeById(req.params.recipeId, _user));
+    }
+));
+
 publicRecipeRouter.use("/recipe", publicRecipeRouter);
 privateRecipeRouter.use("/recipe", privateRecipeRouter);
 

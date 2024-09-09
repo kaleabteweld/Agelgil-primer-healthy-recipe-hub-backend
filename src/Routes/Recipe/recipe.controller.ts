@@ -160,7 +160,7 @@ export default class RecipeController {
     }
 
     static async removeById(recipeId: string, user: IUser): Promise<IResponseType<{} | null>> {
-        const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, await UserModel.getById(user.id as any));
+        const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, (await UserModel.getById(user.id as any)));
         await RecipeModel.removeByID(recipe?.id)
         await Datasx.getInstance().removeRecipe(recipe as any)
         return { body: {} };

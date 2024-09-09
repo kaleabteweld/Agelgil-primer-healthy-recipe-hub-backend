@@ -126,10 +126,13 @@ export const validRecipes: Omit<INewRecipeFrom, "ingredients">[] = [{
     youtubeLink: "https://www.youtube.com/watch?v=A5w-dEgIU1M",
 }];
 
-export const validReview: Omit<INewReviewFrom, "recipe"> = {
+export const validReviews: Omit<INewReviewFrom, "recipe">[] = [{
     comment: "this is a comment",
     rating: 4,
-}
+}, {
+    comment: "this is a comment",
+    rating: 3,
+}]
 
 export const expectError = async (response: Response, code: number) => {
 
@@ -200,6 +203,21 @@ export const createRecipes = async (request: Function, app: any, newValidRecipes
     return recipes;
 }
 
+export const createReviews = async (request: Function, app: any, newValidReviews: Omit<INewReviewFrom, "recipe">[], recipes: IRecipe, accessToken: string): Promise<any[]> => {
+
+    const reviews: any[] = [];
+
+    for (let index = 0; index < newValidReviews.length; index++) {
+        const response = await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send(
+            {
+                ...newValidReviews[index],
+                recipe: recipes._id
+            });
+        reviews.push(response.body.body);
+    }
+
+    return reviews;
+}
 export const expectValidIngredient = (response: Response, input: INewIngredientFrom) => {
     expect(response.status).toBe(200);
     expect(response.body.body).toMatchObject({

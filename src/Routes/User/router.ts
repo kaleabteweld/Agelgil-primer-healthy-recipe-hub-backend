@@ -11,7 +11,6 @@ privateUserRouter.get("/", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
         res.json(await UserController.getById(_user.id as any));
-        res.json(await UserController.getById(_user.id as any));
     }
 ));
 

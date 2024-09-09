@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>76/76</span>
+                <span class='fraction'>66/66</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>76/76</span>
+                <span class='fraction'>66/66</span>
             </div>
         
             
@@ -129,17 +129,7 @@
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -172,6 +162,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">130x</span>
+<span class="cline-any cline-yes">130x</span>
+<span class="cline-any cline-yes">130x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -182,9 +175,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">112x</span>
-<span class="cline-any cline-yes">112x</span>
-<span class="cline-any cline-yes">112x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -197,17 +187,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">137x</span>
+<span class="cline-any cline-yes">155x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -217,7 +197,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import mongoose from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { EActivityLevel, EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals, EGender, EStatus, EVerified, IUser, IUserMethods, IUserModel } from './user.type';
+import { EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals, EStatus, IUser, IUserMethods, IUserModel } from './user.type';
 import {
     checkPassword, encryptPassword, getBookedRecipes, getByEmail, getById, getMyRecipes,
     removeByID, setStatus, toggleBookedRecipes, update, validator, hasBookedRecipe, updateUserStatus,
@@ -234,24 +214,14 @@ export const userSchema = new mongoose.Schema&lt;IUser, IUserModel, IUserMethods
     status: { type: String, enum: Object.values(EStatus), default: EStatus.active },
     booked_recipes: [{ type: mongoose.Types.ObjectId, ref: "Recipe" }],
     my_recipes: [{ type: mongoose.Types.ObjectId, ref: "Recipe" }],
-    verified: { type: String, enum: Object.values(EVerified), default: EVerified.pending },
+    verified: { type: Boolean, default: false },
 &nbsp;
     medical_condition: {
         chronicDiseases: { type: [String], enum: Object.values(EChronicDisease) },
         dietary_preferences: { type: [String], enum: Object.values(EDietaryPreferences) },
         allergies: { type: [String], enum: Object.values(EAllergies) },
-    },
-&nbsp;
-    userStats: {
-        weights: { type: { date: Date, value: Number } },
-        weight: Number,
-        height: Number,
-        age: Number,
-        gender: { type: String, enum: Object.values(EGender) },
-        activityLevel: { type: String, enum: Object.values(EActivityLevel) },
-        diet_goals: { type: String, enum: Object.values(EDietGoals) },
-    },
-    mealPlanner: { type: mongoose.Types.ObjectId, ref: "MealPlanner" },
+        // diet_goals: { type: [String], enum: Object.values(EDietGoals) },
+    }
 &nbsp;
 }, {
     timestamps: true,
@@ -298,7 +268,7 @@ export default UserModel;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-09T14:37:52.927Z
+                at 2024-09-09T14:43:07.106Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

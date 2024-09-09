@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40.35% </span>
+                <span class="strong">78.94% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/57</span>
+                <span class='fraction'>45/57</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">77.77% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>14/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>3/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40.35% </span>
+                <span class="strong">78.94% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>23/57</span>
+                <span class='fraction'>45/57</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -133,18 +133,30 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -153,20 +165,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -189,29 +189,29 @@ import { IPagination, IResponseType } from "../../Types";
 &nbsp;
 export default class ReviewController {
 &nbsp;
-    static async <span class="fstat-no" title="function not covered" >create(_review: INewReviewFrom, user: IUser): Promise&lt;IResponseType&lt;IReview&gt;&gt; {</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        const _user = await UserModel.getById(user.id as any)</span>
-<span class="cstat-no" title="statement not covered" >        await ReviewModel.validator(_review, newReviewSchema);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        _review = {</span>
-<span class="cstat-no" title="statement not covered" >            ..._review,</span>
-<span class="cstat-no" title="statement not covered" >            user: {</span>
-<span class="cstat-no" title="statement not covered" >                user: _user?._id,</span>
-<span class="cstat-no" title="statement not covered" >                profile_img: _user?.profile_img,</span>
-<span class="cstat-no" title="statement not covered" >                full_name: _user?.full_name</span>
-<span class="cstat-no" title="statement not covered" >            }</span>
-<span class="cstat-no" title="statement not covered" >        } as any;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        const review = await new ReviewModel((_review));</span>
-<span class="cstat-no" title="statement not covered" >        await review.save();</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        return { body: (review.toJSON() as any) }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+    static async create(_review: INewReviewFrom, user: IUser): Promise&lt;IResponseType&lt;IReview&gt;&gt; {
 &nbsp;
-    static async <span class="fstat-no" title="function not covered" >recipeReviews(recipeId: string, { skip, limit }: IPagination): Promise&lt;IResponseType&lt;IReview[]&gt;&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return { body: await RecipeModel.getRecipesReview(recipeId, { skip, limit }) }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+        const _user = await UserModel.getById(user.id as any);
+        await ReviewModel.validator(_review, newReviewSchema);
+&nbsp;
+        _review = {
+            ..._review,
+            user: {
+                user: _user<span class="branch-0 cbranch-no" title="branch not covered" >?._</span>id,
+                profile_img: _user<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>rofile_img,
+                full_name: _user<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>ull_name
+            }
+        } as any;
+&nbsp;
+        const review = await new ReviewModel((_review));
+        await review.save();
+&nbsp;
+        return { body: (review.toJSON() as any) }
+    }
+&nbsp;
+    static async recipeReviews(recipeId: string, { skip, limit }: IPagination): Promise&lt;IResponseType&lt;IReview[]&gt;&gt; {
+        return { body: await RecipeModel.getRecipesReview(recipeId, { skip, limit }) }
+    }
 &nbsp;
     static async <span class="fstat-no" title="function not covered" >update(_review: IReviewUpdateFrom, reviewId: string): Promise&lt;IResponseType&lt;IReview | null&gt;&gt; {</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -221,9 +221,9 @@ export default class ReviewController {
 <span class="cstat-no" title="statement not covered" >        return { body: (updateReview as any).toJSON() }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-    static async <span class="fstat-no" title="function not covered" >getById(reviewId: string = ""): Promise&lt;IResponseType&lt;IReview | null&gt;&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return { body: ((await ReviewModel.getById(reviewId))?.toJSON() as any) };</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+    static async getById(reviewId: string = ""): Promise&lt;IResponseType&lt;IReview | null&gt;&gt; {
+        return { body: ((await ReviewModel.getById(reviewId))<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>oJSON() as any) };
+    }
 &nbsp;
     static async <span class="fstat-no" title="function not covered" >removeById(reviewId: string, user: IReview): Promise&lt;IResponseType&lt;{} | null&gt;&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        const Review = await ReviewModel.getById(reviewId);</span>
@@ -241,7 +241,7 @@ export default class ReviewController {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-09T14:37:52.927Z
+                at 2024-09-09T14:43:07.106Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

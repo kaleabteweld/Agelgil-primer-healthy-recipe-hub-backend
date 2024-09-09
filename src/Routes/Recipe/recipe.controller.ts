@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import IngredientModel from "../../Schema/Ingredient/ingredient.schema";
 import { IIngredient } from "../../Schema/Ingredient/ingredient.type";
 import ModeratorModel from "../../Schema/Moderator/moderator.schema";
@@ -16,22 +17,28 @@ import { Datasx } from "../../Util/Datasx";
 
 export default class RecipeController {
 
+    static async getIngredients(_recipe: IRecipeUpdateFrom): Promise<{
+        name?: string,
+        type?: string,
+        localName?: string,
+        amount: number
+        unit: string
+    }[]> {
+        const ingredients: any = []
+
+        for (const { ingredient, amount, unit } of _recipe?.ingredients ?? []) {
+            const ingredientData = await IngredientModel.findById(ingredient, { name: 1, type: 1, localName: 1 });
+            ingredients.push({ ...ingredientData?.toJSON(), amount, unit });
+        }
+        return ingredients;
+    }
+
     static async create(_recipe: INewRecipeFrom, user: IUser): Promise<IResponseType<IRecipe>> {
 
         const _user = await UserModel.getById(user.id as any)
         await RecipeModel.validator(_recipe, newRecipeSchema);
+        const ingredients = await RecipeController.getIngredients(_recipe)
 
-        const ingredients: {
-            name?: string,
-            type?: string,
-            localName?: string,
-            amount: number
-            unit: string
-        }[] = await Promise.all(_recipe.ingredients.map(async ({ ingredient, amount, unit }) => {
-            const ingredientData = await IngredientModel.findById(ingredient, { name: 1, type: 1, localName: 1 });
-            console.log('Fetched ingredient data:', ingredientData, ingredientData?.name);
-            return { ...ingredientData, amount, unit };
-        }))
 
         _recipe = {
             ..._recipe,
@@ -104,18 +111,7 @@ export default class RecipeController {
 
         await RecipeModel.validator(_recipe, recipeUpdateSchema);
         const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, await UserModel.getById(user.id as any));
-
-        const ingredients: {
-            name?: string,
-            type?: string,
-            localName?: string,
-            amount: number
-            unit: string
-        }[] = await Promise.all(_recipe?.ingredients ?? [].map(async ({ ingredient, amount, unit }) => {
-            const ingredientData = await IngredientModel.findById(ingredient, { name: 1, type: 1, localName: 1 });
-            console.log('Fetched ingredient data:', ingredientData, ingredientData?.name);
-            return { ...ingredientData, amount, unit };
-        }))
+        const ingredients = await RecipeController.getIngredients(_recipe)
 
         _recipe = {
             ..._recipe,

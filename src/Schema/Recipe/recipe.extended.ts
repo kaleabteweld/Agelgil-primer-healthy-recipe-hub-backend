@@ -89,7 +89,7 @@ export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, m
         const datasx = Datasx.getInstance();
         await datasx.EmbedAndSave(recipe)
 
-        return await this.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(_id) }, {
+        const newRecipe = await this.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(_id) }, {
             status: body.status,
             moderator: {
                 moderator: {
@@ -101,6 +101,7 @@ export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, m
 
             },
         }, { new: true, overwrite: true }) as any;
+        return newRecipe
 
     } catch (error) {
         if (error instanceof BSONError) {

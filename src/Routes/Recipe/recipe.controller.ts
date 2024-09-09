@@ -28,7 +28,9 @@ export default class RecipeController {
             amount: number
             unit: string
         }[] = await Promise.all(_recipe.ingredients.map(async ({ ingredient, amount, unit }) => {
-            return { ...(await IngredientModel.findById(ingredient, { name: 1, type: 1, localName: 1 })), amount, unit }
+            const ingredientData = await IngredientModel.findById(ingredient, { name: 1, type: 1, localName: 1 });
+            console.log('Fetched ingredient data:', ingredientData, ingredientData?.name);
+            return { ...ingredientData, amount, unit };
         }))
 
         _recipe = {
@@ -110,7 +112,9 @@ export default class RecipeController {
             amount: number
             unit: string
         }[] = await Promise.all(_recipe?.ingredients ?? [].map(async ({ ingredient, amount, unit }) => {
-            return { ...(await IngredientModel.findById(ingredient, { name: 1, type: 1, localName: 1 })), amount, unit }
+            const ingredientData = await IngredientModel.findById(ingredient, { name: 1, type: 1, localName: 1 });
+            console.log('Fetched ingredient data:', ingredientData, ingredientData?.name);
+            return { ...ingredientData, amount, unit };
         }))
 
         _recipe = {

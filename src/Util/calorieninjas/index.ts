@@ -96,7 +96,7 @@ export default class Calorieninjas {
             serving_size_g: 0,
             name: ""
         }
-        const food = ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.unit} ${ingredient.name}`).join(",");
+        const food = ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.unit} ${(ingredient as any)._doc.name}`).join(",");
         return await this.getTotalNutrition(food);
     }
 

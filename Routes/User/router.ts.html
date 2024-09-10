@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.23% </span>
+                <span class="strong">89.74% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>54/78</span>
+                <span class='fraction'>70/78</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.23% </span>
+                <span class="strong">89.74% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>54/78</span>
+                <span class='fraction'>70/78</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -166,36 +166,36 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -249,30 +249,30 @@ publicUserRouter.get("/id/:id", MakeErrorHandler(
 &nbsp;
 privateUserRouter.get("/bookedRecipes/:skip/:limit", userOnly, MakeErrorHandler(
     async (req: any, res: Response) =&gt; {
-<span class="cstat-no" title="statement not covered" >        const _user: IUser = req['user'];</span>
-<span class="cstat-no" title="statement not covered" >        const skip = Number.parseInt(req.params.skip);</span>
-<span class="cstat-no" title="statement not covered" >        const limit = Number.parseInt(req.params.limit);</span>
-<span class="cstat-no" title="statement not covered" >        res.json(await UserController.bookedRecipes(_user.id as any, { skip, limit }));</span>
-<span class="cstat-no" title="statement not covered" >        res.json(await UserController.bookedRecipes(_user.id as any, { skip, limit }));</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+        const _user: IUser = req['user'];
+        const skip = Number.parseInt(req.params.skip);
+        const limit = Number.parseInt(req.params.limit);
+        res.json(await UserController.bookedRecipes(_user.id as any, { skip, limit }));
+        res.json(await UserController.bookedRecipes(_user.id as any, { skip, limit }));
+    }
 ));
 &nbsp;
 privateUserRouter.get("/myRecipe/:status/:skip/:limit", userOnly, MakeErrorHandler(
     async (req: any, res: Response) =&gt; {
-<span class="cstat-no" title="statement not covered" >        const _user: IUser = req['user'];</span>
-<span class="cstat-no" title="statement not covered" >        const skip = Number.parseInt(req.params.skip);</span>
-<span class="cstat-no" title="statement not covered" >        const limit = Number.parseInt(req.params.limit);</span>
-<span class="cstat-no" title="statement not covered" >        const status = req.params.status;</span>
-<span class="cstat-no" title="statement not covered" >        res.json(await UserController.myRecipes(_user.id, status, { skip, limit }));</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+        const _user: IUser = req['user'];
+        const skip = Number.parseInt(req.params.skip);
+        const limit = Number.parseInt(req.params.limit);
+        const status = req.params.status;
+        res.json(await UserController.myRecipes(_user.id, status, { skip, limit }));
+    }
 ));
 &nbsp;
 privateUserRouter.patch("/bookedRecipes/toggle/:recipeId", userOnly, MakeErrorHandler(
     async (req: any, res: Response) =&gt; {
-<span class="cstat-no" title="statement not covered" >        const _user: IUser = req['user'];</span>
-<span class="cstat-no" title="statement not covered" >        const recipeId = req.params.recipeId;</span>
-<span class="cstat-no" title="statement not covered" >        res.json(await UserController.toggleBookedRecipes(_user.id as any, recipeId));</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+        const _user: IUser = req['user'];
+        const recipeId = req.params.recipeId;
+        res.json(await UserController.toggleBookedRecipes(_user.id as any, recipeId));
+    }
 ));
 &nbsp;
 privateUserRouter.get("/list/:page/:verified", moderatorOnly, MakeErrorHandler(
@@ -301,7 +301,7 @@ export { publicUserRouter, privateUserRouter } </pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-09T14:43:07.106Z
+                at 2024-09-10T06:28:27.307Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90% </span>
+                <span class="strong">63.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>54/60</span>
+                <span class='fraction'>38/60</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90% </span>
+                <span class="strong">63.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>54/60</span>
+                <span class='fraction'>38/60</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -133,30 +133,22 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -169,12 +161,20 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -192,16 +192,16 @@ const privateModeratorRouter = express.Router();
 &nbsp;
 privateModeratorRouter.get("/", moderatorOnly, MakeErrorHandler(
     async (req: any, res: Response) =&gt; {
-        const _moderator: IModerator = req['moderator'];
-        res.json(await moderatorController.getById(_moderator.id as any));
-    }
+<span class="cstat-no" title="statement not covered" >        const _moderator: IModerator = req['moderator'];</span>
+<span class="cstat-no" title="statement not covered" >        res.json(await moderatorController.getById(_moderator.id as any));</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 ));
 &nbsp;
 privateModeratorRouter.patch("/update", moderatorOnly, MakeErrorHandler(
     async (req: any, res: Response) =&gt; {
-        const _moderator: IModerator = req['moderator'];
-        res.json(await moderatorController.update(req.body, _moderator.id));
-    }
+<span class="cstat-no" title="statement not covered" >        const _moderator: IModerator = req['moderator'];</span>
+<span class="cstat-no" title="statement not covered" >        res.json(await moderatorController.update(req.body, _moderator.id));</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 ));
 &nbsp;
 publicModeratorRouter.get("/id/:id", MakeErrorHandler(
@@ -212,10 +212,10 @@ publicModeratorRouter.get("/id/:id", MakeErrorHandler(
 &nbsp;
 privateModeratorRouter.patch("/updateRecipeStatus/:recipeId", moderatorOnly, MakeErrorHandler(
     async (req: any, res: Response) =&gt; {
-        const _moderator: IModerator = req['moderator'];
-        const recipeId = req.params.recipeId;
-        res.json(await moderatorController.updateRecipeStatus(recipeId, req.body, _moderator.id as any));
-    }
+<span class="cstat-no" title="statement not covered" >        const _moderator: IModerator = req['moderator'];</span>
+<span class="cstat-no" title="statement not covered" >        const recipeId = req.params.recipeId;</span>
+<span class="cstat-no" title="statement not covered" >        res.json(await moderatorController.updateRecipeStatus(recipeId, req.body, _moderator.id as any));</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 ));
 &nbsp;
 privateModeratorRouter.patch("/updateUserStatus/:userId", moderatorOnly, MakeErrorHandler(
@@ -228,12 +228,12 @@ privateModeratorRouter.patch("/updateUserStatus/:userId", moderatorOnly, MakeErr
 &nbsp;
 privateModeratorRouter.get("/moderatedRecipes/:status/:skip/:limit", moderatorOnly, MakeErrorHandler(
     async (req: any, res: Response) =&gt; {
-        const _moderator: IModerator = req['moderator'];
-        const skip = Number.parseInt(req.params.skip);
-        const limit = Number.parseInt(req.params.limit);
-        const status = req.params.status;
-        res.json(await moderatorController.moderatedRecipes(_moderator.id, status, { skip, limit }));
-    }
+<span class="cstat-no" title="statement not covered" >        const _moderator: IModerator = req['moderator'];</span>
+<span class="cstat-no" title="statement not covered" >        const skip = Number.parseInt(req.params.skip);</span>
+<span class="cstat-no" title="statement not covered" >        const limit = Number.parseInt(req.params.limit);</span>
+<span class="cstat-no" title="statement not covered" >        const status = req.params.status;</span>
+<span class="cstat-no" title="statement not covered" >        res.json(await moderatorController.moderatedRecipes(_moderator.id, status, { skip, limit }));</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 ));
 &nbsp;
 publicModeratorRouter.use("/moderator", publicModeratorRouter);
@@ -247,7 +247,7 @@ export { publicModeratorRouter, privateModeratorRouter } </pre></td></tr></table
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-10T06:28:27.307Z
+                at 2024-09-11T20:51:39.518Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

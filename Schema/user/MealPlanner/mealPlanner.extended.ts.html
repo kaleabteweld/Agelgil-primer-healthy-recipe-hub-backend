@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for Schema/Review/review.extended.ts</title>
+    <title>Code coverage report for Schema/user/MealPlanner/mealPlanner.extended.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../prettify.css" />
-    <link rel="stylesheet" href="../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../sort-arrow-sprite.png);
+            background-image: url(../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">Schema/Review</a> review.extended.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">Schema/user/MealPlanner</a> mealPlanner.extended.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">24.19% </span>
+                <span class="strong">22.95% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/62</span>
+                <span class='fraction'>14/61</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">24.19% </span>
+                <span class="strong">22.95% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/62</span>
+                <span class='fraction'>14/61</span>
             </div>
         
             
@@ -134,6 +134,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -183,34 +186,34 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import mongoose from "mongoose";
 import Joi from "joi";
-import { ValidationErrorFactory, errorFactory, isValidationError } from "../../Types/error"
+import { ValidationErrorFactory } from "../../../Types/error"
 import { BSONError } from 'bson';
-import { MakeValidator } from "../../Util";
-import { IReview } from "./review.type";
+import { MakeValidator } from "../../../Util";
+import { IMealPlanner } from "./mealPlanner.type";
+import { EPreferredMealTime, ERecipeStatus, IRecipe } from "../../Recipe/recipe.type";
+import { RecipeSearchBuilder } from "../../Recipe/recipe.utils";
+import { IUser } from "../user.type";
 &nbsp;
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export function validator&lt;T&gt;(reviewInput: T, schema: Joi.ObjectSchema&lt;T&gt;) {</span></span>
-<span class="cstat-no" title="statement not covered" >    return MakeValidator&lt;T&gt;(schema, reviewInput);</span>
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export function validator&lt;T&gt;(mealPlannerInput: T, schema: Joi.ObjectSchema&lt;T&gt;) {</span></span>
+<span class="cstat-no" title="statement not covered" >    return MakeValidator&lt;T&gt;(schema, mealPlannerInput);</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function getById(this: mongoose.Model&lt;IReview&gt;, _id: string): Promise&lt;IReview&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function getById(this: mongoose.Model&lt;IMealPlanner&gt;, _id: string): Promise&lt;IMealPlanner&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >        const review = await this.findById(new mongoose.Types.ObjectId(_id));</span>
-<span class="cstat-no" title="statement not covered" >        if (review == null) {</span>
+<span class="cstat-no" title="statement not covered" >        const mealPlanner = await this.findById(new mongoose.Types.ObjectId(_id));</span>
+<span class="cstat-no" title="statement not covered" >        if (mealPlanner == null) {</span>
 <span class="cstat-no" title="statement not covered" >            throw ValidationErrorFactory({</span>
-<span class="cstat-no" title="statement not covered" >                msg: "review not found",</span>
+<span class="cstat-no" title="statement not covered" >                msg: "mealPlanner not found",</span>
 <span class="cstat-no" title="statement not covered" >                statusCode: 404,</span>
 <span class="cstat-no" title="statement not covered" >                type: "Validation"</span>
 <span class="cstat-no" title="statement not covered" >            }, "_id")</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >        return review;</span>
+<span class="cstat-no" title="statement not covered" >        return mealPlanner;</span>
 <span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
 <span class="cstat-no" title="statement not covered" >        if (error instanceof BSONError) {</span>
 <span class="cstat-no" title="statement not covered" >            throw ValidationErrorFactory({</span>
@@ -224,12 +227,12 @@ import { IReview } from "./review.type";
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function removeByID(this: mongoose.Model&lt;IReview&gt;, _id: string): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function removeByID(this: mongoose.Model&lt;IMealPlanner&gt;, _id: string): Promise&lt;void&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
 <span class="cstat-no" title="statement not covered" >        const result = await this.deleteOne({ _id: new mongoose.Types.ObjectId(_id) })</span>
 <span class="cstat-no" title="statement not covered" >        if (result.deletedCount === 0) {</span>
 <span class="cstat-no" title="statement not covered" >            throw ValidationErrorFactory({</span>
-<span class="cstat-no" title="statement not covered" >                msg: "review not found",</span>
+<span class="cstat-no" title="statement not covered" >                msg: "mealPlanner not found",</span>
 <span class="cstat-no" title="statement not covered" >                statusCode: 404,</span>
 <span class="cstat-no" title="statement not covered" >                type: "Validation"</span>
 <span class="cstat-no" title="statement not covered" >            }, "_id")</span>
@@ -246,9 +249,6 @@ import { IReview } from "./review.type";
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
-// export async function update(this: mongoose.Model&lt;IReview&gt;, _id: string, rewReview: IReviewUpdateFrom, populatePath?: string | string[]): Promise&lt;IReview | null&gt; {
-&nbsp;
-// }
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -258,14 +258,14 @@ import { IReview } from "./review.type";
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
                 at 2024-09-11T20:51:39.518Z
             </div>
-        <script src="../../prettify.js"></script>
+        <script src="../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../sorter.js"></script>
-        <script src="../../block-navigation.js"></script>
+        <script src="../../../sorter.js"></script>
+        <script src="../../../block-navigation.js"></script>
     </body>
 </html>
     

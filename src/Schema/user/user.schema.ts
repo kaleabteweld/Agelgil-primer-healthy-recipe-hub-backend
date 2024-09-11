@@ -1,13 +1,17 @@
 import mongoose from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { EActivityLevel, EAllergies, EChronicDisease, EDietaryPreferences, EDietGoals, EGender, EStatus, EVerified, IUser, IUserMethods, IUserModel } from './user.type';
+import {
+    EActivityLevel, EAllergies, EChronicDisease, EDietaryPreferences,
+    EDietGoals, EGender, EStatus, EVerified, IUser, IUserMethods, IUserModel
+} from './user.type';
 import {
     checkPassword, encryptPassword, getBookedRecipes, getByEmail, getById, getMyRecipes,
     removeByID, setStatus, toggleBookedRecipes, update, validator, hasBookedRecipe, updateUserStatus,
-    ownsRecipe
+    ownsRecipe, addXp
 } from './user.extended';
 
 export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
+    xp: { type: Number, default: 0 },
     profile_img: { type: String, default: null },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -62,6 +66,7 @@ export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
         checkPassword,
         hasBookedRecipe,
         ownsRecipe,
+        addXp,
     }
 });
 

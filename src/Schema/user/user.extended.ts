@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import Joi from "joi";
 import { ValidationErrorFactory, errorFactory, isValidationError } from "../../Types/error"
 import { BSONError } from 'bson';
-import { EStatus, IModeratorUserUpdateSchema, IUser, IUserUpdateFrom } from "./user.type";
+import { EStatus, EXpType, IModeratorUserUpdateSchema, IUser, IUserUpdateFrom } from "./user.type";
 import { MakeValidator } from "../../Util";
 import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
@@ -258,4 +258,9 @@ export async function updateUserStatus(this: mongoose.Model<IUser>, userId: stri
 
 export function ownsRecipe(this: IUser, recipeId: any): boolean {
     return this.my_recipes.includes(recipeId);
+}
+
+export function addXp(this: IUser, xpType: EXpType): Promise<IUser> {
+    this.xp += xpType;
+    return this.save();
 }

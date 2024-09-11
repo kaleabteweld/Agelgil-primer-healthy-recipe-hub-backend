@@ -93,7 +93,16 @@ export interface IMedicalCondition extends mongoose.Document {
     allergies: EAllergies[];
     // diet_goals?: EDietGoals;
 }
-
+export enum EXpType {
+    addRecipe = 5,
+    removeRecipe = -5,
+    bookRecipe = 10,
+    unBookRecipe = -10,
+    newFollower = 5,
+    unFollow = -5,
+    positiveReview = 15,
+    negativeReview = -15,
+}
 export interface IMedicalConditionInput {
     chronicDiseases: EChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
@@ -122,6 +131,7 @@ export interface IUserStats {
 
 
 export interface IUser extends mongoose.Document {
+    xp: number;
     profile_img?: string;
     email: string;
     password: string;
@@ -147,6 +157,7 @@ export interface IUserMethods {
     checkPassword(this: IUser, password: string): Promise<boolean>
     hasBookedRecipe(this: IUser, recipeId: any): boolean
     ownsRecipe(this: IUser, recipeId: any): boolean
+    addXp(this: IUser, xpType: EXpType): Promise<IUser>
 }
 
 export interface IUserDocument extends IUser, IUserMethods, mongoose.Document {

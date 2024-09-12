@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">24.19% </span>
+                <span class="strong">56.45% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/62</span>
+                <span class='fraction'>35/62</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">24.19% </span>
+                <span class="strong">56.45% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/62</span>
+                <span class='fraction'>35/62</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -134,9 +134,22 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -144,23 +157,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -196,33 +196,33 @@ import { IReview } from "./review.type";
 &nbsp;
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export function validator&lt;T&gt;(reviewInput: T, schema: Joi.ObjectSchema&lt;T&gt;) {</span></span>
-<span class="cstat-no" title="statement not covered" >    return MakeValidator&lt;T&gt;(schema, reviewInput);</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+export function validator&lt;T&gt;(reviewInput: T, schema: Joi.ObjectSchema&lt;T&gt;) {
+    return MakeValidator&lt;T&gt;(schema, reviewInput);
+}
 &nbsp;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function getById(this: mongoose.Model&lt;IReview&gt;, _id: string): Promise&lt;IReview&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >        const review = await this.findById(new mongoose.Types.ObjectId(_id));</span>
-<span class="cstat-no" title="statement not covered" >        if (review == null) {</span>
-<span class="cstat-no" title="statement not covered" >            throw ValidationErrorFactory({</span>
-<span class="cstat-no" title="statement not covered" >                msg: "review not found",</span>
-<span class="cstat-no" title="statement not covered" >                statusCode: 404,</span>
-<span class="cstat-no" title="statement not covered" >                type: "Validation"</span>
-<span class="cstat-no" title="statement not covered" >            }, "_id")</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >        return review;</span>
-<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >        if (error instanceof BSONError) {</span>
+export async function getById(this: mongoose.Model&lt;IReview&gt;, _id: string): Promise&lt;IReview&gt; {
+    try {
+        const review = await this.findById(new mongoose.Types.ObjectId(_id));
+        if (review == null) {
+            throw ValidationErrorFactory({
+                msg: "review not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        return review;
+    } catch (error) {
+        if (error instanceof BSONError) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
 <span class="cstat-no" title="statement not covered" >            throw ValidationErrorFactory({</span>
 <span class="cstat-no" title="statement not covered" >                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",</span>
 <span class="cstat-no" title="statement not covered" >                statusCode: 400,</span>
 <span class="cstat-no" title="statement not covered" >                type: "validation",</span>
 <span class="cstat-no" title="statement not covered" >            }, "id");</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >        throw error;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >}</span>
+        throw error;
+    }
+&nbsp;
+}
 &nbsp;
 <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function removeByID(this: mongoose.Model&lt;IReview&gt;, _id: string): Promise&lt;void&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
@@ -256,7 +256,7 @@ import { IReview } from "./review.type";
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-12T09:03:26.775Z
+                at 2024-09-12T10:00:04.377Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

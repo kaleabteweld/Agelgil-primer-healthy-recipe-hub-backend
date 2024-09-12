@@ -17,10 +17,17 @@ const nutritionSchema = {
     carbohydrates_total_g: { type: Number, default: 0 },
 }
 
+const nutritionGoalSchema = {
+    calories: { type: Number, default: 0 },
+    protein: { type: Number, default: 0 },
+    carbs: { type: Number, default: 0 },
+    fat: { type: Number, default: 0 },
+}
+
 const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlannerMethods>({
 
-    nutritionGoal: nutritionSchema,
-    currentNutrition: nutritionSchema,
+    nutritionGoal: nutritionGoalSchema,
+    currentNutrition: nutritionGoalSchema,
     user: { type: Schema.Types.ObjectId, ref: 'user' },
     userStats: {
         weights: { type: { date: Date, value: Number } },

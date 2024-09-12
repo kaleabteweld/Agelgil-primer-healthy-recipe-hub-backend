@@ -7,6 +7,7 @@ import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import { newMealPlannerSchema } from "../../Schema/user/MealPlanner/mealPlanner..validation";
 import { calculateNutritionNeeds } from "../../Schema/user/MealPlanner/mealPlanner.util";
 import mongoose, { mongo } from "mongoose";
+import UserModel from "../../Schema/user/user.schema";
 
 
 export default class MealPlannerController {
@@ -14,7 +15,7 @@ export default class MealPlannerController {
     static async createMealPlan(_user: IUser, body: INewMealPlanner): Promise<IResponseType<IMealPlanner>> {
 
         await MealPlannerModel.validator(body, newMealPlannerSchema);
-        const user = await MealPlannerModel.getById(_user.id);
+        const user = await UserModel.getById(_user.id);
 
         const nutritionGoal = await calculateNutritionNeeds(body);
         const mealPlanner = new MealPlannerModel({
@@ -42,7 +43,10 @@ export default class MealPlannerController {
             (mealPlanner.recipes[mealTime].nutrition as any)[key] += (recipe.nutrition as any)[key];
         });
 
-        mealPlanner.currentNutrition = mealPlanner.recipes[mealTime].nutrition;
+        mealPlanner.currentNutrition.calories += recipe.nutrition.calories;
+        mealPlanner.currentNutrition.protein += recipe.nutrition.protein_g;
+        mealPlanner.currentNutrition.carbs += recipe.nutrition.calories;
+        mealPlanner.currentNutrition.fat += recipe.nutrition.fat_total_g;
 
         return { body: await mealPlanner.save() }
     }
@@ -57,7 +61,10 @@ export default class MealPlannerController {
             (mealPlanner.recipes[mealTime].nutrition as any)[key] -= (recipe.nutrition as any)[key];
         });
 
-        mealPlanner.currentNutrition = mealPlanner.recipes[mealTime].nutrition;
+        mealPlanner.currentNutrition.calories -= recipe.nutrition.calories;
+        mealPlanner.currentNutrition.protein -= recipe.nutrition.protein_g;
+        mealPlanner.currentNutrition.carbs -= recipe.nutrition.calories;
+        mealPlanner.currentNutrition.fat -= recipe.nutrition.fat_total_g;
 
         return { body: await mealPlanner.save() }
     }

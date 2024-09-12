@@ -54,7 +54,7 @@ export interface IUserStats {
 
 export interface IMealPlanner extends mongoose.Document {
     nutritionGoal: INutritionGoal,
-    currentNutrition: NutritionData,
+    currentNutrition: INutritionGoal,
     user: mongoose.Schema.Types.ObjectId | IUser,
     userStats?: IUserStats,
     recipes: {

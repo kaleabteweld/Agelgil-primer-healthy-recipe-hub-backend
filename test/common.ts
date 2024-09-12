@@ -6,6 +6,7 @@ import { IModerator, IModeratorLogInFrom, IModeratorSignUpFrom } from "../src/Sc
 import { IIngredient, INewIngredientFrom } from "../src/Schema/Ingredient/ingredient.type";
 import { EPreferredMealTime, EPreparationDifficulty, INewRecipeFrom, IngredientDetail, IRecipe } from "../src/Schema/Recipe/recipe.type";
 import { INewReviewFrom } from "../src/Schema/Review/review.type";
+import { EActivityLevel, EDietGoals, EGender, IMealPlanner, INewMealPlanner } from "../src/Schema/user/MealPlanner/mealPlanner.type";
 
 
 export const sighupUrl = (user: UserType) => `/Api/v1/public/authentication/${user}/signUp`;
@@ -25,6 +26,9 @@ export const recipePublicUrl = () => `/Api/v1/public/recipe/`;
 
 export const reviewPrivateUrl = () => `/Api/v1/private/review/`;
 export const reviewPublicUrl = () => `/Api/v1/public/review/`;
+
+export const mealPlannerPrivateUrl = () => `/Api/v1/private/mealPlanner/`;
+export const mealPlannerPublicUrl = () => `/Api/v1/public/mealPlanner/`;
 
 
 
@@ -134,6 +138,15 @@ export const validReviews: Omit<INewReviewFrom, "recipe">[] = [{
     rating: 3,
 }]
 
+export const validUserStatus: INewMealPlanner[] = [{
+    activityLevel: EActivityLevel.active,
+    age: 20,
+    diet_goals: EDietGoals.muscle_gain,
+    gender: EGender.male,
+    height: 180,
+    weight: 70
+}];
+
 export const expectError = async (response: Response, code: number) => {
 
     if (code == 400) {
@@ -218,6 +231,19 @@ export const createReviews = async (request: Function, app: any, newValidReviews
 
     return reviews;
 }
+
+export const createMealPlanner = async (request: Function, app: any, newValidMealPlanner: INewMealPlanner[], accessToken: string): Promise<IMealPlanner[]> => {
+
+    const mealPlanners: any[] = [];
+
+    for (let index = 0; index < newValidMealPlanner.length; index++) {
+        const response = await request(app).post(`${mealPlannerPrivateUrl()}createMealPlan`).set("authorization", `Bearer ${accessToken}`).send(newValidMealPlanner[index]);
+        mealPlanners.push(response.body.body);
+    }
+
+    return mealPlanners;
+}
+
 export const expectValidIngredient = (response: Response, input: INewIngredientFrom) => {
     expect(response.status).toBe(200);
     expect(response.body.body).toMatchObject({
@@ -373,4 +399,41 @@ export const expectValidReviewList = async (response: Response, inputReviews: IN
             ...matchers
         }));
     });
+}
+
+export const expectValidMealPlanner = (response: Response, opt?: { input?: INewMealPlanner, matchers?: Record<string, unknown> | Record<string, unknown>[] }) => {
+    expect(response.status).toBe(200);
+    expect(response.body.body).toMatchObject({
+        _id: expect.any(String),
+        nutritionGoal: {
+            calories: expect.any(Number),
+            protein: expect.any(Number),
+            carbs: expect.any(Number),
+            fat: expect.any(Number),
+        },
+        currentNutrition: {
+            calories: expect.any(Number),
+            protein: expect.any(Number),
+            carbs: expect.any(Number),
+            fat: expect.any(Number),
+        },
+        user: expect.any(String),
+        userStats: {
+            weight: expect.any(Number),
+            height: expect.any(Number),
+            age: expect.any(Number),
+            gender: expect.any(String),
+            activityLevel: expect.any(String),
+            diet_goals: expect.any(String),
+        },
+        recipes: {
+            breakfast: expect.any(Object),
+            lunch: expect.any(Object),
+            dinner: expect.any(Object),
+            snacks: expect.any(Object),
+        },
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        ...(opt?.matchers),
+    })
 }

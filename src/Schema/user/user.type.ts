@@ -102,6 +102,8 @@ export enum EXpType {
     unFollow = -5,
     positiveReview = 15,
     negativeReview = -15,
+    approveRecipe = 15,
+    rejectRecipe = -15,
 }
 export interface IMedicalConditionInput {
     chronicDiseases: EChronicDisease[];

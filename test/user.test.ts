@@ -280,6 +280,8 @@ describe('User', () => {
         var user: IUser;
         var accessToken: string[];
         var ingredients: IIngredient[];
+        var moderatorAccessTokens: string[];
+
 
         beforeEach(async () => {
             const { users, accessTokens } = await createUsers(request, app, [newValidUser, newValidUser2]);
@@ -287,8 +289,9 @@ describe('User', () => {
             accessToken = accessTokens;
 
             const { accessTokens: moderatorTokens } = await createModerators(request, app, [newValidModeratorSignUp]);
+            moderatorAccessTokens = moderatorTokens;
 
-            const _ingredients = await createIngredients(request, app, validIngredients, moderatorTokens[0]);
+            const _ingredients = await createIngredients(request, app, validIngredients, moderatorAccessTokens[0]);
             ingredients = _ingredients;
 
         })
@@ -307,7 +310,48 @@ describe('User', () => {
 
             })
 
-            //TODO: add when moderation verification is added
+            describe("WHEN Moderator Moderates the Recipe", () => {
+
+                describe("WHEN Moderator Approve the Recipe", () => {
+                    it(`SHOULD add XP to user by ${(EXpType.approveRecipe + (EXpType.addRecipe * validRecipes.length)).toString()}`, async () => {
+                        const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                        expect(userResponse.status).toBe(200);
+                        expect(userResponse.body.body.xp).toBe(0);
+
+                        const recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+
+                        await request(app).patch(`${userPrivateUrl(UserType.moderator)}updateRecipeStatus/${recipes[0]._id}`).set('authorization', `Bearer ${moderatorAccessTokens[0]}`).send({
+                            status: ERecipeStatus.verified,
+                            comment: "this is a comment"
+                        });
+
+                        const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                        expect(_userResponse.status).toBe(200);
+                        expect(_userResponse.body.body.xp).toBe(EXpType.approveRecipe + (EXpType.addRecipe * validRecipes.length));
+
+                    })
+                });
+
+                describe("WHEN Moderator Reject the Recipe", () => {
+                    it(`SHOULD add XP to user by ${(EXpType.approveRecipe + (EXpType.addRecipe * validRecipes.length)).toString()}`, async () => {
+                        const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                        expect(userResponse.status).toBe(200);
+                        expect(userResponse.body.body.xp).toBe(0);
+
+                        const recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+
+                        await request(app).patch(`${userPrivateUrl(UserType.moderator)}updateRecipeStatus/${recipes[0]._id}`).set('authorization', `Bearer ${moderatorAccessTokens[0]}`).send({
+                            status: ERecipeStatus.rejected,
+                            comment: "this is a comment"
+                        });
+
+                        const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                        expect(_userResponse.status).toBe(200);
+                        expect(_userResponse.body.body.xp).toBe(EXpType.rejectRecipe + (EXpType.addRecipe * validRecipes.length));
+
+                    })
+                });
+            });
         });
 
         describe("WHEN user add a Review", () => {

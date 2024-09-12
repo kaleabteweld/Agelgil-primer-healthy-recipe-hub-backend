@@ -3,14 +3,15 @@ import Joi from "joi";
 import { ValidationErrorFactory } from "../../Types/error"
 import { BSONError } from 'bson';
 import { MakeValidator } from "../../Util";
-import { IModeratorRecipeUpdateFrom, IRecipe, IRecipeUpdateFrom } from "./recipe.type";
+import { ERecipeStatus, IModeratorRecipeUpdateFrom, IRecipe, IRecipeUpdateFrom } from "./recipe.type";
 import { IPagination } from "../../Types";
 import { IReview } from "../Review/review.type";
-import { IUser, IUserDocument } from "../user/user.type";
+import { EXpType, IUser, IUserDocument } from "../user/user.type";
 import ShareableLink from "../../Util/ShareableLink";
 import { IModerator } from "../Moderator/moderator.type";
 import { Datasx } from "../../Util/Datasx";
 import UserModel from "../user/user.schema";
+import RecipeModel from "./recipe.schema";
 
 
 
@@ -102,6 +103,14 @@ export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, m
 
             },
         }, { new: true, overwrite: true }) as any;
+
+        const recipeOwner = await RecipeModel.getRecipesOwner(_id)
+        if (recipeOwner && newRecipe.status === ERecipeStatus.verified)
+            recipeOwner.addXp(EXpType.approveRecipe)
+        else if (recipeOwner && newRecipe.status === ERecipeStatus.rejected)
+            recipeOwner.addXp(EXpType.rejectRecipe)
+
+
         return newRecipe
 
     } catch (error) {

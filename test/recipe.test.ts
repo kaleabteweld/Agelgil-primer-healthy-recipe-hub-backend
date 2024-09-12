@@ -5,7 +5,9 @@ import { makeServer } from '../src/Util/Factories';
 import RedisCache from '../src/Util/cache/redis';
 import {
     createRecipes, createModerators, createUsers, expectError, newValidModeratorSignUp, newValidUser2, validRecipes, recipePrivateUrl, expectValidRecipe,
-    createIngredients, validIngredients, userPublicUrl, recipePublicUrl, expectValidRecipeList, expectValidRecipeCardList
+    createIngredients, validIngredients, userPublicUrl, recipePublicUrl, expectValidRecipeList, expectValidRecipeCardList,
+    newValidUser,
+    userPrivateUrl
 } from './common';
 import { IUser } from '../src/Schema/user/user.type';
 import { IIngredient } from '../src/Schema/Ingredient/ingredient.type';
@@ -246,39 +248,36 @@ describe('Recipe', () => {
 
     });
 
-
     describe("Update Recipe", () => {
 
-        var user: IUser;
-        var accessToken: string;
-        var moderatorTokens: string[];
+        var accessTokens: string[];
+        var moderatorAccessTokens: string[];
         var ingredients: IIngredient[];
         var recipes: IRecipe[];
 
         beforeEach(async () => {
-            const { users, accessTokens } = await createUsers(request, app, [newValidUser2]);
-            user = users[0];
-            accessToken = accessTokens[0];
+            const { users, accessTokens: ats } = await createUsers(request, app, [newValidUser, newValidUser2]);
+            accessTokens = ats;
 
             const { accessTokens: _moderatorTokens } = await createModerators(request, app, [newValidModeratorSignUp]);
-            moderatorTokens = _moderatorTokens;
+            moderatorAccessTokens = _moderatorTokens;
 
-            const _ingredients = await createIngredients(request, app, validIngredients, moderatorTokens[0]);
+            const _ingredients = await createIngredients(request, app, validIngredients, moderatorAccessTokens[0]);
             ingredients = _ingredients;
 
-            const _recipes = await createRecipes(request, app, validRecipes, _ingredients, accessToken);
+            const _recipes = await createRecipes(request, app, validRecipes, _ingredients, accessTokens[0]);
             recipes = _recipes;
         })
 
-        describe("WHEN Login in as a Moderator", () => {
-            describe("WHEN Moderator try to update Recipe", () => {
+        describe("WHEN Login in as a User", () => {
+            describe("WHEN User try to update Recipe", () => {
                 it("SHOULD update and return 200 with the Recipe", async () => {
-                    let response = await request(app).patch(`${recipePrivateUrl()}update/${recipes[0]._id}`).set('authorization', `Bearer ${accessToken}`).send({
+                    let response = await request(app).patch(`${recipePrivateUrl()}update/${recipes[0]._id}`).set('authorization', `Bearer ${accessTokens[0]}`).send({
                         name: "New Name"
                     });
                     expect(response.status).toBe(200);
 
-                    const getResponse = await request(app).get(`${recipePrivateUrl()}details/user/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken}`).send();
+                    const getResponse = await request(app).get(`${recipePrivateUrl()}details/user/${recipes[0]._id}`).set("authorization", `Bearer ${accessTokens[0]}`).send();
                     expectValidRecipe(getResponse, ({
                         ...validRecipes[0],
                         name: "New Name",
@@ -296,6 +295,45 @@ describe('Recipe', () => {
                 });
 
             });
+
+            describe("WHEN user Updates a Recipe that does not belong to them", () => {
+                it("SHOULD return a 403 status code AND Error obj", async () => {
+                    const response = await request(app).patch(`${recipePrivateUrl()}update/${recipes[0]._id}`).set('authorization', `Bearer ${accessTokens[1]}`).send({
+                        name: "New Name"
+                    });
+                    expectError(response, 403);
+                });
+            })
+
+            describe("WHEN user Updates a Recipe that that is Moderated", () => {
+                it(`SHOULD reset the status to ${ERecipeStatus.pending}`, async () => {
+
+                    await request(app).patch(`${userPrivateUrl(UserType.moderator)}updateRecipeStatus/${recipes[0]._id}`).set('authorization', `Bearer ${moderatorAccessTokens[0]}`).send({
+                        status: ERecipeStatus.verified,
+                        comment: "this is a comment"
+                    });
+
+                    const response = await request(app).patch(`${recipePrivateUrl()}update/${recipes[0]._id}`).set('authorization', `Bearer ${accessTokens[0]}`).send({
+                        name: "New Name"
+                    });
+                    expect(response.status).toBe(200);
+
+                    const getResponse = await request(app).get(`${recipePrivateUrl()}details/user/${recipes[0]._id}`).set("authorization", `Bearer ${accessTokens[0]}`).send();
+                    expectValidRecipe(getResponse, ({
+                        ...validRecipes[0],
+                        name: "New Name",
+                        ingredients: ingredients.map(ingredient => ({
+                            amount: 1,
+                            unit: "kg",
+                            localName: ingredient.localName,
+                            name: ingredient.name,
+                            type: ingredient.type,
+                        }))
+                    } as INewRecipeFrom), {
+                        status: ERecipeStatus.pending,
+                    });
+                });
+            })
         });
 
         describe("WHEN there is not a Token", () => {
@@ -306,9 +344,9 @@ describe('Recipe', () => {
                 expectError(response, 401);
             });
 
-            describe("WHEN Login in as a User", () => {
+            describe("WHEN Login in as a Moderator", () => {
                 it("SHOULD return a 401 status code AND Error obj", async () => {
-                    const response = await request(app).patch(`${recipePrivateUrl()}update/${recipes[0]._id}`).set('authorization', `Bearer ${moderatorTokens[0]}`).send({
+                    const response = await request(app).patch(`${recipePrivateUrl()}update/${recipes[0]._id}`).set('authorization', `Bearer ${moderatorAccessTokens[0]}`).send({
                         name: "New Name"
                     });
                     expectError(response, 401);

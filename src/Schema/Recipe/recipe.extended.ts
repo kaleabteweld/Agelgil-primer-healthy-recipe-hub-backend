@@ -174,7 +174,7 @@ export async function checkIfUserOwnsRecipe(this: mongoose.Model<IRecipe>, _id: 
                 type: "Validation"
             }, "_id")
         }
-        if (recipe.user.user == user._id) {
+        if (recipe.user.user != user.id) {
             throw ValidationErrorFactory({
                 msg: "user does not own recipe",
                 statusCode: 403,

@@ -406,7 +406,6 @@ describe('User', () => {
             })
         });
 
-
         describe("WHEN user add a Booked Recipe", () => {
             describe("WHEN other user Booked/UnBooked a Recipe", () => {
                 describe("WHEN user Booked a Recipe", () => {

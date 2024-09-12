@@ -125,7 +125,6 @@ export default class RecipeController {
         } as any;
 
         const updateRecipe: any = await RecipeModel.update(recipe.id, _recipe)
-        //TODO: add a test here
         if (recipe.status === ERecipeStatus.verified) {
             updateRecipe.status = ERecipeStatus.pending
             await updateRecipe.save()

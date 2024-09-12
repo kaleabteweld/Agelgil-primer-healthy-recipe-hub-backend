@@ -60,39 +60,13 @@ export enum EAllergies {
 
 export type TAllergies = "peanuts" | "tree_nuts" | "shellfish" | "dairy" | "eggs" | "wheat" | "soy" | "fish" | "other" | "none";
 
-export enum EDietGoals {
-    weight_loss = "weight_loss",
-    weight_gain = "weight_gain",
-    muscle_gain = "muscle_gain",
-    maintain_weight = "maintain_weight",
-    none = "none",
-}
-
-export type TDietGoals = "weight_loss" | "weight_gain" | "muscle_gain" | "maintain_weight" | "none";
-
-export enum EGender {
-    male = "male",
-    female = "female"
-}
-
-export type tGender = "male" | "female"
-
-export enum EActivityLevel {
-    sedentary = "sedentary",
-    light = "light",
-    moderate = "moderate",
-    active = "active",
-    veryActive = "veryActive"
-}
-
-export type TActivityLevel = "sedentary" | "light" | "moderate" | "active" | "veryActive"
-
 export interface IMedicalCondition extends mongoose.Document {
     chronicDiseases: EChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
     allergies: EAllergies[];
     // diet_goals?: EDietGoals;
 }
+
 export enum EXpType {
     addRecipe = 5,
     removeRecipe = -5,
@@ -117,20 +91,6 @@ export interface IMedicalConditionInput {
     dietary_preferences: EDietaryPreferences[];
     allergies: EAllergies[];
 }
-export interface IUserStats {
-    weights: {
-        date: Date;
-        value: number;
-    };
-    weight: number;
-    height: number;
-    age: number
-    gender: EGender;
-    activityLevel: EActivityLevel
-    diet_goals: EDietGoals;
-}
-
-
 
 export interface IUser extends mongoose.Document {
     xp: number;
@@ -146,7 +106,6 @@ export interface IUser extends mongoose.Document {
 
     medical_condition: IMedicalCondition;
 
-    userStats?: IUserStats,
     mealPlanner?: mongoose.Types.ObjectId | IMealPlanner;
 
     booked_recipes: mongoose.Types.ObjectId[] | IRecipe[];

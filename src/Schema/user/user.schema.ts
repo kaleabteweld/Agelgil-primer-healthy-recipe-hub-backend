@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
 import {
-    EActivityLevel, EAllergies, EChronicDisease, EDietaryPreferences,
-    EDietGoals, EGender, EStatus, EVerified, IUser, IUserMethods, IUserModel
+    EAllergies, EChronicDisease, EDietaryPreferences,
+    EStatus, EVerified, IUser, IUserMethods, IUserModel
 } from './user.type';
 import {
     checkPassword, encryptPassword, getBookedRecipes, getByEmail, getById, getMyRecipes,
@@ -29,15 +29,6 @@ export const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>({
         allergies: { type: [String], enum: Object.values(EAllergies) },
     },
 
-    userStats: {
-        weights: { type: { date: Date, value: Number } },
-        weight: Number,
-        height: Number,
-        age: Number,
-        gender: { type: String, enum: Object.values(EGender) },
-        activityLevel: { type: String, enum: Object.values(EActivityLevel) },
-        diet_goals: { type: String, enum: Object.values(EDietGoals) },
-    },
     mealPlanner: { type: mongoose.Types.ObjectId, ref: "MealPlanner" },
 
 }, {

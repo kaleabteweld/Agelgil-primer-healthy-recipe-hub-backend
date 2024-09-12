@@ -1,40 +1,51 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../../Middleware/errors.middleware';
-import { getById, removeByID, validator } from './mealPlanner.extended';
-import { IMealPlanner, IMealPlannerMethods, IMealPlannerModel } from './mealPlanner.type';
+import { checkIfUserHasRecipe, getById, getByUser, getNutritionGoal, getUserMeals, removeByID, removeRecipeFromMealPlan, validator } from './mealPlanner.extended';
+import { EActivityLevel, EDietGoals, EGender, IMealPlanner, IMealPlannerMethods, IMealPlannerModel } from './mealPlanner.type';
 
 const nutritionSchema = {
-    sugar_g: { type: Number },
-    fiber_g: { type: Number },
-    serving_size_g: { type: Number },
-    sodium_mg: { type: Number },
-    potassium_mg: { type: Number },
-    fat_saturated_g: { type: Number },
-    fat_total_g: { type: Number },
-    calories: { type: Number },
-    cholesterol_mg: { type: Number },
-    protein_g: { type: Number },
-    carbohydrates_total_g: { type: Number },
+    sugar_g: { type: Number, default: 0 },
+    fiber_g: { type: Number, default: 0 },
+    serving_size_g: { type: Number, default: 0 },
+    sodium_mg: { type: Number, default: 0 },
+    potassium_mg: { type: Number, default: 0 },
+    fat_saturated_g: { type: Number, default: 0 },
+    fat_total_g: { type: Number, default: 0 },
+    calories: { type: Number, default: 0 },
+    cholesterol_mg: { type: Number, default: 0 },
+    protein_g: { type: Number, default: 0 },
+    carbohydrates_total_g: { type: Number, default: 0 },
 }
 
 const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlannerMethods>({
 
     nutritionGoal: nutritionSchema,
+    currentNutrition: nutritionSchema,
+    user: { type: Schema.Types.ObjectId, ref: 'user' },
+    userStats: {
+        weights: { type: { date: Date, value: Number } },
+        weight: Number,
+        height: Number,
+        age: Number,
+        gender: { type: String, enum: Object.values(EGender) },
+        activityLevel: { type: String, enum: Object.values(EActivityLevel) },
+        diet_goals: { type: String, enum: Object.values(EDietGoals) },
+    },
     recipes: {
         breakfast: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe' }],
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe', default: [] }],
             nutrition: nutritionSchema,
         },
         lunch: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe' }],
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe', default: [] }],
             nutrition: nutritionSchema,
         },
         dinner: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe' }],
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe', default: [] }],
             nutrition: nutritionSchema,
         },
         snacks: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe' }],
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe', default: [] }],
             nutrition: nutritionSchema,
         }
     }
@@ -45,6 +56,11 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
         validator,
         getById,
         removeByID,
+        getUserMeals,
+        checkIfUserHasRecipe,
+        removeRecipeFromMealPlan,
+        getNutritionGoal,
+        getByUser,
     }
 });
 

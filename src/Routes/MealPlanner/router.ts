@@ -7,61 +7,44 @@ import { IUser } from "../../Schema/user/user.type";
 const publicMealPlannerRouter = express.Router();
 const privateMealPlannerRouter = express.Router();
 
+privateMealPlannerRouter.post("/createMealPlan", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+    const _user: IUser = req['user'];
+    const mealPlan = await MealPlannerController.createMealPlan(_user, req.body);
+    res.json(mealPlan);
+}));
 
-publicMealPlannerRouter.get("/:mealPlanId", MakeErrorHandler(
-    async (req: any, res: Response) => {
-        res.json(await MealPlannerController.getById(req.params.mealPlanId));
-    }
-));
+privateMealPlannerRouter.get("/mealPlan/:mealTime/:page", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+    const { mealTime, page } = req.params;
+    const _user: IUser = req['user'];
+    const mealPlan = await MealPlannerController.getMealPlan(_user, mealTime, parseInt(page));
+    res.json(mealPlan);
+}));
 
-// privateMealPlannerRouter.get("/weekPlan/:mealTime/:skip/:limit", userOnly, MakeErrorHandler(
-//     async (req: any, res: Response) => {
-//         const _user: IUser = req['user'];
-//         res.json(await MealPlannerController.weekPlan(_user, req.params.mealTime, req.params.skip, req.params.limit));
-//     }
-// ));
+privateMealPlannerRouter.post("/addToMealPlan/:mealTime/:recipeID", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+    const { mealTime, recipeID } = req.params;
+    const _user: IUser = req['user'];
+    const mealPlan = await MealPlannerController.addToMealPlan(_user, mealTime, recipeID);
+    res.json(mealPlan);
+}));
 
-privateMealPlannerRouter.post("/add/:mealPlanId/:mealTime/:recipeId", userOnly, MakeErrorHandler(
-    async (req: any, res: Response) => {
-        const _user: IUser = req['user'];
-        res.json(await MealPlannerController.add(_user, req.params.mealPlanId, req.params.mealTime, req.params.recipeId));
-    }
-));
+privateMealPlannerRouter.delete("/removeFromMealPlan/:mealTime/:recipeID", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+    const { mealTime, recipeID } = req.params;
+    const _user: IUser = req['user'];
+    const mealPlan = await MealPlannerController.removeFromMealPlan(_user, mealTime, recipeID);
+    res.json(mealPlan);
+}));
 
-privateMealPlannerRouter.delete("/mealPlanId", userOnly, MakeErrorHandler(
-    async (req: any, res: Response) => {
-        const _user: IUser = req['user'];
-        res.json(await MealPlannerController.removeByID(req.params.mealPlanId, _user));
-    }
-));
+privateMealPlannerRouter.delete("/resetMealPlan", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+    const _user: IUser = req['user'];
+    const mealPlan = await MealPlannerController.resetMealPlan(_user);
+    res.json(mealPlan);
+}));
 
-privateMealPlannerRouter.delete("/remove/:mealPlanId/:mealTime/:recipeId", userOnly, MakeErrorHandler(
-    async (req: any, res: Response) => {
-        const _user: IUser = req['user'];
-        res.json(await MealPlannerController.removeFromMealPlanner(_user, req.params.mealPlanId, req.params.mealTime, req.params.recipeId));
-    }
-));
-
-// privateMealPlannerRouter.get("/carbs/:mealPlanId", MakeErrorHandler(
-//     async (req: any, res: Response) => {
-//         res.json(await MealPlannerController.carbs(req.params.mealPlanId));
-//     }
-// ));
-
-// privateMealPlannerRouter.patch("/copy", userOnly, MakeErrorHandler(
-//     async (req: any, res: Response) => {
-//         const _user: IUser = req['user'];
-//         res.json(await MealPlannerController.copy(_user, req.body));
-//     }
-// ));
-
-publicMealPlannerRouter.get("/list/:skip/:limit", MakeErrorHandler(
-    async (req: any, res: Response) => {
-        const skip = Number.parseInt(req.params.skip);
-        const limit = Number.parseInt(req.params.limit);
-        res.json(await MealPlannerController.list({ skip, limit }));
-    }
-));
+privateMealPlannerRouter.get("/nutritionGoal", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+    const _user: IUser = req['user'];
+    const mealPlan = await MealPlannerController.getNutritionGoal(_user);
+    res.json(mealPlan);
+}));
 
 
 privateMealPlannerRouter.use("/mealPlanner", publicMealPlannerRouter);

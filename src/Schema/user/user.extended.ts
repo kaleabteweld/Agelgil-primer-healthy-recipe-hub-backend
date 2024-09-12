@@ -5,7 +5,7 @@ import { ValidationErrorFactory, errorFactory, isValidationError } from "../../T
 import { BSONError } from 'bson';
 import { EStatus, EXpType, IModeratorUserUpdateSchema, IUser, IUserUpdateFrom } from "./user.type";
 import { MakeValidator } from "../../Util";
-import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
+import { EPreferredMealTime, IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
 import UserModel from "./user.schema";
 import RecipeModel from "../Recipe/recipe.schema";

@@ -1,4 +1,4 @@
-import { EActivityLevel, EDietGoals, EGender, IUserStats } from "../user.type";
+import { EActivityLevel, EDietGoals, EGender, INewMealPlanner, IUserStats } from "../MealPlanner/mealPlanner.type";
 import { INutritionGoal } from "./mealPlanner.type";
 
 export function calculateBestWeight(user: IUserStats) {
@@ -33,7 +33,7 @@ export function calculateBestWeight(user: IUserStats) {
 }
 
 
-export function calculateNutritionNeeds(user: IUserStats): INutritionGoal {
+export function calculateNutritionNeeds(user: INewMealPlanner): INutritionGoal {
 
     const { activityLevel, age, diet_goals, gender, height, weight } = user;
 

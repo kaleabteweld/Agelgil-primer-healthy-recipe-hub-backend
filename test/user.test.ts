@@ -3,10 +3,12 @@ import { connectDB, dropCollections, dropDB } from './util';
 import request from "supertest";
 import { makeServer } from '../src/Util/Factories';
 import RedisCache from '../src/Util/cache/redis';
-import { IUser } from '../src/Schema/user/user.type';
-import { createIngredients, createModerators, createRecipes, createUsers, expectError, expectValidRecipeCardList, loginUrl, newValidModeratorSignUp, newValidUser, newValidUser2, sighupUrl, userPrivateUrl, userPublicUrl, validIngredients, validRecipes } from './common';
+import { EXpType, IUser } from '../src/Schema/user/user.type';
+import { createIngredients, createModerators, createRecipes, createReviews, createUsers, expectError, expectValidRecipeCardList, loginUrl, newValidModeratorSignUp, newValidUser, newValidUser2, sighupUrl, userPrivateUrl, userPublicUrl, validIngredients, validRecipes, validReviews } from './common';
 import { UserType } from '../src/Util/jwt/jwt.types';
 import { ERecipeStatus, IRecipe } from '../src/Schema/Recipe/recipe.type';
+import { IReview } from '../src/Schema/Review/review.type';
+import { IIngredient } from '../src/Schema/Ingredient/ingredient.type';
 
 const redisCache = RedisCache.getInstance();
 
@@ -272,6 +274,149 @@ describe('User', () => {
             });
 
         });
+    });
+
+    describe("XP", () => {
+        var user: IUser;
+        var accessToken: string[];
+        var ingredients: IIngredient[];
+
+        beforeEach(async () => {
+            const { users, accessTokens } = await createUsers(request, app, [newValidUser, newValidUser2]);
+            user = users[0];
+            accessToken = accessTokens;
+
+            const { accessTokens: moderatorTokens } = await createModerators(request, app, [newValidModeratorSignUp]);
+
+            const _ingredients = await createIngredients(request, app, validIngredients, moderatorTokens[0]);
+            ingredients = _ingredients;
+
+        })
+
+        describe("WHEN user add a Recipe", () => {
+            it(`SHOULD add XP to user by ${EXpType.addRecipe.toString()}`, async () => {
+                const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                expect(userResponse.status).toBe(200);
+                expect(userResponse.body.body.xp).toBe(0);
+
+                await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+
+                const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                expect(_userResponse.status).toBe(200);
+                expect(_userResponse.body.body.xp).toBe(EXpType.addRecipe * validRecipes.length);
+
+            })
+
+            //TODO: add when moderation verification is added
+        });
+
+        describe("WHEN user add a Review", () => {
+
+            describe("WHEN Other user add a Review", () => {
+                it(`SHOULD add XP to user by ${(EXpType.positiveReview + (EXpType.addRecipe * validRecipes.length)).toString()} when rating > 4`, async () => {
+                    const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                    expect(userResponse.status).toBe(200);
+                    expect(userResponse.body.body.xp).toBe(0);
+
+                    const recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+                    await createReviews(request, app, [{
+                        comment: "good",
+                        rating: 5
+                    }], recipes[0], accessToken[1]);
+
+                    const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                    expect(_userResponse.status).toBe(200);
+                    expect(_userResponse.body.body.xp).toBe(EXpType.positiveReview + (EXpType.addRecipe * validRecipes.length));
+
+                })
+                it(`SHOULD add XP to user by ${(EXpType.negativeReview + (EXpType.addRecipe * validRecipes.length)).toString()} when rating < 4`, async () => {
+                    const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                    expect(userResponse.status).toBe(200);
+                    expect(userResponse.body.body.xp).toBe(0);
+
+                    const recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+                    await createReviews(request, app, [{
+                        comment: "meh",
+                        rating: 2
+                    }], recipes[0], accessToken[1]);
+
+                    const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                    expect(_userResponse.status).toBe(200);
+                    expect(_userResponse.body.body.xp).toBe(EXpType.negativeReview + (EXpType.addRecipe * validRecipes.length));
+
+                })
+            });
+
+            it(`SHOULD Same add to user 0 Xp`, async () => {
+                const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                expect(userResponse.status).toBe(200);
+                expect(userResponse.body.body.xp).toBe(0);
+
+                const recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+                await createReviews(request, app, validReviews, recipes[0], accessToken[0]);
+
+                const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                expect(_userResponse.status).toBe(200);
+                expect(_userResponse.body.body.xp).toBe(EXpType.addRecipe * validRecipes.length);
+
+            })
+        });
+
+
+        describe("WHEN user add a Booked Recipe", () => {
+            describe("WHEN other user Booked/UnBooked a Recipe", () => {
+                describe("WHEN user Booked a Recipe", () => {
+                    it(`SHOULD add XP to user by ${(EXpType.bookRecipe + (EXpType.addRecipe * validRecipes.length)).toString()}`, async () => {
+                        const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                        expect(userResponse.status).toBe(200);
+                        expect(userResponse.body.body.xp).toBe(0);
+
+                        const recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+                        await request(app).patch(`${userPrivateUrl(UserType.user)}bookedRecipes/toggle/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken[1]}`).send();
+
+                        const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                        expect(_userResponse.status).toBe(200);
+                        expect(_userResponse.body.body.xp).toBe((EXpType.bookRecipe + (EXpType.addRecipe * validRecipes.length)));
+
+                    })
+                });
+                describe("WHEN user remove a Booked Recipe", () => {
+                    it(`SHOULD remove XP to user by ${((EXpType.bookRecipe + EXpType.unBookRecipe) + (EXpType.addRecipe * validRecipes.length)).toString()}`, async () => {
+                        const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                        expect(userResponse.status).toBe(200);
+                        expect(userResponse.body.body.xp).toBe(0);
+
+                        const recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+                        await request(app).patch(`${userPrivateUrl(UserType.user)}bookedRecipes/toggle/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken[1]}`).send();
+                        await request(app).patch(`${userPrivateUrl(UserType.user)}bookedRecipes/toggle/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken[1]}`).send();
+
+                        const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                        expect(_userResponse.status).toBe(200);
+                        expect(_userResponse.body.body.xp).toBe(((EXpType.bookRecipe + EXpType.unBookRecipe) + (EXpType.addRecipe * validRecipes.length)));
+
+                    })
+                });
+            })
+
+            describe("WHEN user Booked there own Recipe", () => {
+                it(`SHOULD NOT add XP to user`, async () => {
+                    const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                    expect(userResponse.status).toBe(200);
+                    expect(userResponse.body.body.xp).toBe(0);
+
+                    const recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+                    await request(app).patch(`${userPrivateUrl(UserType.user)}bookedRecipes/toggle/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+
+                    const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}`).set("authorization", `Bearer ${accessToken[0]}`).send();
+                    expect(_userResponse.status).toBe(200);
+                    expect(_userResponse.body.body.xp).toBe(validRecipes.length * EXpType.addRecipe);
+
+                })
+            });
+
+        });
+
+
     });
 
 

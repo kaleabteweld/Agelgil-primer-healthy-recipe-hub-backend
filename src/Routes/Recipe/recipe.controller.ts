@@ -8,7 +8,7 @@ import { EPreferredMealTime, ERecipeStatus, INewRecipeFrom, IRecipe, IRecipeSear
 import { RecipeSearchBuilder } from "../../Schema/Recipe/recipe.utils";
 import { newRecipeSchema, recipeSearchSchema, recipeUpdateSchema } from "../../Schema/Recipe/recipe.validation";
 import UserModel from "../../Schema/user/user.schema";
-import { IUser } from "../../Schema/user/user.type";
+import { EXpType, IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
 import Calorieninjas from "../../Util/calorieninjas";
 import { NutritionData } from "../../Util/calorieninjas/types";
@@ -53,6 +53,11 @@ export default class RecipeController {
 
         const recipe = await new RecipeModel((_recipe));
         await recipe.save();
+
+        const recipeOwner = await RecipeModel.getRecipesOwner(recipe.id as any);
+        if (recipeOwner) {
+            await recipeOwner.addXp(EXpType.addRecipe);
+        }
 
         return { body: (recipe.toJSON() as any) }
     }

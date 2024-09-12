@@ -188,11 +188,13 @@ export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: stri
         const recipeOwner = await RecipeModel.getRecipesOwner(recipe._id as any);
         if (recipeIndex !== -1) {
             user.booked_recipes.splice(recipeIndex, 1);
-            recipeOwner.addXp(EXpType.bookRecipe);
+            if (recipeOwner.id !== _id)
+                recipeOwner.addXp(EXpType.unBookRecipe);
         }
         else {
             user.booked_recipes.push(recipe._id as any);
-            recipeOwner.addXp(EXpType.unBookRecipe);
+            if (recipeOwner.id !== _id)
+                recipeOwner.addXp(EXpType.bookRecipe);
         }
 
         await user.save();

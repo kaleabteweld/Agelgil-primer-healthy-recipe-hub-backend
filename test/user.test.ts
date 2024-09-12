@@ -4,8 +4,9 @@ import request from "supertest";
 import { makeServer } from '../src/Util/Factories';
 import RedisCache from '../src/Util/cache/redis';
 import { IUser } from '../src/Schema/user/user.type';
-import { createUsers, expectError, loginUrl, newValidModeratorSignUp, newValidUser, sighupUrl, userPrivateUrl } from './common';
+import { createIngredients, createModerators, createRecipes, createUsers, expectError, expectValidRecipeCardList, loginUrl, newValidModeratorSignUp, newValidUser, newValidUser2, sighupUrl, userPrivateUrl, userPublicUrl, validIngredients, validRecipes } from './common';
 import { UserType } from '../src/Util/jwt/jwt.types';
+import { ERecipeStatus, IRecipe } from '../src/Schema/Recipe/recipe.type';
 
 const redisCache = RedisCache.getInstance();
 
@@ -53,14 +54,14 @@ describe('User', () => {
                 })
             })
 
-            describe("WHEN trying to get Organizer by InValid organizer id", () => {
+            describe("WHEN trying to get User by InValid organizer id", () => {
 
                 it("SHOULD return 401 with error obj", async () => {
                     const userResponse = await request(app).get(userPrivateUrl(UserType.user)).send();
                     expectError(userResponse, 401);
                 });
 
-                describe("WHEN trying to get Organizer by InValid JWT", () => {
+                describe("WHEN trying to get User by InValid JWT", () => {
                     it("SHOULD return 401 with error obj", async () => {
 
                         const invalidKWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
@@ -71,6 +72,28 @@ describe('User', () => {
                 })
             })
         })
+
+        describe("WHEN trying to get User by there ID in URL", () => {
+
+            describe("WHEN trying to get User by valid User id", () => {
+
+                it("SHOULD return the User with that id", async () => {
+                    const userResponse = await request(app).get(`${userPublicUrl(UserType.user)}id/${users[0].id}`).send();
+                    expect(userResponse.status).toBe(200);
+                    const checkValidUser = { ...newValidUser }
+                    delete (checkValidUser as any)["password"]
+                    expect(userResponse.body.body).toMatchObject({ ...checkValidUser });
+                })
+            })
+
+            describe("WHEN trying to get User by InValid User id", () => {
+
+                it("SHOULD return 404 with error obj", async () => {
+                    const userResponse = await request(app).get(`${userPublicUrl(UserType.user)}id/123`).send();
+                    expectError(userResponse, 400);
+                });
+            })
+        });
 
     });
 
@@ -163,6 +186,94 @@ describe('User', () => {
         });
 
     })
+
+    describe("BookedRecipes", () => {
+        var user: IUser;
+        var accessToken: string;
+        var recipes: IRecipe[];
+
+        beforeEach(async () => {
+            const { users, accessTokens } = await createUsers(request, app, [newValidUser2]);
+            user = users[0];
+            accessToken = accessTokens[0];
+
+            const { accessTokens: _moderatorTokens } = await createModerators(request, app, [newValidModeratorSignUp]);
+
+            const _ingredients = await createIngredients(request, app, validIngredients, _moderatorTokens[0]);
+
+            const _recipes = await createRecipes(request, app, validRecipes, _ingredients, accessToken);
+            recipes = _recipes;
+
+        })
+
+        describe("WHEN user try to toggle there Booked Recipes", () => {
+            it("SHOULD return the User Booked Recipes and add to user book list", async () => {
+                const _userResponse = await request(app).patch(`${userPrivateUrl(UserType.user)}bookedRecipes/toggle/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken}`).send();
+                expect(_userResponse.status).toBe(200);
+                expect(_userResponse.body.body).toContain(recipes[0]._id);
+
+                const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}bookedRecipes/0/1`).set("authorization", `Bearer ${accessToken}`).send();
+                expect(userResponse.status).toBe(200);
+                expect(userResponse.body.body.length).toBe(1);
+
+                expectValidRecipeCardList(userResponse, 1);
+            });
+
+            it("SHOULD return the User Booked Recipes and remove from user book list", async () => {
+                await request(app).patch(`${userPrivateUrl(UserType.user)}bookedRecipes/toggle/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken}`).send();
+                const userResponse = await request(app).patch(`${userPrivateUrl(UserType.user)}bookedRecipes/toggle/${recipes[0]._id}`).set("authorization", `Bearer ${accessToken}`).send();
+                expect(userResponse.status).toBe(200);
+                expect(userResponse.body.body).not.toContain(recipes[0]._id);
+
+                const _userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}bookedRecipes/0/1`).set("authorization", `Bearer ${accessToken}`).send();
+                expect(_userResponse.status).toBe(200);
+                expect(_userResponse.body.body.length).toBe(0);
+            });
+        });
+    });
+
+    describe("MyRecipes", () => {
+        var user: IUser;
+        var accessToken: string;
+        var recipes: IRecipe[];
+
+        beforeEach(async () => {
+            const { users, accessTokens } = await createUsers(request, app, [newValidUser2]);
+            user = users[0];
+            accessToken = accessTokens[0];
+
+            const { accessTokens: _moderatorTokens } = await createModerators(request, app, [newValidModeratorSignUp]);
+
+            const _ingredients = await createIngredients(request, app, validIngredients, _moderatorTokens[0]);
+
+            const _recipes = await createRecipes(request, app, validRecipes, _ingredients, accessToken);
+            recipes = _recipes;
+
+        })
+
+        describe("WHEN user try to get there Recipes", () => {
+            it("SHOULD return the User Recipes " + ERecipeStatus.pending, async () => {
+                const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}myRecipe/${ERecipeStatus.pending}/0/1`).set("authorization", `Bearer ${accessToken}`).send();
+                expect(userResponse.status).toBe(200);
+                expect(userResponse.body.body.length).toBe(1);
+                expectValidRecipeCardList(userResponse, 1);
+            });
+
+            it("SHOULD return the User Recipes " + ERecipeStatus.verified, async () => {
+                const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}myRecipe/${ERecipeStatus.verified}/0/1`).set("authorization", `Bearer ${accessToken}`).send();
+                expect(userResponse.status).toBe(200);
+                expect(userResponse.body.body.length).toBe(0);
+            });
+
+            it("SHOULD return the User Recipes " + ERecipeStatus.rejected, async () => {
+                const userResponse = await request(app).get(`${userPrivateUrl(UserType.user)}myRecipe/${ERecipeStatus.rejected}/0/1`).set("authorization", `Bearer ${accessToken}`).send();
+                expect(userResponse.status).toBe(200);
+                expect(userResponse.body.body.length).toBe(0);
+            });
+
+        });
+    });
+
 
     // describe("Follow", () => {
     //     var users: IUser[] = [];

@@ -116,40 +116,74 @@ recipeSchema.post('save', async function (doc) {
 
 });
 
-recipeSchema.pre('findOneAndUpdate', async function (next) {
+// recipeSchema.pre('findOneAndUpdate', async function (next) {
 
-    const update: any = this.getUpdate();
+//     const update: any = this.getUpdate();
+
+//     try {
+
+//         // findByIdAndUpdate
+//         if (!this.getQuery()._id) {
+//             const status = update.status;
+//             if (status === ERecipeStatus.verified || status === ERecipeStatus.rejected) {
+//                 const _moderator: any = update?.moderator;
+//                 const comment: any = _moderator.comment;
+//                 const _id: mongoose.Types.ObjectId = this.getQuery()?._id;
+//                 console.log({ status });
+
+//                 const moderator = await mongoose.model('Moderator').findById(_moderator?.moderator.moderator, { moderated_recipe: 1 });
+//                 if (moderator) {
+//                     moderator.moderated_recipe.addToSet({ recipe: _id, status, comment });
+//                     await moderator.save();
+//                     next();
+//                 } else {
+//                     update.status = ERecipeStatus.pending;
+//                     update.moderator = undefined;
+//                     next(ValidationErrorFactory({
+//                         msg: "Moderator not found",
+//                         statusCode: 404,
+//                         type: "Validation"
+//                     }, "_id") as any);
+//                 }
+//             }
+//         }
+
+//     } catch (error) {
+//         console.log("recipe post save error", { error });
+//         next(error as any);
+//     }
+
+// });
+
+recipeSchema.post('findOneAndUpdate', async function (doc) {
 
     try {
+        const status = doc.status;
+        if (status === ERecipeStatus.verified || status === ERecipeStatus.rejected) {
+            const _moderator: any = doc?.moderator;
+            const comment: any = _moderator.comment;
+            const _id: mongoose.Types.ObjectId = this.getQuery()?._id;
 
-        // findByIdAndUpdate
-        if (!this.getQuery()._id) {
-            const status = update.status;
-            if (status === ERecipeStatus.verified || status === ERecipeStatus.rejected) {
-                const _moderator: any = update?.moderator;
-                const comment: any = _moderator.comment;
-                const _id: mongoose.Types.ObjectId = this.getQuery()?._id;
 
-                const moderator = await mongoose.model('Moderator').findById(_moderator?.moderator.moderator, { moderated_recipe: 1 });
-                if (moderator) {
-                    moderator.moderated_recipe.addToSet({ recipe: _id, status, comment });
-                    await moderator.save();
-                    next();
-                } else {
-                    update.status = ERecipeStatus.pending;
-                    update.moderator = undefined;
-                    next(ValidationErrorFactory({
-                        msg: "Moderator not found",
-                        statusCode: 404,
-                        type: "Validation"
-                    }, "_id") as any);
-                }
+            const moderator = await mongoose.model('Moderator').findById(_moderator?.moderator.moderator, { moderated_recipe: 1 });
+            if (moderator) {
+                moderator.moderated_recipe.addToSet({ recipe: _id, status, comment });
+                await moderator.save();
+
+            } else {
+                doc.status = ERecipeStatus.pending;
+                doc.moderator = undefined;
+                throw (ValidationErrorFactory({
+                    msg: "Moderator not found",
+                    statusCode: 404,
+                    type: "Validation"
+                }, "_id") as any);
             }
         }
 
     } catch (error) {
         console.log("recipe post save error", { error });
-        next(error as any);
+        throw error;
     }
 
 });

@@ -12,7 +12,7 @@ export default class ReviewController {
 
     static async create(_review: INewReviewFrom, user: IUser): Promise<IResponseType<IReview>> {
 
-        const _user = await UserModel.getById(user.id as any)
+        const _user = await UserModel.getById(user.id as any);
         await ReviewModel.validator(_review, newReviewSchema);
 
         _review = {

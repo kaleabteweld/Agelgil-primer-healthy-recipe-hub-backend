@@ -39,17 +39,17 @@ export default class Calorieninjas {
     getTotalNutrition = async (food: string): Promise<NutritionData> => {
         const data = await this.getNutritionData(food);
         if (this._passive) return {
-            calories: 0,
-            carbohydrates_total_g: 0,
-            fat_total_g: 0,
-            protein_g: 0,
-            sugar_g: 0,
-            fiber_g: 0,
-            sodium_mg: 0,
-            potassium_mg: 0,
-            cholesterol_mg: 0,
-            fat_saturated_g: 0,
-            serving_size_g: 0,
+            calories: Math.floor(Math.random() * 1000),
+            carbohydrates_total_g: Math.floor(Math.random() * 1000),
+            fat_total_g: Math.floor(Math.random() * 1000),
+            protein_g: Math.floor(Math.random() * 1000),
+            sugar_g: Math.floor(Math.random() * 1000),
+            fiber_g: Math.floor(Math.random() * 1000),
+            sodium_mg: Math.floor(Math.random() * 1000),
+            potassium_mg: Math.floor(Math.random() * 1000),
+            cholesterol_mg: Math.floor(Math.random() * 1000),
+            fat_saturated_g: Math.floor(Math.random() * 1000),
+            serving_size_g: Math.floor(Math.random() * 1000),
             name: ""
         }
         return data.items.reduce((acc: NutritionData, item: NutritionData) => {
@@ -83,17 +83,17 @@ export default class Calorieninjas {
 
     getNutrition = async (ingredients: { name?: string; type?: string; localName?: string; amount: number; unit: string; }[]): Promise<NutritionData> => {
         if (this._passive) return {
-            calories: 0,
-            carbohydrates_total_g: 0,
-            fat_total_g: 0,
-            protein_g: 0,
-            sugar_g: 0,
-            fiber_g: 0,
-            sodium_mg: 0,
-            potassium_mg: 0,
-            cholesterol_mg: 0,
-            fat_saturated_g: 0,
-            serving_size_g: 0,
+            calories: Math.floor(Math.random() * 1000),
+            carbohydrates_total_g: Math.floor(Math.random() * 1000),
+            fat_total_g: Math.floor(Math.random() * 1000),
+            protein_g: Math.floor(Math.random() * 1000),
+            sugar_g: Math.floor(Math.random() * 1000),
+            fiber_g: Math.floor(Math.random() * 1000),
+            sodium_mg: Math.floor(Math.random() * 1000),
+            potassium_mg: Math.floor(Math.random() * 1000),
+            cholesterol_mg: Math.floor(Math.random() * 1000),
+            fat_saturated_g: Math.floor(Math.random() * 1000),
+            serving_size_g: Math.floor(Math.random() * 1000),
             name: ""
         }
         const food = ingredients.map((ingredient) => `${ingredient.amount} ${ingredient.unit} ${ingredient.name}`).join(",");

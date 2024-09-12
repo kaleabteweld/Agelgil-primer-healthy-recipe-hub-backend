@@ -6,7 +6,7 @@ import { IResponseType } from "../../Types";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import { newMealPlannerSchema } from "../../Schema/user/MealPlanner/mealPlanner..validation";
 import { calculateNutritionNeeds } from "../../Schema/user/MealPlanner/mealPlanner.util";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import UserModel from "../../Schema/user/user.schema";
 
 

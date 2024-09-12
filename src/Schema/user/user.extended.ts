@@ -8,6 +8,7 @@ import { MakeValidator } from "../../Util";
 import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
 import UserModel from "./user.schema";
+import RecipeModel from "../Recipe/recipe.schema";
 
 
 export async function encryptPassword(this: IUser, password?: string): Promise<String> {
@@ -184,14 +185,7 @@ export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: stri
         }
 
         const recipeIndex = user.booked_recipes.indexOf(recipe._id as any);
-        const recipeOwner = await UserModel.getById(recipe.user.user as any);
-        // if (recipeOwner == null) {
-        //     throw ValidationErrorFactory({
-        //         msg: "Recipe Owner not found",
-        //         statusCode: 404,
-        //         type: "Validation"
-        //     }, "_id")
-        // }
+        const recipeOwner = await RecipeModel.getRecipesOwner(recipe._id as any);
         if (recipeIndex !== -1) {
             user.booked_recipes.splice(recipeIndex, 1);
             recipeOwner.addXp(EXpType.bookRecipe);

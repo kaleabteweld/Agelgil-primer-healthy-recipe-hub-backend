@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 import { IIngredient, INewIngredientFrom } from "../Ingredient/ingredient.type";
 import { IModerator } from "../Moderator/moderator.type";
 import { IReview } from "../Review/review.type";
-import { IMedicalCondition, IMedicalConditionInput, IUser } from "../user/user.type";
+import { IMedicalCondition, IMedicalConditionInput, IUser, IUserDocument } from "../user/user.type";
 import { IPagination } from "../../Types";
 import { NutritionData } from "../../Util/calorieninjas/types";
 
@@ -91,6 +91,7 @@ export interface IRecipeModel extends mongoose.Model<IRecipeDocument> {
     similarRecipes(queryVector: number[], pagination: IPagination): Promise<IRecipe[]>
     checkIfUserOwnsRecipe(_id: string, user: IUser): Promise<IRecipe>
     getRecipeByShareableLink(recipeId: string): Promise<IRecipe>
+    getRecipesOwner(_id: string, showError?: Boolean): Promise<IUserDocument>
 }
 
 export interface INewRecipeFrom {

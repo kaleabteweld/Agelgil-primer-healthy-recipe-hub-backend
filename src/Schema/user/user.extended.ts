@@ -7,6 +7,7 @@ import { EStatus, EXpType, IModeratorUserUpdateSchema, IUser, IUserUpdateFrom } 
 import { MakeValidator } from "../../Util";
 import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
+import UserModel from "./user.schema";
 
 
 export async function encryptPassword(this: IUser, password?: string): Promise<String> {
@@ -183,8 +184,22 @@ export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: stri
         }
 
         const recipeIndex = user.booked_recipes.indexOf(recipe._id as any);
-        if (recipeIndex !== -1) user.booked_recipes.splice(recipeIndex, 1);
-        else user.booked_recipes.push(recipe._id as any);
+        const recipeOwner = await UserModel.getById(recipe.user.user as any);
+        // if (recipeOwner == null) {
+        //     throw ValidationErrorFactory({
+        //         msg: "Recipe Owner not found",
+        //         statusCode: 404,
+        //         type: "Validation"
+        //     }, "_id")
+        // }
+        if (recipeIndex !== -1) {
+            user.booked_recipes.splice(recipeIndex, 1);
+            recipeOwner.addXp(EXpType.bookRecipe);
+        }
+        else {
+            user.booked_recipes.push(recipe._id as any);
+            recipeOwner.addXp(EXpType.unBookRecipe);
+        }
 
         await user.save();
         return user.booked_recipes as IRecipe[];

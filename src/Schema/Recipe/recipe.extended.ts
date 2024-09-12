@@ -6,10 +6,11 @@ import { MakeValidator } from "../../Util";
 import { IModeratorRecipeUpdateFrom, IRecipe, IRecipeUpdateFrom } from "./recipe.type";
 import { IPagination } from "../../Types";
 import { IReview } from "../Review/review.type";
-import { IUser } from "../user/user.type";
+import { IUser, IUserDocument } from "../user/user.type";
 import ShareableLink from "../../Util/ShareableLink";
 import { IModerator } from "../Moderator/moderator.type";
 import { Datasx } from "../../Util/Datasx";
+import UserModel from "../user/user.schema";
 
 
 
@@ -188,4 +189,37 @@ export function getRecipeByShareableLink(this: mongoose.Model<IRecipe>, recipeId
         return getById.bind(this)(ShareableLink.getInstance({}).decryptId(recipeId))
     }
     return getById.bind(this)(recipeId)
+}
+
+export async function getRecipesOwner(this: mongoose.Model<IRecipe>, _id: string, showError: Boolean = false): Promise<IUserDocument> {
+    try {
+        const recipe = await this.findById(new mongoose.Types.ObjectId(_id)).select('user').exec();
+        if (recipe == null && showError) {
+            throw ValidationErrorFactory({
+                msg: "recipe not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        const user = UserModel.getById(recipe?.user.user as any);
+        if (user == null && showError) {
+            throw ValidationErrorFactory({
+                msg: "user not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+
+        return user;
+
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
 }

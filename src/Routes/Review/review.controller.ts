@@ -4,7 +4,7 @@ import ReviewModel from "../../Schema/Review/review.schema";
 import { INewReviewFrom, IReview, IReviewUpdateFrom } from "../../Schema/Review/review.type";
 import { newReviewSchema, reviewUpdateSchema } from "../../Schema/Review/review.validation";
 import UserModel from "../../Schema/user/user.schema";
-import { IUser } from "../../Schema/user/user.type";
+import { EXpType, IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
 
 
@@ -26,6 +26,14 @@ export default class ReviewController {
 
         const review = await new ReviewModel((_review));
         await review.save();
+
+        const recipeOwner = await RecipeModel.getRecipesOwner(_review.recipe);
+        if (recipeOwner && recipeOwner.id !== user.id) {
+            if (_review.rating > 3)
+                recipeOwner.addXp(EXpType.positiveReview);
+            else if (_review.rating < 3)
+                recipeOwner.addXp(EXpType.negativeReview);
+        }
 
         return { body: (review.toJSON() as any) }
     }

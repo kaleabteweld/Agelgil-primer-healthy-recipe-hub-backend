@@ -202,26 +202,44 @@ export async function removeRecipeFromMealPlan(this: mongoose.Model<IMealPlanner
     }
 }
 
-export async function resetMealPlan(this: mongoose.Model<IMealPlanner>, _id: string): Promise<void> {
+export async function resetRecipes(this: mongoose.Model<IMealPlanner>, _id: string): Promise<IMealPlanner> {
     try {
-        await this.updateOne({ user: new mongoose.Types.ObjectId(_id) }, {
-            $set: {
-                recipes: {
-                    breakfast: {
-                        recipe: []
-                    },
-                    lunch: {
-                        recipe: []
-                    },
-                    dinner: {
-                        recipe: []
-                    },
-                    snacks: {
-                        recipe: []
-                    }
+        const resetNutritionGoal = {
+            calories: 0,
+            protein: 0,
+            carbs: 0,
+            fat: 0
+        }
+        const mealPlan = await this.findOneAndUpdate({ user: new mongoose.Types.ObjectId(_id) }, {
+            recipes: {
+                breakfast: {
+                    recipe: [],
+                    nutrition: resetNutritionGoal
+                },
+                lunch: {
+                    recipe: [],
+                    nutrition: resetNutritionGoal
+                },
+                dinner: {
+                    recipe: [],
+                    nutrition: resetNutritionGoal
+                },
+                snacks: {
+                    recipe: [],
+                    nutrition: resetNutritionGoal
                 }
             }
-        });
+        }, { new: true });
+
+        if (mealPlan == null) {
+            throw ValidationErrorFactory({
+                msg: "Meal plan not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+
+        return mealPlan;
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({
@@ -268,6 +286,30 @@ export async function checkIfUserInitializedStats(this: mongoose.Model<IMealPlan
             }, "_id")
         }
         return mealPlanner?.userStats !== undefined;
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+
+}
+
+export async function checkIfUserHasMealPlan(this: mongoose.Model<IMealPlanner>, _id: string): Promise<IMealPlanner> {
+    try {
+        const mealPlanner = await this.findOne({ user: new mongoose.Types.ObjectId(_id) });
+        if (mealPlanner == null) {
+            throw ValidationErrorFactory({
+                msg: "mealPlanner not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id")
+        }
+        return mealPlanner;
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({

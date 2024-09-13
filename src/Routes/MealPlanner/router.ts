@@ -34,9 +34,9 @@ privateMealPlannerRouter.delete("/removeFromMealPlan/:mealTime/:recipeID", userO
     res.json(mealPlan);
 }));
 
-privateMealPlannerRouter.delete("/resetMealPlan", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+privateMealPlannerRouter.delete("/reset/recipes", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
     const _user: IUser = req['user'];
-    const mealPlan = await MealPlannerController.resetMealPlan(_user);
+    const mealPlan = await MealPlannerController.resetRecipes(_user);
     res.json(mealPlan);
 }));
 

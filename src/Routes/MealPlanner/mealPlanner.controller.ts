@@ -15,6 +15,7 @@ export default class MealPlannerController {
     static async createMealPlan(_user: IUser, body: INewMealPlanner): Promise<IResponseType<IMealPlanner>> {
 
         await MealPlannerModel.validator(body, newMealPlannerSchema);
+        //TODO: await MealPlannerModel.checkIfUserHasMealPlan(_user.id);
         const user = await UserModel.getById(_user.id);
 
         const nutritionGoal = await calculateNutritionNeeds(body);
@@ -69,9 +70,8 @@ export default class MealPlannerController {
         return { body: await mealPlanner.save() }
     }
 
-    static async resetMealPlan(user: IUser): Promise<IResponseType<{}>> {
-        await MealPlannerModel.resetMealPlan(user.id);
-        return { body: {} }
+    static async resetRecipes(user: IUser): Promise<IResponseType<{}>> {
+        return { body: await MealPlannerModel.resetRecipes(user.id) }
     }
 
     static async getNutritionGoal(user: IUser): Promise<IResponseType<INutritionGoal>> {

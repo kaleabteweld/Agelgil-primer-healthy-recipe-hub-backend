@@ -82,9 +82,10 @@ export interface IMealPlannerModel extends mongoose.Model<IMealPlannerDocument> 
     checkIfUserHasRecipe(_id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner>
     checkIfUserDoseNotRecipe(_id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner>
     removeRecipeFromMealPlan(_id: string, time: EPreferredMealTime, recipeId: string): Promise<void>
-    resetMealPlan(_id: string): Promise<void>
+    resetRecipes(_id: string): Promise<IMealPlanner>
     getNutritionGoal(_id: string): Promise<INutritionGoal>
     getByUser(userId: string): Promise<IMealPlanner>
+    checkIfUserHasMealPlan(_id: string): Promise<IMealPlanner>
 }
 
 export interface INewMealPlanner {

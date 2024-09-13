@@ -7,6 +7,7 @@ import { IIngredient, INewIngredientFrom } from "../src/Schema/Ingredient/ingred
 import { EPreferredMealTime, EPreparationDifficulty, INewRecipeFrom, IngredientDetail, IRecipe } from "../src/Schema/Recipe/recipe.type";
 import { INewReviewFrom } from "../src/Schema/Review/review.type";
 import { EActivityLevel, EDietGoals, EGender, IMealPlanner, INewMealPlanner } from "../src/Schema/user/MealPlanner/mealPlanner.type";
+import { NutritionData } from "../src/Util/calorieninjas/types";
 
 
 export const sighupUrl = (user: UserType) => `/Api/v1/public/authentication/${user}/signUp`;
@@ -146,6 +147,20 @@ export const validUserStatus: INewMealPlanner[] = [{
     height: 180,
     weight: 70
 }];
+
+export const defaultNutritionData: Omit<NutritionData, "name"> = {
+    sugar_g: 0,
+    fiber_g: 0,
+    serving_size_g: 0,
+    sodium_mg: 0,
+    potassium_mg: 0,
+    fat_saturated_g: 0,
+    fat_total_g: 0,
+    calories: 0,
+    cholesterol_mg: 0,
+    protein_g: 0,
+    carbohydrates_total_g: 0,
+}
 
 export const expectError = async (response: Response, code: number) => {
 

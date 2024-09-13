@@ -8,6 +8,7 @@ import { newMealPlannerSchema } from "../../Schema/user/MealPlanner/mealPlanner.
 import { calculateNutritionNeeds } from "../../Schema/user/MealPlanner/mealPlanner.util";
 import mongoose from "mongoose";
 import UserModel from "../../Schema/user/user.schema";
+import { NutritionData } from "../../Util/calorieninjas/types";
 
 
 export default class MealPlannerController {
@@ -23,12 +24,13 @@ export default class MealPlannerController {
             user: user.id,
             nutritionGoal,
             userStats: body,
+            //TODO: add weight with date object
         });
 
         return { body: await mealPlanner.save() }
     }
 
-    static async getMealPlan(user: IUser, mealTime: EPreferredMealTime, page: number): Promise<IResponseType<IMealPlanner | null>> {
+    static async getMealPlan(user: IUser, mealTime: EPreferredMealTime, page: number): Promise<IResponseType<{ recipe: IRecipe[]; nutrition: NutritionData } | null>> {
         const mealPlanner = await MealPlannerModel.getUserMeals(user.id, mealTime, page);
         return { body: mealPlanner }
     }

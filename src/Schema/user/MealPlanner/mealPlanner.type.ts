@@ -78,7 +78,7 @@ export interface IMealPlannerModel extends mongoose.Model<IMealPlannerDocument> 
     removeByID(_id: string): Promise<void>
     generateWeekPlanRecipes(user: IUser, mealTime: EPreferredMealTime, page?: number): Promise<IRecipe[]>
     checkIfUserOwnsMealPlanner(_id: string, user: IUser): Promise<boolean>
-    getUserMeals(_id: string, mealTime: EPreferredMealTime, page: number): Promise<IMealPlanner | null>
+    getUserMeals(_id: string, mealTime: EPreferredMealTime, page: number): Promise<{ recipe: IRecipe[]; nutrition: NutritionData } | null>
     checkIfUserHasRecipe(_id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner>
     checkIfUserDoseNotRecipe(_id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner>
     removeRecipeFromMealPlan(_id: string, time: EPreferredMealTime, recipeId: string): Promise<void>

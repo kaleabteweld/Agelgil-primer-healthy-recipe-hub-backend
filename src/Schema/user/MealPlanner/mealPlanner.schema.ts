@@ -40,19 +40,19 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
     },
     recipes: {
         breakfast: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe', default: [] }],
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
             nutrition: nutritionSchema,
         },
         lunch: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe', default: [] }],
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
             nutrition: nutritionSchema,
         },
         dinner: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe', default: [] }],
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
             nutrition: nutritionSchema,
         },
         snacks: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'recipe', default: [] }],
+            recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
             nutrition: nutritionSchema,
         }
     }

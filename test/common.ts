@@ -390,6 +390,25 @@ export const expectValidRecipeCardList = async (response: Response, minLen: numb
     });
 }
 
+export const expectValidRecipeCardListWithNoRes = async (data: any, minLen: number, maxLen?: number, matchers?: Record<string, unknown> | Record<string, unknown>[]) => {
+
+    expect(data.length).toBeGreaterThanOrEqual(minLen)
+    maxLen && expect(data.length).toBeLessThanOrEqual(maxLen)
+
+    data.forEach((recipe: IRecipe) => {
+        expect(recipe).toMatchObject({
+            _id: expect.any(String),
+            id: expect.any(String),
+            name: expect.any(String),
+            description: expect.any(String),
+            imgs: expect.any(Array),
+            preferredMealTime: expect.any(Array),
+            preparationDifficulty: expect.any(String),
+            ...matchers
+        });
+    });
+}
+
 export const expectValidReview = (response: Response, input: INewReviewFrom, matchers?: Record<string, unknown> | Record<string, unknown>[]) => {
     expect(response.status).toBe(200);
     expect(response.body.body).toMatchObject({

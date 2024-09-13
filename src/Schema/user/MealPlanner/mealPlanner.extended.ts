@@ -7,6 +7,7 @@ import { IMealPlanner, INutritionGoal } from "./mealPlanner.type";
 import { EPreferredMealTime, ERecipeStatus, IRecipe } from "../../Recipe/recipe.type";
 import { RecipeSearchBuilder } from "../../Recipe/recipe.utils";
 import { IUser } from "../user.type";
+import { NutritionData } from "../../../Util/calorieninjas/types";
 
 
 
@@ -83,7 +84,7 @@ export async function removeByID(this: mongoose.Model<IMealPlanner>, _id: string
     }
 }
 
-export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: string, mealTime: EPreferredMealTime, page: number): Promise<IMealPlanner | null> {
+export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: string, mealTime: EPreferredMealTime, page: number): Promise<{ recipe: IRecipe[]; nutrition: NutritionData } | null> {
     try {
         const mealPlanner = await this.findOne({ user: new mongoose.Types.ObjectId(_id) }).populate({
             path: `recipes.${mealTime}.recipe`,
@@ -92,8 +93,15 @@ export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: stri
             options: { limit: page * 10, skip: (page - 1) * 10 }
         }).exec();
 
-        console.log({ mealPlanner });
-        return mealPlanner;
+        if (mealPlanner == null) {
+            throw ValidationErrorFactory({
+                msg: "Meal planner not found",
+                statusCode: 404,
+                type: "validation"
+            }, "_id")
+        }
+
+        return mealPlanner?.recipes[mealTime] as any;
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({

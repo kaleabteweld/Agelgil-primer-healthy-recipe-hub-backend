@@ -106,15 +106,10 @@ export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: stri
     }
 }
 
-export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _id: string, time: EPreferredMealTime, recipeId: string, exist: Boolean = true): Promise<IMealPlanner> {
+export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner> {
     try {
         const mealPlanner = await this.findOne({
             user: new mongoose.Types.ObjectId(_id),
-            // [`recipes.${EPreferredMealTime}.recipe`]: {
-            //     $elemMatch: {
-            //         $in: [new mongoose.Types.ObjectId(recipeId)]
-            //     }
-            // }
         });
 
         if (mealPlanner == null) {
@@ -125,7 +120,41 @@ export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _
             }, "recipeId")
         }
 
-        if (exist && mealPlanner?.recipes[time].recipe.includes(new mongoose.Types.ObjectId(recipeId) as any)) {
+        if (mealPlanner?.recipes[time].recipe.includes(new mongoose.Types.ObjectId(recipeId) as any)) {
+            throw ValidationErrorFactory({
+                msg: "User already has recipe in meal plan",
+                statusCode: 400,
+                type: "Validation"
+            }, "recipeId")
+        }
+        return mealPlanner as IMealPlanner;
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}
+
+export async function checkIfUserDoseNotRecipe(this: mongoose.Model<IMealPlanner>, _id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner> {
+    try {
+        const mealPlanner = await this.findOne({
+            user: new mongoose.Types.ObjectId(_id),
+        });
+
+        if (mealPlanner == null) {
+            throw ValidationErrorFactory({
+                msg: "User does not have recipe in meal plan",
+                statusCode: 404,
+                type: "Validation"
+            }, "recipeId")
+        }
+
+        if (!mealPlanner?.recipes[time].recipe.includes(new mongoose.Types.ObjectId(recipeId) as any)) {
             throw ValidationErrorFactory({
                 msg: "User already has recipe in meal plan",
                 statusCode: 400,

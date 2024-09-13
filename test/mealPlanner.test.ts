@@ -152,7 +152,7 @@ describe('MealPlanner', () => {
             describe("WHEN user Dose't have a meal plan", () => {
                 it("SHOULD return an error", async () => {
                     const res = await request(app)
-                        .post(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
+                        .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
                         .set('Authorization', 'Bearer ' + accessToken[0]);
                     console.log(res.body);
                     expectError(res, 404);

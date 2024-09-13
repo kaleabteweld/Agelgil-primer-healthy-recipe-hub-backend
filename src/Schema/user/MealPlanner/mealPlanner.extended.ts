@@ -106,20 +106,26 @@ export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: stri
     }
 }
 
-export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner> {
+export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _id: string, time: EPreferredMealTime, recipeId: string, exist: Boolean = true): Promise<IMealPlanner> {
     try {
         const mealPlanner = await this.findOne({
             user: new mongoose.Types.ObjectId(_id),
-            recipes: {
-                $elemMatch: {
-                    recipe: new mongoose.Types.ObjectId(recipeId)
-                }
-            }
+            // [`recipes.${EPreferredMealTime}.recipe`]: {
+            //     $elemMatch: {
+            //         $in: [new mongoose.Types.ObjectId(recipeId)]
+            //     }
+            // }
         });
 
-        console.log({ mealPlanner });
+        if (mealPlanner == null) {
+            throw ValidationErrorFactory({
+                msg: "User does not have recipe in meal plan",
+                statusCode: 404,
+                type: "Validation"
+            }, "recipeId")
+        }
 
-        if (mealPlanner?.recipes[time].recipe.includes(new mongoose.Types.ObjectId(recipeId) as any)) {
+        if (exist && mealPlanner?.recipes[time].recipe.includes(new mongoose.Types.ObjectId(recipeId) as any)) {
             throw ValidationErrorFactory({
                 msg: "User already has recipe in meal plan",
                 statusCode: 400,

@@ -52,7 +52,7 @@ export default class MealPlannerController {
     }
 
     static async removeFromMealPlan(user: IUser, mealTime: EPreferredMealTime, recipeID: string): Promise<IResponseType<IMealPlanner>> {
-        const mealPlanner = await MealPlannerModel.checkIfUserHasRecipe(user.id, mealTime, recipeID);
+        const mealPlanner = await MealPlannerModel.checkIfUserHasRecipe(user.id, mealTime, recipeID, false);
         const recipe = await RecipeModel.getById(recipeID);
 
         mealPlanner.recipes[mealTime].recipe = mealPlanner.recipes[mealTime].recipe.filter((id: any) => id.toString() !== recipe.id) as IRecipe[];

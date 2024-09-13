@@ -6,7 +6,7 @@ import { IModerator, IModeratorLogInFrom, IModeratorSignUpFrom } from "../src/Sc
 import { IIngredient, INewIngredientFrom } from "../src/Schema/Ingredient/ingredient.type";
 import { EPreferredMealTime, EPreparationDifficulty, INewRecipeFrom, IngredientDetail, IRecipe } from "../src/Schema/Recipe/recipe.type";
 import { INewReviewFrom } from "../src/Schema/Review/review.type";
-import { EActivityLevel, EDietGoals, EGender, IMealPlanner, INewMealPlanner } from "../src/Schema/user/MealPlanner/mealPlanner.type";
+import { EActivityLevel, EDietGoals, EGender, IMealPlanner, INewMealPlanner, INutritionGoal } from "../src/Schema/user/MealPlanner/mealPlanner.type";
 import { NutritionData } from "../src/Util/calorieninjas/types";
 
 
@@ -160,6 +160,13 @@ export const defaultNutritionData: Omit<NutritionData, "name"> = {
     cholesterol_mg: 0,
     protein_g: 0,
     carbohydrates_total_g: 0,
+}
+
+export const defaultNutritionGoal: INutritionGoal = {
+    calories: 0,
+    protein: 0,
+    carbs: 0,
+    fat: 0,
 }
 
 export const expectError = async (response: Response, code: number) => {

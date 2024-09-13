@@ -86,6 +86,7 @@ export interface IMealPlannerModel extends mongoose.Model<IMealPlannerDocument> 
     getNutritionGoal(_id: string): Promise<INutritionGoal>
     getByUser(userId: string): Promise<IMealPlanner>
     checkIfUserHasMealPlan(_id: string): Promise<IMealPlanner>
+    checkIfUserIsInitialized(_id: string): Promise<void>
 }
 
 export interface INewMealPlanner {

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../../Middleware/errors.middleware';
-import { checkIfUserDoseNotRecipe, checkIfUserHasMealPlan, checkIfUserHasRecipe, getById, getByUser, getNutritionGoal, getUserMeals, removeByID, removeRecipeFromMealPlan, resetRecipes, validator } from './mealPlanner.extended';
+import { checkIfUserDoseNotRecipe, checkIfUserHasMealPlan, checkIfUserHasRecipe, checkIfUserIsInitialized, getById, getByUser, getNutritionGoal, getUserMeals, removeByID, removeRecipeFromMealPlan, resetRecipes, validator } from './mealPlanner.extended';
 import { EActivityLevel, EDietGoals, EGender, IMealPlanner, IMealPlannerMethods, IMealPlannerModel } from './mealPlanner.type';
 
 const nutritionSchema = {
@@ -71,6 +71,7 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
         getNutritionGoal,
         getByUser,
         checkIfUserHasMealPlan,
+        checkIfUserIsInitialized,
     }
 });
 

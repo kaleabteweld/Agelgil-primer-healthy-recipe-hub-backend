@@ -3,11 +3,12 @@ import { connectDB, dropCollections, dropDB } from './util';
 import request from "supertest";
 import { makeServer } from '../src/Util/Factories';
 import RedisCache from '../src/Util/cache/redis';
-import { createIngredients, createModerators, createRecipes, createReviews, createUsers, defaultNutritionData, expectError, expectValidMealPlanner, expectValidRecipeCardList, loginUrl, mealPlannerPrivateUrl, newValidModeratorSignUp, newValidUser, newValidUser2, sighupUrl, userPrivateUrl, userPublicUrl, validIngredients, validRecipes, validReviews, validUserStatus } from './common';
+import { createIngredients, createModerators, createRecipes, createReviews, createUsers, defaultNutritionData, defaultNutritionGoal, expectError, expectValidMealPlanner, expectValidRecipeCardList, loginUrl, mealPlannerPrivateUrl, newValidModeratorSignUp, newValidUser, newValidUser2, sighupUrl, userPrivateUrl, userPublicUrl, validIngredients, validRecipes, validReviews, validUserStatus } from './common';
 import { UserType } from '../src/Util/jwt/jwt.types';
 import { IUser } from '../src/Schema/user/user.type';
 import { IIngredient } from '../src/Schema/Ingredient/ingredient.type';
 import { IRecipe } from '../src/Schema/Recipe/recipe.type';
+import { IMealPlanner } from '../src/Schema/user/MealPlanner/mealPlanner.type';
 
 const redisCache = RedisCache.getInstance();
 
@@ -51,7 +52,21 @@ describe('MealPlanner', () => {
             recipes = _recipes;
         });
 
-        describe("WHEN user is logged in", () => {
+        describe("WHEN user have a meal plan", () => {
+            it("SHOULD return an 400 error", async () => {
+                await request(app)
+                    .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                    .set('Authorization', 'Bearer ' + accessToken[0])
+                    .send(validUserStatus[0]);
+
+                const res = await request(app)
+                    .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                    .set('Authorization', 'Bearer ' + accessToken[0])
+                    .send(validUserStatus[0]);
+                expectError(res, 400);
+            });
+        })
+        describe("WHEN User dose't have a meal plan", () => {
             it("SHOULD create a meal plan", async () => {
                 const res = await request(app)
                     .post(`${mealPlannerPrivateUrl()}createMealPlan`)
@@ -60,7 +75,8 @@ describe('MealPlanner', () => {
 
                 expectValidMealPlanner(res);
             });
-        });
+        })
+
     });
 
     describe("Add to Meal Plan", () => {
@@ -87,39 +103,37 @@ describe('MealPlanner', () => {
             recipes = _recipes;
         });
 
-        describe("WHEN user is logged in", () => {
-            describe("WHEN user Dose't have a meal plan", () => {
-                it("SHOULD return an error", async () => {
-                    const res = await request(app)
-                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
-                        .set('Authorization', 'Bearer ' + accessToken[0]);
-                    expectError(res, 404);
-                });
+        describe("WHEN user Dose't have a meal plan", () => {
+            it("SHOULD return an error", async () => {
+                const res = await request(app)
+                    .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                    .set('Authorization', 'Bearer ' + accessToken[0]);
+                expectError(res, 404);
             });
+        });
 
-            describe("WHEN user has a meal plan", () => {
-                it("SHOULD add a recipe to the meal plan", async () => {
-                    await request(app)
-                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
-                        .set('Authorization', 'Bearer ' + accessToken[0])
-                        .send(validUserStatus[0]);
+        describe("WHEN user has a meal plan", () => {
+            it("SHOULD add a recipe to the meal plan", async () => {
+                await request(app)
+                    .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                    .set('Authorization', 'Bearer ' + accessToken[0])
+                    .send(validUserStatus[0]);
 
-                    const res = await request(app)
-                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
-                        .set('Authorization', 'Bearer ' + accessToken[0]);
+                const res = await request(app)
+                    .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                    .set('Authorization', 'Bearer ' + accessToken[0]);
 
-                    expectValidMealPlanner(res, {
-                        matchers: {
-                            recipes: {
-                                breakfast: {
-                                    recipe: [recipes[0].id]
-                                },
-                                lunch: {
-                                    recipe: []
-                                },
-                            }
+                expectValidMealPlanner(res, {
+                    matchers: {
+                        recipes: {
+                            breakfast: {
+                                recipe: [recipes[0].id]
+                            },
+                            lunch: {
+                                recipe: []
+                            },
                         }
-                    });
+                    }
                 });
             });
         });
@@ -148,58 +162,57 @@ describe('MealPlanner', () => {
             recipes = _recipes;
         });
 
-        describe("WHEN user is logged in", () => {
-            describe("WHEN user Dose't have a meal plan", () => {
-                it("SHOULD return an error", async () => {
-                    const res = await request(app)
-                        .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
-                        .set('Authorization', 'Bearer ' + accessToken[0]);
-                    console.log(res.body);
-                    expectError(res, 404);
-                });
-            });
-
-            describe("WHEN user has a meal plan", () => {
-                it("SHOULD remove a recipe from the meal plan", async () => {
-                    await request(app)
-                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
-                        .set('Authorization', 'Bearer ' + accessToken[0])
-                        .send(validUserStatus[0]);
-
-                    var res = await request(app)
-                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
-                        .set('Authorization', 'Bearer ' + accessToken[0]);
-
-                    expectValidMealPlanner(res, {
-                        matchers: {
-                            recipes: {
-                                breakfast: {
-                                    recipe: [recipes[0].id]
-                                },
-                            }
-                        }
-                    });
-
-
-                    res = await request(app)
-                        .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
-                        .set('Authorization', 'Bearer ' + accessToken[0]);
-
-                    expectValidMealPlanner(res, {
-                        matchers: {
-                            recipes: {
-                                breakfast: {
-                                    recipe: []
-                                },
-                            }
-                        }
-                    });
-                    expect(res.status).toBe(200);
-
-                });
+        describe("WHEN user Dose't have a meal plan", () => {
+            it("SHOULD return an error", async () => {
+                const res = await request(app)
+                    .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
+                    .set('Authorization', 'Bearer ' + accessToken[0]);
+                expectError(res, 404);
             });
         });
-    })
+
+        describe("WHEN user has a meal plan", () => {
+            it("SHOULD remove a recipe from the meal plan and Subtract the recipe's nutrients from current in from total nutrients", async () => {
+                await request(app)
+                    .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                    .set('Authorization', 'Bearer ' + accessToken[0])
+                    .send(validUserStatus[0]);
+
+                var res = await request(app)
+                    .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                    .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                expectValidMealPlanner(res, {
+                    matchers: {
+                        recipes: {
+                            breakfast: {
+                                recipe: [recipes[0].id]
+                            },
+                        }
+                    }
+                });
+
+
+                res = await request(app)
+                    .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
+                    .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                expectValidMealPlanner(res, {
+                    matchers: {
+                        currentNutrition: defaultNutritionGoal,
+                        recipes: {
+                            breakfast: {
+                                recipe: [],
+                                nutrition: defaultNutritionData
+                            },
+                        }
+                    }
+                });
+                expect(res.status).toBe(200);
+
+            });
+        });
+    });
 
     describe("Reset Meal Plan Recipes", () => {
 
@@ -223,66 +236,63 @@ describe('MealPlanner', () => {
             const _recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
             recipes = _recipes;
         });
-
-        describe("WHEN user is logged in", () => {
-            describe("WHEN user Dose't have a meal plan", () => {
-                it("SHOULD return an error", async () => {
-                    const res = await request(app)
-                        .delete(`${mealPlannerPrivateUrl()}reset/recipes`)
-                        .set('Authorization', 'Bearer ' + accessToken[0]);
-                    expectError(res, 404);
-                });
+        describe("WHEN user Dose't have a meal plan", () => {
+            it("SHOULD return an error", async () => {
+                const res = await request(app)
+                    .delete(`${mealPlannerPrivateUrl()}reset/recipes`)
+                    .set('Authorization', 'Bearer ' + accessToken[0]);
+                expectError(res, 404);
             });
+        });
 
-            describe("WHEN user has a meal plan", () => {
-                it("SHOULD reset the meal plan", async () => {
-                    await request(app)
-                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
-                        .set('Authorization', 'Bearer ' + accessToken[0])
-                        .send(validUserStatus[0]);
+        describe("WHEN user has a meal plan", () => {
+            it("SHOULD reset the meal plan and reset user total nutrients", async () => {
+                await request(app)
+                    .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                    .set('Authorization', 'Bearer ' + accessToken[0])
+                    .send(validUserStatus[0]);
 
-                    var res = await request(app)
-                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
-                        .set('Authorization', 'Bearer ' + accessToken[0]);
+                var res = await request(app)
+                    .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                    .set('Authorization', 'Bearer ' + accessToken[0]);
 
-                    expectValidMealPlanner(res, {
-                        matchers: {
-                            recipes: {
-                                breakfast: {
-                                    recipe: [recipes[0].id]
-                                },
-                            }
+                expectValidMealPlanner(res, {
+                    matchers: {
+                        recipes: {
+                            breakfast: {
+                                recipe: [recipes[0].id]
+                            },
                         }
-                    });
-
-                    res = await request(app)
-                        .delete(`${mealPlannerPrivateUrl()}reset/recipes`)
-                        .set('Authorization', 'Bearer ' + accessToken[0]);
-
-                    expectValidMealPlanner(res, {
-                        matchers: {
-                            recipes: {
-                                breakfast: {
-                                    recipe: [],
-                                    nutrition: defaultNutritionData
-                                },
-                                lunch: {
-                                    recipe: [],
-                                    nutrition: defaultNutritionData
-                                },
-                                dinner: {
-                                    recipe: [],
-                                    nutrition: defaultNutritionData
-                                },
-                                snacks: {
-                                    recipe: [],
-                                    nutrition: defaultNutritionData
-                                }
-                            }
-                        }
-                    });
-                    expect(res.status).toBe(200);
+                    }
                 });
+
+                res = await request(app)
+                    .delete(`${mealPlannerPrivateUrl()}reset/recipes`)
+                    .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                expectValidMealPlanner(res, {
+                    matchers: {
+                        recipes: {
+                            breakfast: {
+                                recipe: [],
+                                nutrition: defaultNutritionData
+                            },
+                            lunch: {
+                                recipe: [],
+                                nutrition: defaultNutritionData
+                            },
+                            dinner: {
+                                recipe: [],
+                                nutrition: defaultNutritionData
+                            },
+                            snacks: {
+                                recipe: [],
+                                nutrition: defaultNutritionData
+                            }
+                        }
+                    }
+                });
+                expect(res.status).toBe(200);
             });
         });
     });

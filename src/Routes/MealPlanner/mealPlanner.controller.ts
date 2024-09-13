@@ -15,7 +15,7 @@ export default class MealPlannerController {
     static async createMealPlan(_user: IUser, body: INewMealPlanner): Promise<IResponseType<IMealPlanner>> {
 
         await MealPlannerModel.validator(body, newMealPlannerSchema);
-        //TODO: await MealPlannerModel.checkIfUserHasMealPlan(_user.id);
+        await MealPlannerModel.checkIfUserIsInitialized(_user.id);
         const user = await UserModel.getById(_user.id);
 
         const nutritionGoal = await calculateNutritionNeeds(body);

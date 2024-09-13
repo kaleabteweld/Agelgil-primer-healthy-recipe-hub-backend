@@ -275,17 +275,16 @@ export async function getNutritionGoal(this: mongoose.Model<IMealPlanner>, _id: 
     }
 }
 
-export async function checkIfUserInitializedStats(this: mongoose.Model<IMealPlanner>, _id: string): Promise<boolean> {
+export async function checkIfUserIsInitialized(this: mongoose.Model<IMealPlanner>, _id: string): Promise<void> {
     try {
         const mealPlanner = await this.findOne({ user: new mongoose.Types.ObjectId(_id) });
-        if (mealPlanner == null) {
+        if (mealPlanner != null) {
             throw ValidationErrorFactory({
-                msg: "mealPlanner not found",
-                statusCode: 404,
-                type: "Validation"
+                msg: "mealPlanner already initialized",
+                statusCode: 400,
+                type: "validation"
             }, "_id")
         }
-        return mealPlanner?.userStats !== undefined;
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({

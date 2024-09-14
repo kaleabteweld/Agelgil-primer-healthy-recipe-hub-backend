@@ -273,4 +273,52 @@ describe('Ingredients', () => {
 
     })
 
+    describe("Remove Ingredients", () => {
+        var Ingredients: IIngredient[] = [];
+        var accessToken: string;
+
+        beforeEach(async () => {
+            const { accessTokens } = await createModerators(request, app, [newValidModeratorSignUp]);
+            accessToken = accessTokens[0];
+
+            const _Ingredients = await createIngredients(request, app, validIngredients, accessToken);
+            Ingredients = _Ingredients;
+        })
+
+        describe("WHEN Login in as a Moderator", () => {
+            describe("WHEN Moderator try to remove Ingredient", () => {
+                it("SHOULD remove and return 200 with the Ingredient", async () => {
+                    let response = await request(app).delete(`${ingredientPrivateUrl()}remove/id/${Ingredients[0]._id}`).set('authorization', `Bearer ${accessToken}`).send({});
+                    expect(response.status).toBe(200);
+
+                    response = await request(app).get(`${ingredientPublicUrl()}byId/${Ingredients[0]._id}`).send();
+                    expect(response.status).toBe(404)
+                });
+            });
+        });
+
+        describe("WHEN not Login in as a Moderator", () => {
+            it("SHOULD return a 401 status code AND Error obj", async () => {
+                const response = await request(app).delete(`${ingredientPrivateUrl()}remove/${Ingredients[0]._id}`).send({});
+                expectError(response, 401);
+            });
+
+            describe("WHEN Login in as a User", () => {
+                var user: IUser;
+                var accessToken: string;
+                beforeEach(async () => {
+                    const { users, accessTokens } = await createUsers(request, app, [newValidUser2]);
+                    user = users[0];
+                    accessToken = accessTokens[0];
+                })
+
+                it("SHOULD return a 401 status code AND Error obj", async () => {
+                    const response = await request(app).delete(`${ingredientPrivateUrl()}remove/${Ingredients[0]._id}`).set('authorization', `Bearer ${accessToken}`).send({});
+                    expectError(response, 401);
+                })
+            })
+
+        });
+    })
+
 });

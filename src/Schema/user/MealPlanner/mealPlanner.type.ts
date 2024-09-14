@@ -43,7 +43,7 @@ export interface IUserStats {
     weights: {
         date: Date;
         value: number;
-    };
+    }[];
     weight: number;
     height: number;
     age: number
@@ -87,6 +87,7 @@ export interface IMealPlannerModel extends mongoose.Model<IMealPlannerDocument> 
     getByUser(userId: string): Promise<IMealPlanner>
     checkIfUserHasMealPlan(_id: string): Promise<IMealPlanner>
     checkIfUserIsInitialized(_id: string): Promise<void>
+    updateStats(_id: string, body: INewMealPlanner): Promise<IMealPlanner>
 }
 
 export interface INewMealPlanner {

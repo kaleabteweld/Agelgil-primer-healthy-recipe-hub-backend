@@ -46,6 +46,11 @@ privateMealPlannerRouter.get("/nutritionGoal", userOnly, MakeErrorHandler(async 
     res.json(mealPlan);
 }));
 
+privateMealPlannerRouter.patch("/updateStats", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+    const _user: IUser = req['user'];
+    const mealPlan = await MealPlannerController.updateStats(_user, req.body);
+    res.json(mealPlan);
+}));
 
 privateMealPlannerRouter.use("/mealPlanner", publicMealPlannerRouter);
 privateMealPlannerRouter.use("/mealPlanner", privateMealPlannerRouter);

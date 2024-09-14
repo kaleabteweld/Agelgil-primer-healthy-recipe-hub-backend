@@ -246,7 +246,7 @@ export function hasBookedRecipe(this: IUser, recipeId: any): boolean {
 
 export async function updateUserStatus(this: mongoose.Model<IUser>, userId: string, body: IModeratorUserUpdateSchema): Promise<IUser> {
     try {
-        const user = await this.findByIdAndUpdate(userId, { status: body.status }, { new: true, overwrite: true });
+        const user = await this.findByIdAndUpdate(userId, { status: body.status, verified: body.verified }, { new: true, overwrite: true });
         if (user == null) {
             throw ValidationErrorFactory({
                 msg: "User not found",

@@ -23,8 +23,12 @@ export default class MealPlannerController {
         const mealPlanner = new MealPlannerModel({
             user: user.id,
             nutritionGoal,
-            userStats: body,
-            //TODO: add weight with date object
+            userStats: {
+                ...body, weights: {
+                    date: new Date(),
+                    value: body.weight
+                }
+            },
         });
 
         return { body: await mealPlanner.save() }
@@ -81,7 +85,8 @@ export default class MealPlannerController {
         return { body: nutritionGoal }
     }
 
-    //TODO: add edit nutrition goal
-
+    static async updateStats(user: IUser, body: INewMealPlanner): Promise<IResponseType<IMealPlanner>> {
+        return { body: await MealPlannerModel.updateStats(user.id, body) }
+    }
 
 }

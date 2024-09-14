@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import Joi from "joi";
 import { ValidationErrorFactory } from "../../../Types/error"
 import { BSONError } from 'bson';
-import { MakeValidator } from "../../../Util";
-import { IMealPlanner, INutritionGoal } from "./mealPlanner.type";
+import { copyObjectWithout, MakeValidator } from "../../../Util";
+import { IMealPlanner, INewMealPlanner, INutritionGoal } from "./mealPlanner.type";
 import { EPreferredMealTime, ERecipeStatus, IRecipe } from "../../Recipe/recipe.type";
 import { RecipeSearchBuilder } from "../../Recipe/recipe.utils";
 import { IUser } from "../user.type";
@@ -328,4 +328,53 @@ export async function checkIfUserHasMealPlan(this: mongoose.Model<IMealPlanner>,
         throw error;
     }
 
+}
+
+export async function updateStats(this: mongoose.Model<IMealPlanner>, _id: string, body: INewMealPlanner): Promise<IMealPlanner> {
+    try {
+        const update: any = {};
+
+        if (body.weight) {
+            update.$push = {
+                'userStats.weights': {
+                    date: new Date(),
+                    value: body.weight
+                }
+            };
+        }
+
+        update.$set = {
+            'userStats.weight': body.weight,
+            'userStats.height': body.height,
+            'userStats.age': body.age,
+            'userStats.gender': body.gender,
+            'userStats.activityLevel': body.activityLevel,
+            'userStats.diet_goals': body.diet_goals
+        };
+
+        const mealPlanner = await this.findOneAndUpdate(
+            { user: new mongoose.Types.ObjectId(_id) },
+            update,
+            { new: true }
+        ).exec();
+
+        if (!mealPlanner) {
+            throw ValidationErrorFactory({
+                msg: "mealPlanner or userStats not found",
+                statusCode: 404,
+                type: "Validation"
+            }, "_id");
+        }
+
+        return mealPlanner;
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
 }

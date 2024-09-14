@@ -62,6 +62,14 @@ publicIngredientsRouter.post("/search/:page", MakeErrorHandler(
     }
 ));
 
+privateIngredientsRouter.delete("/remove/id/:id", moderatorOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _moderator: any = req['moderator'];
+        const id = req.params.id;
+        res.json(await IngredientController.removeById(id, _moderator.id));
+    }
+));
+
 privateIngredientsRouter.delete("/remove/:ingredientId", moderatorOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _moderator: any = req['moderator'];

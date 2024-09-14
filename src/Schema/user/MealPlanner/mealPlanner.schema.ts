@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../../Middleware/errors.middleware';
-import { checkIfUserDoseNotRecipe, checkIfUserHasMealPlan, checkIfUserHasRecipe, checkIfUserIsInitialized, getById, getByUser, getNutritionGoal, getUserMeals, removeByID, removeRecipeFromMealPlan, resetRecipes, validator } from './mealPlanner.extended';
+import { checkIfUserDoseNotRecipe, checkIfUserHasMealPlan, checkIfUserHasRecipe, checkIfUserIsInitialized, getById, getByUser, getNutritionGoal, getUserMeals, removeByID, removeRecipeFromMealPlan, resetRecipes, updateStats, validator } from './mealPlanner.extended';
 import { EActivityLevel, EDietGoals, EGender, IMealPlanner, IMealPlannerMethods, IMealPlannerModel } from './mealPlanner.type';
 
 const nutritionSchema = {
@@ -30,7 +30,7 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
     currentNutrition: nutritionGoalSchema,
     user: { type: Schema.Types.ObjectId, ref: 'user' },
     userStats: {
-        weights: { type: { date: Date, value: Number } },
+        weights: { type: [{ date: Date, value: Number }], default: [], _id: false },
         weight: Number,
         height: Number,
         age: Number,
@@ -72,6 +72,7 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
         getByUser,
         checkIfUserHasMealPlan,
         checkIfUserIsInitialized,
+        updateStats,
     }
 });
 

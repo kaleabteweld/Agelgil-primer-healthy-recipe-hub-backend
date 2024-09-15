@@ -326,8 +326,6 @@ export const expectValidRecipe = (response: Response, input: INewRecipeFrom, mat
 
     response.body.body.ingredients.forEach((ingredient: IngredientDetail, index: number) => {
         expect(ingredient).toMatchObject({
-            _id: expect.any(String),
-            id: expect.any(String),
             amount: input.ingredients[index].amount,
             localName: input.ingredients[index].localName,
             name: input.ingredients[index].name,

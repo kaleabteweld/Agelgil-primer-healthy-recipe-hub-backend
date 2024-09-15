@@ -1,7 +1,7 @@
 import Joi from "joi";
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import { IUser } from "../user.type";
-import { EPreferredMealTime, IRecipe, TPreferredMealTime } from "../../Recipe/recipe.type";
+import { EPreferredMealTime, IngredientDetail, IRecipe } from "../../Recipe/recipe.type";
 import { NutritionData } from "../../../Util/calorieninjas/types";
 
 
@@ -61,13 +61,14 @@ export interface IMealPlanner extends mongoose.Document {
         [key in EPreferredMealTime]: {
             recipe: mongoose.Schema.Types.ObjectId[] | IRecipe[],
             nutrition: NutritionData;
+            shoppingList: IngredientDetail[],
         }
     }
 }
 
 export interface IMealPlannerMethods {
-    addToMealPlanner(mealTime: EPreferredMealTime, recipe: IRecipe): Promise<IMealPlanner>
-    removeFromMealPlanner(mealTime: EPreferredMealTime, recipe: IRecipe): Promise<IMealPlanner>
+    addOrMergeShoppingListItem(this: IMealPlanner, mealTime: EPreferredMealTime, ingredient: IngredientDetail[]): Promise<IMealPlanner>
+    removeFromShoppingList(this: IMealPlanner, mealTime: EPreferredMealTime, ingredient: IngredientDetail[]): Promise<IMealPlanner>
 }
 
 export interface IMealPlannerDocument extends IMealPlanner, IMealPlannerMethods, mongoose.Document { }
@@ -79,15 +80,15 @@ export interface IMealPlannerModel extends mongoose.Model<IMealPlannerDocument> 
     generateWeekPlanRecipes(user: IUser, mealTime: EPreferredMealTime, page?: number): Promise<IRecipe[]>
     checkIfUserOwnsMealPlanner(_id: string, user: IUser): Promise<boolean>
     getUserMeals(_id: string, mealTime: EPreferredMealTime, page: number): Promise<{ recipe: IRecipe[]; nutrition: NutritionData } | null>
-    checkIfUserHasRecipe(_id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner>
-    checkIfUserDoseNotRecipe(_id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner>
+    checkIfUserHasRecipe(_id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlannerDocument>
+    checkIfUserDoseNotRecipe(_id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlannerDocument>
     removeRecipeFromMealPlan(_id: string, time: EPreferredMealTime, recipeId: string): Promise<void>
-    resetRecipes(_id: string): Promise<IMealPlanner>
+    resetRecipes(_id: string): Promise<IMealPlannerDocument>
     getNutritionGoal(_id: string): Promise<INutritionGoal>
-    getByUser(userId: string): Promise<IMealPlanner>
-    checkIfUserHasMealPlan(_id: string): Promise<IMealPlanner>
+    getByUser(userId: string): Promise<IMealPlannerDocument>
+    checkIfUserHasMealPlan(_id: string): Promise<IMealPlannerDocument>
     checkIfUserIsInitialized(_id: string): Promise<void>
-    updateStats(_id: string, body: INewMealPlanner): Promise<IMealPlanner>
+    updateStats(_id: string, body: INewMealPlanner): Promise<IMealPlannerDocument>
 }
 
 export interface INewMealPlanner {

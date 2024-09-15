@@ -19,6 +19,7 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         localName: { type: String },
         unit: { type: String },
         amount: { type: Number },
+        _id: false
         //TODo: remark: { type: String }
     }],
     instructions: { type: String },

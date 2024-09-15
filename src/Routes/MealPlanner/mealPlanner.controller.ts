@@ -1,6 +1,6 @@
 import MealPlannerModel from "../../Schema/user/MealPlanner/mealPlanner.schema";
 import { IMealPlanner, INewMealPlanner, INutritionGoal } from "../../Schema/user/MealPlanner/mealPlanner.type";
-import { EPreferredMealTime, IRecipe } from "../../Schema/Recipe/recipe.type";
+import { EPreferredMealTime, IngredientDetail, IRecipe } from "../../Schema/Recipe/recipe.type";
 import { IUser } from "../../Schema/user/user.type";
 import { IResponseType } from "../../Types";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
@@ -55,6 +55,8 @@ export default class MealPlannerController {
         mealPlanner.currentNutrition.carbs += recipe.nutrition.calories;
         mealPlanner.currentNutrition.fat += recipe.nutrition.fat_total_g;
 
+        mealPlanner.addOrMergeShoppingListItem(mealTime, recipe.ingredients);
+
         return { body: await mealPlanner.save() }
     }
 
@@ -73,6 +75,8 @@ export default class MealPlannerController {
         mealPlanner.currentNutrition.carbs -= recipe.nutrition.calories;
         mealPlanner.currentNutrition.fat -= recipe.nutrition.fat_total_g;
 
+        mealPlanner.removeFromShoppingList(mealTime, recipe.ingredients);
+
         return { body: await mealPlanner.save() }
     }
 
@@ -88,5 +92,11 @@ export default class MealPlannerController {
     static async updateStats(user: IUser, body: INewMealPlanner): Promise<IResponseType<IMealPlanner>> {
         return { body: await MealPlannerModel.updateStats(user.id, body) }
     }
+
+    static async getShoppingList(user: IUser, mealTime: EPreferredMealTime): Promise<IResponseType<IngredientDetail[]>> {
+        const mealPlanner = await MealPlannerModel.getByUser(user.id);
+        return { body: mealPlanner.recipes[mealTime].shoppingList }
+    }
+
 
 }

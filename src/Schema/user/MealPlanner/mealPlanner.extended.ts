@@ -2,11 +2,9 @@ import mongoose from "mongoose";
 import Joi from "joi";
 import { ValidationErrorFactory } from "../../../Types/error"
 import { BSONError } from 'bson';
-import { copyObjectWithout, MakeValidator } from "../../../Util";
+import { MakeValidator } from "../../../Util";
 import { IMealPlanner, INewMealPlanner, INutritionGoal } from "./mealPlanner.type";
-import { EPreferredMealTime, ERecipeStatus, IRecipe } from "../../Recipe/recipe.type";
-import { RecipeSearchBuilder } from "../../Recipe/recipe.utils";
-import { IUser } from "../user.type";
+import { EPreferredMealTime, ERecipeStatus, IngredientDetail, IRecipe } from "../../Recipe/recipe.type";
 import { NutritionData } from "../../../Util/calorieninjas/types";
 
 
@@ -22,7 +20,7 @@ export async function getById(this: mongoose.Model<IMealPlanner>, _id: string): 
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found",
                 statusCode: 404,
-                type: "Validation"
+                type: "validationation"
             }, "_id")
         }
         return mealPlanner;
@@ -46,7 +44,7 @@ export async function getByUser(this: mongoose.Model<IMealPlanner>, userId: stri
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found for user",
                 statusCode: 404,
-                type: "Validation"
+                type: "validationation"
             }, "_id")
         }
         return mealPlanner;
@@ -69,7 +67,7 @@ export async function removeByID(this: mongoose.Model<IMealPlanner>, _id: string
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found",
                 statusCode: 404,
-                type: "Validation"
+                type: "validationation"
             }, "_id")
         }
     } catch (error) {
@@ -124,7 +122,7 @@ export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _
             throw ValidationErrorFactory({
                 msg: "User does not have recipe in meal plan",
                 statusCode: 404,
-                type: "Validation"
+                type: "validation"
             }, "recipeId")
         }
 
@@ -132,7 +130,7 @@ export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _
             throw ValidationErrorFactory({
                 msg: "User already has recipe in meal plan",
                 statusCode: 400,
-                type: "Validation"
+                type: "validation"
             }, "recipeId")
         }
         return mealPlanner as IMealPlanner;
@@ -158,7 +156,7 @@ export async function checkIfUserDoseNotRecipe(this: mongoose.Model<IMealPlanner
             throw ValidationErrorFactory({
                 msg: "User does not have recipe in meal plan",
                 statusCode: 404,
-                type: "Validation"
+                type: "validation"
             }, "recipeId")
         }
 
@@ -166,7 +164,7 @@ export async function checkIfUserDoseNotRecipe(this: mongoose.Model<IMealPlanner
             throw ValidationErrorFactory({
                 msg: "User already has recipe in meal plan",
                 statusCode: 400,
-                type: "Validation"
+                type: "validation"
             }, "recipeId")
         }
         return mealPlanner as IMealPlanner;
@@ -194,7 +192,7 @@ export async function removeRecipeFromMealPlan(this: mongoose.Model<IMealPlanner
             throw ValidationErrorFactory({
                 msg: "Recipe not found in meal plan",
                 statusCode: 404,
-                type: "Validation"
+                type: "validation"
             }, "recipeId")
         }
 
@@ -243,7 +241,7 @@ export async function resetRecipes(this: mongoose.Model<IMealPlanner>, _id: stri
             throw ValidationErrorFactory({
                 msg: "Meal plan not found",
                 statusCode: 404,
-                type: "Validation"
+                type: "validationation"
             }, "_id")
         }
 
@@ -267,7 +265,7 @@ export async function getNutritionGoal(this: mongoose.Model<IMealPlanner>, _id: 
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found",
                 statusCode: 404,
-                type: "Validation"
+                type: "validationation"
             }, "_id")
         }
         return mealPlanner?.nutritionGoal;
@@ -313,7 +311,7 @@ export async function checkIfUserHasMealPlan(this: mongoose.Model<IMealPlanner>,
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found",
                 statusCode: 404,
-                type: "Validation"
+                type: "validationation"
             }, "_id")
         }
         return mealPlanner;
@@ -362,7 +360,7 @@ export async function updateStats(this: mongoose.Model<IMealPlanner>, _id: strin
             throw ValidationErrorFactory({
                 msg: "mealPlanner or userStats not found",
                 statusCode: 404,
-                type: "Validation"
+                type: "validationtion"
             }, "_id");
         }
 
@@ -375,6 +373,41 @@ export async function updateStats(this: mongoose.Model<IMealPlanner>, _id: strin
                 type: "validation",
             }, "id");
         }
+        throw error;
+    }
+}
+
+export async function addOrMergeShoppingListItem(this: IMealPlanner, mealTime: EPreferredMealTime, ingredient: IngredientDetail[]): Promise<IMealPlanner> {
+    try {
+        const shoppingList = this.recipes[mealTime].shoppingList;
+        ingredient.forEach((item) => {
+            const index = shoppingList.findIndex((i) => i.name === item.name);
+            if (index === -1) {
+                shoppingList.push(item);
+            } else {
+                shoppingList[index].amount += item.amount;
+            }
+        });
+        return this;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function removeFromShoppingList(this: IMealPlanner, mealTime: EPreferredMealTime, ingredient: IngredientDetail[]): Promise<IMealPlanner> {
+    try {
+        const shoppingList = this.recipes[mealTime].shoppingList;
+        ingredient.forEach((item) => {
+            const index = shoppingList.findIndex((i) => i.name === item.name);
+            if (index !== -1) {
+                shoppingList[index].amount -= item.amount;
+                if (shoppingList[index].amount <= 0) {
+                    shoppingList.splice(index, 1);
+                }
+            }
+        });
+        return this;
+    } catch (error) {
         throw error;
     }
 }

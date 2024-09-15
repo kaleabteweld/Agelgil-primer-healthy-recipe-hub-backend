@@ -136,6 +136,25 @@ describe('MealPlanner', () => {
                     }
                 });
             });
+
+            describe("WHEN user added a duplicate recipe", () => {
+                it("SHOULD return an error", async () => {
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                        .set('Authorization', 'Bearer ' + accessToken[0])
+                        .send(validUserStatus[0]);
+
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    const res = await request(app)
+                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    expectError(res, 400);
+                });
+            })
         });
     });
 
@@ -435,6 +454,118 @@ describe('MealPlanner', () => {
                     }
                 });
             });
+        });
+    });
+
+    describe("shoppingList", () => {
+        var user: IUser;
+        var accessToken: string[];
+        var ingredients: IIngredient[];
+        var moderatorAccessTokens: string[];
+        var recipes: IRecipe[];
+
+        beforeEach(async () => {
+            const { users, accessTokens } = await createUsers(request, app, [newValidUser, newValidUser2]);
+            user = users[0];
+            accessToken = accessTokens;
+
+            const { accessTokens: moderatorTokens } = await createModerators(request, app, [newValidModeratorSignUp]);
+            moderatorAccessTokens = moderatorTokens;
+
+            const _ingredients = await createIngredients(request, app, validIngredients, moderatorAccessTokens[0]);
+            ingredients = _ingredients;
+
+            const _recipes = await createRecipes(request, app, validRecipes, ingredients, accessToken[0]);
+            recipes = _recipes;
+        });
+
+        describe("WHEN user Dose't have a meal plan", () => {
+            it("SHOULD return an error", async () => {
+                const res = await request(app)
+                    .get(`${mealPlannerPrivateUrl()}shoppingList/breakfast`)
+                    .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                expectError(res, 404);
+            });
+        });
+
+        describe("WHEN user has a meal plan and add recipes", () => {
+
+            describe("WHEN adding a recipe", () => {
+                it("SHOULD return the shopping list with Contains the ingredients of all recipes added", async () => {
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                        .set('Authorization', 'Bearer ' + accessToken[0])
+                        .send(validUserStatus[0]);
+
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    var res = await request(app)
+                        .get(`${mealPlannerPrivateUrl()}shoppingList/breakfast`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    expect(res.body.body).toEqual(recipes[0].ingredients)
+                });
+                describe("WHEN user added duplicate ingredients", () => {
+                    it("SHOULD return the shopping list with Contains the ingredients of all recipes added WITH No duplicate", async () => {
+                        await request(app)
+                            .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                            .set('Authorization', 'Bearer ' + accessToken[0])
+                            .send(validUserStatus[0]);
+
+                        await request(app)
+                            .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                            .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                        await request(app)
+                            .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[1].id}`)
+                            .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                        var res = await request(app)
+                            .get(`${mealPlannerPrivateUrl()}shoppingList/breakfast`)
+                            .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                        expect(res.body.body).toEqual(
+                            recipes[0].ingredients.map((ingredient, index) => {
+                                if (recipes[1].ingredients[index].name === ingredient.name) {
+                                    return { ...ingredient, amount: ingredient.amount + recipes[1].ingredients[index].amount };
+                                }
+                            })
+                        )
+                    });
+                })
+            });
+
+            describe("WHEN removing a recipe", () => {
+                it("SHOULD return the shopping list Containing the ingredients of all recipes added except the removed one", async () => {
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                        .set('Authorization', 'Bearer ' + accessToken[0])
+                        .send(validUserStatus[0]);
+
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[1].id}`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    await request(app)
+                        .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    var res = await request(app)
+                        .get(`${mealPlannerPrivateUrl()}shoppingList/breakfast`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    expect(res.body.body).toEqual(recipes[1].ingredients)
+                });
+            });
+
+
         });
     });
 });

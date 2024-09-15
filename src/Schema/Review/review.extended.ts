@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import Joi from "joi";
-import { ValidationErrorFactory, errorFactory, isValidationError } from "../../Types/error"
+import { ValidationErrorFactory } from "../../Types/error"
 import { BSONError } from 'bson';
 import { MakeValidator } from "../../Util";
 import { IReview } from "./review.type";
@@ -56,7 +56,3 @@ export async function removeByID(this: mongoose.Model<IReview>, _id: string): Pr
         throw error;
     }
 }
-
-// export async function update(this: mongoose.Model<IReview>, _id: string, rewReview: IReviewUpdateFrom, populatePath?: string | string[]): Promise<IReview | null> {
-
-// }

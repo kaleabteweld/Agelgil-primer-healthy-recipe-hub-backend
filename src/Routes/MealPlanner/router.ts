@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Response } from "express";
 import { MakeErrorHandler, userOnly } from "../../Util/middlewares";
 import MealPlannerController from "./mealPlanner.controller";
 import { IUser } from "../../Schema/user/user.type";
@@ -49,6 +49,13 @@ privateMealPlannerRouter.get("/nutritionGoal", userOnly, MakeErrorHandler(async 
 privateMealPlannerRouter.patch("/updateStats", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
     const _user: IUser = req['user'];
     const mealPlan = await MealPlannerController.updateStats(_user, req.body);
+    res.json(mealPlan);
+}));
+
+privateMealPlannerRouter.get("/shoppingList/:mealTime", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+    const _user: IUser = req['user'];
+    const mealTime = req.params.mealTime;
+    const mealPlan = await MealPlannerController.getShoppingList(_user, mealTime);
     res.json(mealPlan);
 }));
 

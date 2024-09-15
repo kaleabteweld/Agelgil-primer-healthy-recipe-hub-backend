@@ -1,6 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../../Middleware/errors.middleware';
-import { checkIfUserDoseNotRecipe, checkIfUserHasMealPlan, checkIfUserHasRecipe, checkIfUserIsInitialized, getById, getByUser, getNutritionGoal, getUserMeals, removeByID, removeRecipeFromMealPlan, resetRecipes, updateStats, validator } from './mealPlanner.extended';
+import {
+    checkIfUserDoseNotRecipe, checkIfUserHasMealPlan, checkIfUserHasRecipe, checkIfUserIsInitialized,
+    getById, getByUser, getNutritionGoal, getUserMeals, removeByID, removeRecipeFromMealPlan, resetRecipes,
+    updateStats, validator, addOrMergeShoppingListItem, removeFromShoppingList
+} from './mealPlanner.extended';
 import { EActivityLevel, EDietGoals, EGender, IMealPlanner, IMealPlannerMethods, IMealPlannerModel } from './mealPlanner.type';
 
 const nutritionSchema = {
@@ -24,6 +28,15 @@ const nutritionGoalSchema = {
     fat: { type: Number, default: 0 },
 }
 
+const ingredientSchema = {
+    type: { type: String },
+    name: { type: String },
+    localName: { type: String },
+    unit: { type: String },
+    amount: { type: Number },
+    _id: false
+}
+
 const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlannerMethods>({
 
     nutritionGoal: nutritionGoalSchema,
@@ -42,18 +55,22 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
         breakfast: {
             recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
             nutrition: nutritionSchema,
+            shoppingList: [ingredientSchema],
         },
         lunch: {
             recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
             nutrition: nutritionSchema,
+            shoppingList: [ingredientSchema],
         },
         dinner: {
             recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
             nutrition: nutritionSchema,
+            shoppingList: [ingredientSchema],
         },
         snacks: {
             recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
             nutrition: nutritionSchema,
+            shoppingList: [ingredientSchema],
         }
     }
 
@@ -73,6 +90,10 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
         checkIfUserHasMealPlan,
         checkIfUserIsInitialized,
         updateStats,
+    },
+    methods: {
+        addOrMergeShoppingListItem,
+        removeFromShoppingList
     }
 });
 

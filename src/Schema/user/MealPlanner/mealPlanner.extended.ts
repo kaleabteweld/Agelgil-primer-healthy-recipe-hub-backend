@@ -82,7 +82,7 @@ export async function removeByID(this: mongoose.Model<IMealPlanner>, _id: string
     }
 }
 
-export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: string, mealTime: EPreferredMealTime, page: number): Promise<{ recipe: IRecipe[]; nutrition: NutritionData } | null> {
+export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: string, mealTime: EPreferredMealTime, page: number): Promise<{ recipe: IRecipe[]; nutrition: NutritionData }> {
     try {
         const mealPlanner = await this.findOne({ user: new mongoose.Types.ObjectId(_id) }).populate({
             path: `recipes.${mealTime}.recipe`,

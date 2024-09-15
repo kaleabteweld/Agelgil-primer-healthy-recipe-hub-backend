@@ -9,6 +9,7 @@ import { calculateNutritionNeeds } from "../../Schema/user/MealPlanner/mealPlann
 import mongoose from "mongoose";
 import UserModel from "../../Schema/user/user.schema";
 import { NutritionData } from "../../Util/calorieninjas/types";
+import { Datasx } from "../../Util/Datasx";
 
 
 export default class MealPlannerController {
@@ -96,6 +97,13 @@ export default class MealPlannerController {
     static async getShoppingList(user: IUser, mealTime: EPreferredMealTime): Promise<IResponseType<IngredientDetail[]>> {
         const mealPlanner = await MealPlannerModel.getByUser(user.id);
         return { body: mealPlanner.recipes[mealTime].shoppingList }
+    }
+
+    static async getSimilarRecipes(user: IUser, mealTime: EPreferredMealTime, page: number): Promise<IResponseType<IRecipe[]>> {
+        const mealPlanner = await MealPlannerModel.getUserMeals(user.id, mealTime, page);
+        const recipes = await RecipeModel.getRecipes(mealPlanner.recipe.map(recipe => recipe.id));
+        const SuggestedRecipes = await Datasx.getInstance().getSuggestionsForRecipes(recipes, page)
+        return { body: SuggestedRecipes as IRecipe[] }
     }
 
 

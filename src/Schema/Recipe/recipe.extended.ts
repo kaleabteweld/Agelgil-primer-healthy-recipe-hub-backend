@@ -233,3 +233,19 @@ export async function getRecipesOwner(this: mongoose.Model<IRecipe>, _id: string
         throw error;
     }
 }
+
+export async function getRecipes(this: mongoose.Model<IRecipe>, _ids: string[]): Promise<IRecipe[]> {
+    try {
+        const recipes = await this.find({ _id: { $in: _ids.map(id => new mongoose.Types.ObjectId(id)) } }).exec();
+        return recipes;
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}

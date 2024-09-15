@@ -131,6 +131,34 @@ export class Datasx {
         }
     }
 
+    async getSuggestionsForRecipes(recipes: IRecipe[], page: number, perPage: number = 10): Promise<any[]> {
+        if (this._passive) return [];
+        try {
+            const cursor = await this.db.collection('recipes').find({
+                $not: {
+                    recipeId: {
+                        $in: recipes.map(recipe => (recipe as any)._id)
+                    }
+                }
+            }, {
+                sort: {
+                    $vectorize: recipes.map(recipe => `${recipe.name} ${recipe.description}
+            ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
+            ${recipe.ingredients.map(ingredientDetail => `${ingredientDetail.name} (${ingredientDetail.type})`).join(' ')}
+            ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
+            ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')}`).join(' ')
+                },
+                limit: perPage * (page + 1),
+                skip: page * perPage,
+                includeSimilarity: true,
+            });
+            return await cursor.toArray();
+        } catch (error) {
+            console.error('Error getting recipe suggestions:', error);
+            throw error;
+        }
+    }
+
     async removeRecipe(recipe: IRecipe): Promise<void> {
         if (this._passive) return;
         try {

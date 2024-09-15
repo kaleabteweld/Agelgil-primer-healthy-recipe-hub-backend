@@ -92,6 +92,7 @@ export interface IRecipeModel extends mongoose.Model<IRecipeDocument> {
     checkIfUserOwnsRecipe(_id: string, user: IUser): Promise<IRecipe>
     getRecipeByShareableLink(recipeId: string): Promise<IRecipe>
     getRecipesOwner(_id: string, showError?: Boolean): Promise<IUserDocument>
+    getRecipes(_ids: string[]): Promise<IRecipe[]>
 }
 
 export interface INewRecipeFrom {

@@ -7,6 +7,7 @@ import { userLogInSchema, userSearchSchema, userSignUpSchema, userUpdateSchema }
 import { IRecipe, TRecipeStatus } from "../../Schema/Recipe/recipe.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import { UserSearchBuilder } from "../../Schema/user/user.utils";
+import Neo4jClient from "../../Util/Neo4j/neo4jClient";
 
 
 export default class UserController {
@@ -19,6 +20,7 @@ export default class UserController {
         await user.save();
         const { accessToken, refreshToken } = await MakeTokens(user.toJSON(), UserType.user);
 
+        await Neo4jClient.getInstance({}).addUser(user);
         return { body: user.toJSON(), header: { accessToken, refreshToken } }
     }
 

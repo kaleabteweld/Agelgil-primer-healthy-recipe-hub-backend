@@ -12,6 +12,7 @@ import { IModerator } from "../Moderator/moderator.type";
 import { Datasx } from "../../Util/Datasx";
 import UserModel from "../user/user.schema";
 import RecipeModel from "./recipe.schema";
+import Neo4jClient from "../../Util/Neo4j/neo4jClient";
 
 
 
@@ -91,6 +92,9 @@ export async function addModerator(this: mongoose.Model<IRecipe>, _id: string, m
         const datasx = Datasx.getInstance();
         await datasx.EmbedAndSave(recipe)
 
+        await Neo4jClient.getInstance({}).addRecipe(recipe);
+
+
         const newRecipe = await this.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(_id) }, {
             status: body.status,
             moderator: {
@@ -156,8 +160,10 @@ export async function update(this: mongoose.Model<IRecipe>, _id: string, newReci
 
     try {
         const newDoc = await this.findByIdAndUpdate(_id, newRecipe, { new: true });
-        populatePath && await newDoc?.populate(populatePath)
+        populatePath && await newDoc?.populate(populatePath);
+
         Datasx.getInstance().updateRecipe(_id, newDoc as any)
+        await Neo4jClient.getInstance({}).updateRecipe(newDoc as any)
         return newDoc;
     } catch (error) {
         throw error;

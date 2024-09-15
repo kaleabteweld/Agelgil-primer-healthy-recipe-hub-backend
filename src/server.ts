@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import RedisCache from "./Util/cache/redis";
 import { IngredientController } from "./Routes/Ingredient";
 import { Datasx } from "./Util/Datasx";
+import Neo4jClient from "./Util/Neo4j/neo4jClient";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV?.trim()}` });
 console.log(`[+] running on ${process.env.NODE_ENV?.trim()} mode`)
@@ -35,3 +36,5 @@ datasx.initNvidiaCollection().catch((error) => {
 }).then(() => {
     console.log("[+] Vector Database Initialized");
 });
+
+const neo4j = Neo4jClient.getInstance({});

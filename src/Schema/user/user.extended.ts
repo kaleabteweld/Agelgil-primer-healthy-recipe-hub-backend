@@ -5,10 +5,10 @@ import { ValidationErrorFactory, errorFactory, isValidationError } from "../../T
 import { BSONError } from 'bson';
 import { EStatus, EXpType, IModeratorUserUpdateSchema, IUser, IUserUpdateFrom } from "./user.type";
 import { MakeValidator } from "../../Util";
-import { EPreferredMealTime, IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
+import { IRecipe, TRecipeStatus } from "../Recipe/recipe.type";
 import { IPagination } from "../../Types";
-import UserModel from "./user.schema";
 import RecipeModel from "../Recipe/recipe.schema";
+import Neo4jClient from "../../Util/Neo4j/neo4jClient";
 
 
 export async function encryptPassword(this: IUser, password?: string): Promise<String> {
@@ -128,6 +128,8 @@ export async function update(this: mongoose.Model<IUser>, _id: string, newUser: 
             newDoc = await this.findByIdAndUpdate(_id, newUser, { new: true, overwrite: true });
         }
         if (populatePath) await newDoc?.populate(populatePath)
+
+        await Neo4jClient.getInstance({}).updateUser(newDoc as any)
         return newDoc;
     } catch (error) {
         throw error;
@@ -187,14 +189,20 @@ export async function toggleBookedRecipes(this: mongoose.Model<IUser>, _id: stri
         const recipeIndex = user.booked_recipes.indexOf(recipe._id as any);
         const recipeOwner = await RecipeModel.getRecipesOwner(recipe._id as any);
         if (recipeIndex !== -1) {
-            user.booked_recipes.splice(recipeIndex, 1);
-            if (recipeOwner.id !== _id)
-                recipeOwner.addXp(EXpType.unBookRecipe);
+            {
+                user.booked_recipes.splice(recipeIndex, 1);
+                if (recipeOwner.id !== _id)
+                    recipeOwner.addXp(EXpType.unBookRecipe);
+            }
+            await Neo4jClient.getInstance({}).removeBookedRecipe(_id, recipe.id as any);
         }
         else {
-            user.booked_recipes.push(recipe._id as any);
-            if (recipeOwner.id !== _id)
-                recipeOwner.addXp(EXpType.bookRecipe);
+            {
+                user.booked_recipes.push(recipe._id as any);
+                if (recipeOwner.id !== _id)
+                    recipeOwner.addXp(EXpType.bookRecipe);
+            }
+            await Neo4jClient.getInstance({}).addBookRecipe(_id, recipe.id);
         }
 
         await user.save();

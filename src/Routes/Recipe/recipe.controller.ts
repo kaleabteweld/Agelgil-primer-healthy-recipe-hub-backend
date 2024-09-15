@@ -1,8 +1,5 @@
-import mongoose from "mongoose";
 import IngredientModel from "../../Schema/Ingredient/ingredient.schema";
-import { IIngredient } from "../../Schema/Ingredient/ingredient.type";
 import ModeratorModel from "../../Schema/Moderator/moderator.schema";
-import { IModerator } from "../../Schema/Moderator/moderator.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import { EPreferredMealTime, ERecipeStatus, INewRecipeFrom, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
 import { RecipeSearchBuilder } from "../../Schema/Recipe/recipe.utils";
@@ -13,6 +10,7 @@ import { IPagination, IResponseType } from "../../Types";
 import Calorieninjas from "../../Util/calorieninjas";
 import { NutritionData } from "../../Util/calorieninjas/types";
 import { Datasx } from "../../Util/Datasx";
+import Neo4jClient from "../../Util/Neo4j/neo4jClient";
 
 
 export default class RecipeController {
@@ -58,6 +56,7 @@ export default class RecipeController {
         if (recipeOwner) {
             await recipeOwner.addXp(EXpType.addRecipe);
         }
+
 
         return { body: (recipe.toJSON() as any) }
     }
@@ -167,6 +166,7 @@ export default class RecipeController {
         const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, (await UserModel.getById(user.id as any)));
         await RecipeModel.removeByID(recipe?.id)
         await Datasx.getInstance().removeRecipe(recipe as any)
+        await Neo4jClient.getInstance({}).removeRecipe(recipe as any)
         return { body: {} };
 
     }
@@ -180,6 +180,7 @@ export default class RecipeController {
         }
     }
 
+    /* istanbul ignore file */
     static async search(searchFrom: IRecipeSearchFrom, page: number = 1): Promise<IResponseType<IRecipe[]>> {
         await RecipeModel.validator(searchFrom, recipeSearchSchema);
         return {
@@ -188,6 +189,7 @@ export default class RecipeController {
         }
     }
 
+    /* istanbul ignore file */
     static async moderatorSearch(searchFrom: IRecipeSearchFrom, page: number = 1): Promise<IResponseType<IRecipe[]>> {
         await RecipeModel.validator(searchFrom, recipeSearchSchema);
         return {
@@ -197,12 +199,12 @@ export default class RecipeController {
     }
 
     /* istanbul ignore file */
-    static async recommendation(user: IUser, time: TPreferredMealTime, { skip, limit }: IPagination): Promise<IResponseType<IRecipe[]>> {
+    static async recommendation(user: IUser, time: TPreferredMealTime, pagination: IPagination): Promise<IResponseType<IRecipe[]>> {
         const _user = await UserModel.getById(user.id as any)
+        const recommendations = await Neo4jClient.getInstance({}).recommendRecipesForUser(_user?.id as any, pagination)
+        console.log({ recommendations })
         return {
             body: await RecipeModel.find({ user: _user?.id })
-                .skip(skip ?? 0)
-                .limit(limit ?? 0)
                 .exec()
         }
     }

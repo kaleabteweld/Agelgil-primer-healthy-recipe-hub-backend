@@ -6,6 +6,7 @@ import { newReviewSchema, reviewUpdateSchema } from "../../Schema/Review/review.
 import UserModel from "../../Schema/user/user.schema";
 import { EXpType, IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
+import Neo4jClient from "../../Util/Neo4j/neo4jClient";
 
 
 export default class ReviewController {
@@ -13,6 +14,7 @@ export default class ReviewController {
     static async create(_review: INewReviewFrom, user: IUser): Promise<IResponseType<IReview>> {
 
         const _user = await UserModel.getById(user.id as any);
+        await RecipeModel.getById(_review.recipe as any)
         await ReviewModel.validator(_review, newReviewSchema);
 
         _review = {
@@ -34,6 +36,8 @@ export default class ReviewController {
             else if (_review.rating < 3)
                 recipeOwner.addXp(EXpType.negativeReview);
         }
+
+        await Neo4jClient.getInstance({}).addReviewToRecipe(_review.recipe, (_user as any)?._id.toString(), review)
 
         return { body: (review.toJSON() as any) }
     }

@@ -64,9 +64,21 @@ describe('Review', () => {
             })
 
             describe("WHEN the Review is Invalid", () => {
-                it("SHOULD return a 400 status code AND Error obj", async () => {
-                    const response = await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send({});
-                    expectError(response, 400);
+
+                describe("WHEN recipe is not provided", () => {
+                    it("SHOULD return a 404 status code AND Error obj", async () => {
+                        const response = await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send({});
+                        expectError(response, 404);
+                    });
+                });
+
+                describe("WHEN rating is provided", () => {
+                    it("SHOULD return a 404 status code AND Error obj", async () => {
+                        const response = await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send({
+                            recipe: recipes[0]._id,
+                        });
+                        expectError(response, 400);
+                    });
                 });
 
             });

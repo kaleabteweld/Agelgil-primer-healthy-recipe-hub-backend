@@ -29,15 +29,15 @@ export default class ReviewController {
         const review = await new ReviewModel((_review));
         await review.save();
 
-        const recipeOwner = await RecipeModel.getRecipesOwner(_review.recipe);
-        if (recipeOwner && recipeOwner.id !== user.id) {
-            if (_review.rating > 3)
-                recipeOwner.addXp(EXpType.positiveReview);
-            else if (_review.rating < 3)
-                recipeOwner.addXp(EXpType.negativeReview);
-        }
+        // const recipeOwner = await RecipeModel.getRecipesOwner(_review.recipe);
+        // if (recipeOwner && recipeOwner.id !== user.id) {
+        //     if (_review.rating > 3)
+        //         recipeOwner.addXp(EXpType.positiveReview);
+        //     else if (_review.rating < 3)
+        //         recipeOwner.addXp(EXpType.negativeReview);
+        // }
 
-        await Neo4jClient.getInstance({}).addReviewToRecipe(_review.recipe, (_user as any)?._id.toString(), review)
+        // await Neo4jClient.getInstance({}).addReviewToRecipe(_review.recipe, (_user as any)?._id.toString(), review)
 
         return { body: (review.toJSON() as any) }
     }

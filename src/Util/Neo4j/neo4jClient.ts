@@ -1,6 +1,6 @@
 import neo4j, { Session } from "neo4j-driver";
 import { EAllergies, EChronicDisease, EDietaryPreferences, IUser } from "../../Schema/user/user.type";
-import { IRecipe } from "../../Schema/Recipe/recipe.type";
+import { IRecipe, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
 import { IReview } from "../../Schema/Review/review.type";
 import { IPagination } from "../../Types";
 
@@ -30,57 +30,81 @@ export default class Neo4jClient {
         return Neo4jClient.instance;
     }
 
-    async recommendRecipesForUser(userId: string, { skip, limit }: IPagination) {
+    async recommendRecipesForUser(userId: string, time: TPreferredMealTime | 'all', pagination: IPagination) {
         const result = await this.session.run(
              /* cypher */`
-             MATCH (u:User {id: $userId})-[:PREFERS]->(dp:DietaryPreference)
-             MATCH (u)-[:HAS_CONDITION]->(mc:MedicalCondition)
-             MATCH (u)-[:ALLERGIC_TO]->(a:Allergy)
-     
-             // Match recipes that match user preferences and do not have disliked attributes
-             MATCH (r:Recipe)
-             WHERE 
-                 (r)-[:PREFERS]->(dp) AND 
-                 NOT EXISTS((r)-[:ALLERGIC_TO]->(a)) AND
-                 (r)-[:HAS_CONDITION]->(mc)
-             
-             // Calculate the probability of the user liking a recipe based on reviews
-             OPTIONAL MATCH (u)-[review:REVIEWED]->(r)
-             
-             // Count the number of positive and negative reviews
-             WITH r, 
-             COUNT(CASE WHEN review.rating >= 3 THEN 1 ELSE null END) AS userPositiveReviews,  // Positive reviews by the user (rating >= 3)
-             COUNT(CASE WHEN review.rating < 3 THEN 1 ELSE null END) AS userNegativeReviews,  // Negative reviews by the user (rating < 3)
-             COUNT { MATCH (:User)-[reviewPos:REVIEWED]->(r) WHERE reviewPos.rating >= 3 RETURN 1 } AS totalPositiveReviews, // Total positive reviews for the recipe
-             COUNT { MATCH (:User)-[reviewNeg:REVIEWED]->(r) WHERE reviewNeg.rating < 3 RETURN 1 } AS totalNegativeReviews  // Total negative reviews for the recipe
+             // Match the current user's preferences, conditions, and allergies
+                MATCH (u:User {id: $userId})-[:PREFERS]->(dp:DietaryPreference)
+                MATCH (u)-[:HAS_CONDITION]->(mc:MedicalCondition)
+                MATCH (u)-[:ALLERGIC_TO]->(a:Allergy)
 
-        // Calculate the probabilities using Naive Bayes formula components
-        WITH r, 
-             userPositiveReviews,
-             userNegativeReviews,
-             totalPositiveReviews, 
-             totalNegativeReviews,
-             toFloat(totalPositiveReviews) / NULLIF((totalPositiveReviews + totalNegativeReviews), 0) AS P_Like, // Prior probability P(Like) with division by zero check
-             toFloat(userPositiveReviews + 1) / (NULLIF(totalPositiveReviews, 0) + 2) AS P_UserLikesGivenRecipe,  // Conditional probability with Laplace smoothing and division by zero check for user liking the recipe
-             toFloat(userNegativeReviews + 1) / (NULLIF(totalNegativeReviews, 0) + 2) AS P_UserDislikesGivenRecipe // Conditional probability with Laplace smoothing and division by zero check for user disliking the recipe
+            // Find similar users based on shared preferences, conditions, or allergies
+            MATCH (similarUser:User)-[:PREFERS]->(dp)
+            MATCH (similarUser)-[:HAS_CONDITION]->(mc)
+            MATCH (similarUser)-[:ALLERGIC_TO]->(a)
 
-             // Calculate the Naive Bayes score
-             WITH r, 
-                  P_Like * P_UserLikesGivenRecipe AS score
-             
-             RETURN r, score
-             ORDER BY score DESC
-             SKIP $skip
-             LIMIT $limit
+            //Find recipes that match the user's preferences and do not have disliked attributes
+            MATCH (r:Recipe)
+            WHERE 
+                (r)-[:PREFERS]->(dp) OR 
+                NOT EXISTS((r)-[:ALLERGIC_TO]->(a)) OR
+                (r)-[:HAS_CONDITION]->(mc) OR
+                ($time = 'all' OR (r)-[:PREFERRED_MEAL_TIME]->(:PreferredMealTime {name: $time}))
+
+            //Check if similar users have BOOKED or REVIEWED the recipe
+            OPTIONAL MATCH (similarUser)-[:BOOKED]->(r)
+            OPTIONAL MATCH (similarUser)-[:REVIEWED]->(r)
+
+            //Calculate review statistics for the current user
+            OPTIONAL MATCH (u)-[review:REVIEWED]->(r)
+            WITH r, 
+                COUNT(CASE WHEN review.rating >= 3 THEN 1 ELSE null END) AS userPositiveReviews,  // Positive reviews by the user
+                COUNT(CASE WHEN review.rating < 3 THEN 1 ELSE null END) AS userNegativeReviews,   // Negative reviews by the user
+                
+                //Count total positive and negative reviews by similar users
+                COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 3}]->(r) THEN 1 ELSE null END) AS similarUserPositiveReviews, 
+                COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 1}]->(r) THEN 1 ELSE null END) AS similarUserNegativeReviews,
+                
+                //Calculate total reviews by any user
+                COUNT { MATCH (:User)-[reviewPos:REVIEWED]->(r) WHERE reviewPos.rating >= 3 RETURN 1 } AS totalPositiveReviews,
+                COUNT { MATCH (:User)-[reviewNeg:REVIEWED]->(r) WHERE reviewNeg.rating < 3 RETURN 1 } AS totalNegativeReviews
+
+            //Calculate the probabilities using Naive Bayes formula components
+            WITH r, 
+                userPositiveReviews,
+                userNegativeReviews,
+                similarUserPositiveReviews,
+                similarUserNegativeReviews,
+                totalPositiveReviews, 
+                totalNegativeReviews,
+
+            // Prior probability P(Like) based on total reviews
+            toFloat(totalPositiveReviews) / NULLIF((totalPositiveReviews + totalNegativeReviews), 0) AS P_Like,  
+            
+            // Conditional probability P(UserLikes | Recipe) with Laplace smoothing for user's positive reviews
+            toFloat(userPositiveReviews + similarUserPositiveReviews + 1) / (NULLIF(totalPositiveReviews, 0) + 2) AS P_UserLikesGivenRecipe,  
+            
+            // Conditional probability P(UserDislikes | Recipe) with Laplace smoothing for user's negative reviews
+            toFloat(userNegativeReviews + similarUserNegativeReviews + 1) / (NULLIF(totalNegativeReviews, 0) + 2) AS P_UserDislikesGivenRecipe  
+
+            //Calculate the Naive Bayes score
+            WITH r, 
+                P_Like * P_UserLikesGivenRecipe AS score
+
+            WHERE score IS NOT NULL
+
+            RETURN r, score
+            ORDER BY score DESC
+            SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)
+
             `,
-            { userId, limit }
+            { userId, time, skip: pagination.skip ?? 0, limit: pagination.limit ?? 10 }
         );
 
-        // Process and return the recommendations
         const recommendations = result.records.map((record) => {
             const recipe = record.get('r').properties;
             const score = record.get('score');
-            return { ...recipe, skip, score };
+            return { ...recipe, score };
         });
 
         return recommendations;
@@ -246,17 +270,21 @@ export default class Neo4jClient {
             await this.session.run(
                 /* cypher */ `
                 MATCH (r:Recipe {id: $id})
-                SET r.name = $name, 
-                    r.description = $description, 
-                    r.instructions = $instructions,
-                    r.cookingTime = $cookingTime
+                SET r.img = $img,
+                    r.name = $name,
+                    r.preparationDifficulty = $preparationDifficulty,
+                    r.description = $description,
+                    r.preferredMealTime = $preferredMealTime,
+                    r.rating = $rating
                 `,
                 {
                     id: (recipe as any)._id.toString(),
+                    img: recipe.imgs[0],
                     name: recipe.name,
+                    preparationDifficulty: recipe.preparationDifficulty,
                     description: recipe.description,
-                    instructions: recipe.instructions,
-                    cookingTime: recipe.cookingTime
+                    preferredMealTime: recipe.preferredMealTime,
+                    rating: recipe.rating
                 }
             );
 
@@ -348,16 +376,16 @@ export default class Neo4jClient {
                 /* cypher */ `
                 CREATE (r:Recipe { 
                     id: $id,
-                    img: 
+                    img: $img,
                     name: $name, 
                     preparationDifficulty: $preparationDifficulty,
                     description: $description, 
                     preferredMealTime: $preferredMealTime,
-                    rating: $rating,
+                    rating: $rating
                 })`,
                 {
                     id: (recipe as any)._id.toString(),
-                    img: recipe.imgs,
+                    img: recipe.imgs[0],
                     name: recipe.name,
                     preparationDifficulty: recipe.preparationDifficulty,
                     description: recipe.description,
@@ -441,15 +469,12 @@ export default class Neo4jClient {
 
             await this.session.run(
                 /* cypher */ `
-                MERGE (u:User {id: $userId, full_name: $fullName, profile_img: $profileImg}) 
-                WITH u
-                MATCH (r:Recipe {id: $id})
+                MERGE (u:User {id: $userId}) 
+                MERGE (r:Recipe {id: $recipeId})
                 CREATE (r)-[:CREATED_BY]->(u)`,
                 {
-                    id: recipe._id,
+                    recipeId: recipe.id.toString(),
                     userId: recipe.user.user.toString(),
-                    fullName: recipe.user.full_name,
-                    profileImg: recipe.user.profile_img
                 }
             );
         } catch (error) {

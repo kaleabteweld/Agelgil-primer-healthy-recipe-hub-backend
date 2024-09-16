@@ -5,13 +5,14 @@ export class Datasx {
     private client: DataAPIClient;
     private db: Db;
     private _passive: boolean | null = null;
+    private collectionName: string = "recipes";
 
 
     private constructor(_passive?: boolean) {
         this.client = new DataAPIClient(process.env.DATASAX_ASTRA_TOKEN!);
         this.db = this.client.db(process.env.DATASAX_ASTRA_API_Endpoint!);
         if (_passive) this._passive = _passive;
-        else this._passive = process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID !== undefined;
+        else this._passive = process.env.NODE_ENV === "test" || process.env.NODE_ENV == "development " || process.env.JEST_WORKER_ID !== undefined;
     }
 
     static getInstance(_passive?: boolean): Datasx {
@@ -22,12 +23,13 @@ export class Datasx {
     }
 
     async initNvidiaCollection() {
+        if (process.env.NODE_ENV == "development ") this.collectionName = 'recipes_dev';
         try {
             const collections = await this.db.collections();
-            if (collections.length > 0 && collections[0].collectionName === 'recipes') {
+            if (collections.length > 0 && collections.filter(collection => collection.collectionName === this.collectionName).length > 0) {
                 return;
             }
-            await this.db.createCollection('recipes', {
+            await this.db.createCollection(this.collectionName, {
                 vector: {
                     service: {
                         provider: 'nvidia',
@@ -79,11 +81,11 @@ export class Datasx {
     async EmbedAndSave(recipe: IRecipe,): Promise<void> {
         if (this._passive) return;
         try {
-            const _recipe = await this.db.collection('recipes').findOne({ recipeId: (recipe as any)._id })
+            const _recipe = await this.db.collection(this.collectionName).findOne({ recipeId: (recipe as any)._id })
             if (_recipe) {
                 return;
             }
-            await this.db.collection('recipes').insertOne({
+            await this.db.collection(this.collectionName).insertOne({
                 _id: UUID.v7(),
                 recipeId: (recipe as any)._id,
                 name: recipe.name,
@@ -109,7 +111,7 @@ export class Datasx {
     async getSuggestionsForRecipe(recipe: IRecipe, page: number, perPage: number = 10): Promise<any[]> {
         if (this._passive) return [];
         try {
-            const cursor = await this.db.collection('recipes').find({
+            const cursor = await this.db.collection(this.collectionName).find({
                 $not: { recipeId: (recipe as any)._id }
             }, {
 
@@ -134,7 +136,7 @@ export class Datasx {
     async getSuggestionsForRecipes(recipes: IRecipe[], page: number, perPage: number = 10): Promise<any[]> {
         if (this._passive) return [];
         try {
-            const cursor = await this.db.collection('recipes').find({
+            const cursor = await this.db.collection(this.collectionName).find({
                 $not: {
                     recipeId: {
                         $in: recipes.map(recipe => (recipe as any)._id)
@@ -162,7 +164,7 @@ export class Datasx {
     async removeRecipe(recipe: IRecipe): Promise<void> {
         if (this._passive) return;
         try {
-            await this.db.collection('recipes').deleteMany({
+            await this.db.collection(this.collectionName).deleteMany({
                 recipeId: (recipe as any)._id
             });
         } catch (error) {
@@ -174,7 +176,7 @@ export class Datasx {
     async updateRecipe(recipeId: string, recipe: IRecipe): Promise<void> {
         if (this._passive) return;
         try {
-            await this.db.collection('recipes').updateOne({
+            await this.db.collection(this.collectionName).updateOne({
                 recipeId: recipeId
             }, {
                 $set: {

@@ -16,6 +16,7 @@ export default class ReviewController {
         const _user = await UserModel.getById(user.id as any);
         await RecipeModel.getById(_review.recipe as any)
         await ReviewModel.validator(_review, newReviewSchema);
+        await ReviewModel.checkIfUserHasReviewed(_review.recipe, _user.id)
 
         _review = {
             ..._review,

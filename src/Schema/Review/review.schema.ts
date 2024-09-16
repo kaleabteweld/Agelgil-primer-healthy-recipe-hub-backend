@@ -1,8 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
 import { IReview, IReviewMethods, IReviewModel } from './review.type';
-import { getById, removeByID, validator } from './review.extended';
+import { getById, removeByID, validator, checkIfUserHasReviewed } from './review.extended';
 import { Datasx } from '../../Util/Datasx';
+import Neo4jClient from '../../Util/Neo4j/neo4jClient';
 
 
 const reviewSchema = new Schema<IReview, IReviewModel, IReviewMethods>({
@@ -19,8 +20,9 @@ const reviewSchema = new Schema<IReview, IReviewModel, IReviewMethods>({
     statics: {
         validator,
         getById,
-        removeByID
-    }
+        removeByID,
+        checkIfUserHasReviewed
+    },
 });
 
 
@@ -33,6 +35,8 @@ reviewSchema.post('save', async function (doc) {
         recipe.rating = (recipe.rating + doc.rating) / recipe.reviews.length;
         recipe.totalReviews += 1;
         await recipe.save();
+
+        await Neo4jClient.getInstance({}).updateRecipe(recipe);
 
         Datasx.getInstance().updateRecipe(recipe._id, recipe);
     }

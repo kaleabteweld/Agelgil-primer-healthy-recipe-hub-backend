@@ -98,35 +98,49 @@ describe('Review', () => {
 
                 });
 
-                describe("WHEN the Review is Created", () => {
+                describe("WHEN the User has already reviewed the Recipe", () => {
 
-                    it("SHOULD update Reviews User field", async () => {
-                        const response = await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send({
+                    it("SHOULD return a 400 status code AND Error obj", async () => {
+                        await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send({
                             ...validReviews[0],
                             recipe: recipes[0]._id,
                         } as INewReviewFrom);
 
-                        const recipeResponse = await request(app).get(`${reviewPublicUrl()}/${response.body.body._id}`).send();
-                        expect(recipeResponse.body.body.user).toEqual({
-                            user: user._id,
-                            full_name: user.full_name,
-                            profile_img: user.profile_img
-                        });
+                        const response = await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send({
+                            ...validReviews[0],
+                            recipe: recipes[0]._id,
+                        } as INewReviewFrom);
+                        expectError(response, 400);
                     });
+                });
+            });
+            describe("WHEN the Review is Created", () => {
 
-                    it("SHOULD update Recipe Average Rating", async () => {
-                        const response = await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send({
-                            ...validReviews[0],
-                            recipe: recipes[0]._id,
-                        } as INewReviewFrom);
+                it("SHOULD update Reviews User field", async () => {
+                    const response = await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send({
+                        ...validReviews[0],
+                        recipe: recipes[0]._id,
+                    } as INewReviewFrom);
 
-                        const recipeResponse = await request(app).get(`${recipePublicUrl()}/${recipes[0]._id}`).send();
-                        expect(recipeResponse.body.body.rating).toBe(
-                            (validReviews[0].rating + validReviews[0].rating) / 2
-                        )
+                    const recipeResponse = await request(app).get(`${reviewPublicUrl()}/${response.body.body._id}`).send();
+                    expect(recipeResponse.body.body.user).toEqual({
+                        user: user._id,
+                        full_name: user.full_name,
+                        profile_img: user.profile_img
                     });
                 });
 
+                it("SHOULD update Recipe Average Rating", async () => {
+                    const response = await request(app).post(`${reviewPrivateUrl()}create/`).set("authorization", `Bearer ${accessToken}`).send({
+                        ...validReviews[0],
+                        recipe: recipes[0]._id,
+                    } as INewReviewFrom);
+
+                    const recipeResponse = await request(app).get(`${recipePublicUrl()}/${recipes[0]._id}`).send();
+                    expect(recipeResponse.body.body.rating).toBe(
+                        (validReviews[0].rating + validReviews[0].rating) / 2
+                    )
+                });
             });
 
         });

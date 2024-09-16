@@ -24,6 +24,7 @@ export interface IReviewModel extends mongoose.Model<IReviewDocument> {
     getById(_id: string): Promise<IReviewDocument>
     update(_id: string, newUser: IReviewUpdateFrom, populatePath?: string | string[]): Promise<IReviewDocument | null>
     removeByID(_id: string): Promise<void>
+    checkIfUserHasReviewed(recipeId: string, userId: string): Promise<void>
 }
 
 export interface INewReviewFrom {

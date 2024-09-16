@@ -56,3 +56,25 @@ export async function removeByID(this: mongoose.Model<IReview>, _id: string): Pr
         throw error;
     }
 }
+
+export async function checkIfUserHasReviewed(this: mongoose.Model<IReview>, recipeId: string, userId: string): Promise<void> {
+    try {
+        const review = await this.findOne({ recipe: new mongoose.Types.ObjectId(recipeId), "user.user": new mongoose.Types.ObjectId(userId) });
+        if (review != null) {
+            throw ValidationErrorFactory({
+                msg: "User has already reviewed this recipe",
+                statusCode: 400,
+                type: "validation"
+            }, "user");
+        }
+    } catch (error) {
+        if (error instanceof BSONError) {
+            throw ValidationErrorFactory({
+                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+                statusCode: 400,
+                type: "validation",
+            }, "id");
+        }
+        throw error;
+    }
+}

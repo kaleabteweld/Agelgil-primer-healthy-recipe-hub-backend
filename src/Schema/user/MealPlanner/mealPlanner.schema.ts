@@ -67,7 +67,7 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
             nutrition: nutritionSchema,
             shoppingList: [ingredientSchema],
         },
-        snacks: {
+        snack: {
             recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
             nutrition: nutritionSchema,
             shoppingList: [ingredientSchema],

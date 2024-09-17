@@ -100,17 +100,17 @@ export default class MealPlannerController {
     }
 
     static async getSimilarRecipes(user: IUser, mealTime: EPreferredMealTime, page: number): Promise<IResponseType<IRecipe[]>> {
-        const mealPlanner = await MealPlannerModel.getUserMeals(user.id, mealTime, page);
+        const mealPlanner = await MealPlannerModel.getUserMeals(user.id, mealTime, (page + 1));
         const recipes = await RecipeModel.getRecipes(mealPlanner.recipe.map(recipe => recipe.id));
         const SuggestedRecipes = await Datasx.getInstance().getSuggestionsForRecipes(recipes, page)
         return { body: SuggestedRecipes as IRecipe[] }
     }
 
-    static async checkIfUserHasRecipe(user: IUser, mealTime: EPreferredMealTime, recipeID: string): Promise<IResponseType<{ isRecipeInMealPlan: boolean }>> {
-        const mealPlanner = await MealPlannerModel.getById(user.id);
+    static async checkIfUserHasRecipe(user: IUser, recipeID: string): Promise<IResponseType<{ isRecipeInMealPlan: boolean }>> {
+        const mealPlanner = await MealPlannerModel.getByUser(user.id);
         return {
             body: {
-                isRecipeInMealPlan: await mealPlanner.hasRecipeInMealPlan(mealTime, recipeID)
+                isRecipeInMealPlan: await mealPlanner.hasRecipeInMealPlan(recipeID)
             }
         }
     }

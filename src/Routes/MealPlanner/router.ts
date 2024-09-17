@@ -61,16 +61,16 @@ privateMealPlannerRouter.get("/shoppingList/:mealTime", userOnly, MakeErrorHandl
 
 privateMealPlannerRouter.get("/similarRecipes/:mealTime/:page", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
     const _user: IUser = req['user'];
-    const page = req.params.page;
+    const page = Number.parseInt(req.params.page);
     const mealTime = req.params.mealTime;
     const mealPlan = await MealPlannerController.getSimilarRecipes(_user, mealTime, page);
     res.json(mealPlan);
 }))
 
-privateMealPlannerRouter.get("/checkIfUserRecipe/:mealTime/:recipeID", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+privateMealPlannerRouter.get("/checkIfUserRecipe/:recipeID", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
     const _user: IUser = req['user'];
-    const { mealTime, recipeID } = req.params;
-    const mealPlan = await MealPlannerController.checkIfUserHasRecipe(_user, mealTime, recipeID);
+    const { recipeID } = req.params;
+    const mealPlan = await MealPlannerController.checkIfUserHasRecipe(_user, recipeID);
     res.json(mealPlan);
 }));
 

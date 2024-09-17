@@ -86,7 +86,7 @@ export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: stri
     try {
         const mealPlanner = await this.findOne({ user: new mongoose.Types.ObjectId(_id) }).populate({
             path: `recipes.${mealTime}.recipe`,
-            match: { status: ERecipeStatus.verified },
+            // match: { status: ERecipeStatus.verified },
             select: ['name', 'description', 'imgs', 'preparationDifficulty', 'preferredMealTime', "rating"],
             options: { limit: page * 10, skip: (page - 1) * 10 }
         }).exec();
@@ -412,9 +412,12 @@ export async function removeFromShoppingList(this: IMealPlanner, mealTime: EPref
     }
 }
 
-export async function hasRecipeInMealPlan(this: IMealPlanner, mealTime: EPreferredMealTime, recipeId: string): Promise<boolean> {
+export async function hasRecipeInMealPlan(this: IMealPlanner, recipeId: any): Promise<boolean> {
     try {
-        return this.recipes[mealTime].recipe.includes(new mongoose.Types.ObjectId(recipeId) as any);
+        return this.recipes.breakfast.recipe.includes(recipeId) ||
+            this.recipes.lunch.recipe.includes(recipeId) ||
+            this.recipes.dinner.recipe.includes(recipeId) ||
+            this.recipes.snack.recipe.includes(recipeId);
     } catch (error) {
         throw error;
     }

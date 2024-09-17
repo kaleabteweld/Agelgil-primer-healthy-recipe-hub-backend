@@ -3,7 +3,7 @@ import { mongooseErrorPlugin } from '../../Middleware/errors.middleware';
 import {
     checkIfUserDoseNotRecipe, checkIfUserHasMealPlan, checkIfUserHasRecipe, checkIfUserIsInitialized,
     getById, getByUser, getNutritionGoal, getUserMeals, removeByID, removeRecipeFromMealPlan, resetRecipes,
-    updateStats, validator, addOrMergeShoppingListItem, removeFromShoppingList
+    updateStats, validator, addOrMergeShoppingListItem, removeFromShoppingList, hasRecipeInMealPlan
 } from './mealPlanner.extended';
 import { EActivityLevel, EDietGoals, EGender, IMealPlanner, IMealPlannerMethods, IMealPlannerModel } from './mealPlanner.type';
 
@@ -93,7 +93,8 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
     },
     methods: {
         addOrMergeShoppingListItem,
-        removeFromShoppingList
+        removeFromShoppingList,
+        hasRecipeInMealPlan
     }
 });
 

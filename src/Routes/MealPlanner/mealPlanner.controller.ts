@@ -106,5 +106,13 @@ export default class MealPlannerController {
         return { body: SuggestedRecipes as IRecipe[] }
     }
 
+    static async checkIfUserHasRecipe(user: IUser, mealTime: EPreferredMealTime, recipeID: string): Promise<IResponseType<{ isRecipeInMealPlan: boolean }>> {
+        const mealPlanner = await MealPlannerModel.getById(user.id);
+        return {
+            body: {
+                isRecipeInMealPlan: await mealPlanner.hasRecipeInMealPlan(mealTime, recipeID)
+            }
+        }
+    }
 
 }

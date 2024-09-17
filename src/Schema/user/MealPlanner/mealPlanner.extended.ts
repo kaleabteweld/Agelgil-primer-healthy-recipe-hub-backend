@@ -20,7 +20,7 @@ export async function getById(this: mongoose.Model<IMealPlanner>, _id: string): 
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found",
                 statusCode: 404,
-                type: "validationation"
+                type: "Validation"
             }, "_id")
         }
         return mealPlanner;
@@ -44,7 +44,7 @@ export async function getByUser(this: mongoose.Model<IMealPlanner>, userId: stri
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found for user",
                 statusCode: 404,
-                type: "validationation"
+                type: "Validation"
             }, "_id")
         }
         return mealPlanner;
@@ -67,7 +67,7 @@ export async function removeByID(this: mongoose.Model<IMealPlanner>, _id: string
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found",
                 statusCode: 404,
-                type: "validationation"
+                type: "Validation"
             }, "_id")
         }
     } catch (error) {
@@ -241,7 +241,7 @@ export async function resetRecipes(this: mongoose.Model<IMealPlanner>, _id: stri
             throw ValidationErrorFactory({
                 msg: "Meal plan not found",
                 statusCode: 404,
-                type: "validationation"
+                type: "Validation"
             }, "_id")
         }
 
@@ -265,7 +265,7 @@ export async function getNutritionGoal(this: mongoose.Model<IMealPlanner>, _id: 
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found",
                 statusCode: 404,
-                type: "validationation"
+                type: "Validation"
             }, "_id")
         }
         return mealPlanner?.nutritionGoal;
@@ -311,7 +311,7 @@ export async function checkIfUserHasMealPlan(this: mongoose.Model<IMealPlanner>,
             throw ValidationErrorFactory({
                 msg: "mealPlanner not found",
                 statusCode: 404,
-                type: "validationation"
+                type: "Validation"
             }, "_id")
         }
         return mealPlanner;
@@ -407,6 +407,14 @@ export async function removeFromShoppingList(this: IMealPlanner, mealTime: EPref
             }
         });
         return this;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function hasRecipeInMealPlan(this: IMealPlanner, mealTime: EPreferredMealTime, recipeId: string): Promise<boolean> {
+    try {
+        return this.recipes[mealTime].recipe.includes(new mongoose.Types.ObjectId(recipeId) as any);
     } catch (error) {
         throw error;
     }

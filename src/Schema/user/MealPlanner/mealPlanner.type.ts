@@ -69,6 +69,7 @@ export interface IMealPlanner extends mongoose.Document {
 export interface IMealPlannerMethods {
     addOrMergeShoppingListItem(this: IMealPlanner, mealTime: EPreferredMealTime, ingredient: IngredientDetail[]): Promise<IMealPlanner>
     removeFromShoppingList(this: IMealPlanner, mealTime: EPreferredMealTime, ingredient: IngredientDetail[]): Promise<IMealPlanner>
+    hasRecipeInMealPlan(this: IMealPlanner, mealTime: EPreferredMealTime, recipeId: string): Promise<boolean>
 }
 
 export interface IMealPlannerDocument extends IMealPlanner, IMealPlannerMethods, mongoose.Document { }

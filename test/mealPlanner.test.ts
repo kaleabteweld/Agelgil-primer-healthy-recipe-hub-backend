@@ -289,6 +289,7 @@ describe('MealPlanner', () => {
                     .delete(`${mealPlannerPrivateUrl()}reset/recipes`)
                     .set('Authorization', 'Bearer ' + accessToken[0]);
 
+
                 expectValidMealPlanner(res, {
                     matchers: {
                         recipes: {
@@ -304,7 +305,7 @@ describe('MealPlanner', () => {
                                 recipe: [],
                                 nutrition: defaultNutritionData
                             },
-                            snacks: {
+                            snack: {
                                 recipe: [],
                                 nutrition: defaultNutritionData
                             }

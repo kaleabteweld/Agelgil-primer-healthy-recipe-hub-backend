@@ -469,7 +469,7 @@ export const expectValidMealPlanner = (response: Response, opt?: { input?: INewM
             breakfast: expect.any(Object),
             lunch: expect.any(Object),
             dinner: expect.any(Object),
-            snacks: expect.any(Object),
+            snack: expect.any(Object),
         },
         createdAt: expect.any(String),
         updatedAt: expect.any(String),

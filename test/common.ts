@@ -465,14 +465,30 @@ export const expectValidMealPlanner = (response: Response, opt?: { input?: INewM
             activityLevel: expect.any(String),
             diet_goals: expect.any(String),
         },
-        recipes: {
-            breakfast: expect.any(Object),
-            lunch: expect.any(Object),
-            dinner: expect.any(Object),
-            snack: expect.any(Object),
-        },
+        recipes: expect.arrayContaining([]),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         ...(opt?.matchers),
     })
+}
+
+export const expectValidRecipeCardLisMealplanners = async (response: Response, minLen: number, maxLen?: number, matchers?: Record<string, unknown> | Record<string, unknown>[]) => {
+
+    expect(response.status).toBe(200)
+
+    expect(response.body.body.length).toBeGreaterThanOrEqual(minLen)
+    maxLen && expect(response.body.body.length).toBeLessThanOrEqual(maxLen)
+
+    response.body.body.forEach(({ recipe }: { recipe: IRecipe }) => {
+        expect(recipe).toMatchObject({
+            _id: expect.any(String),
+            id: expect.any(String),
+            name: expect.any(String),
+            description: expect.any(String),
+            imgs: expect.any(Array),
+            preferredMealTime: expect.any(Array),
+            preparationDifficulty: expect.any(String),
+            ...matchers
+        });
+    });
 }

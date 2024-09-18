@@ -27,10 +27,10 @@ privateMealPlannerRouter.post("/addToMealPlan/:mealTime/:recipeID", userOnly, Ma
     res.json(mealPlan);
 }));
 
-privateMealPlannerRouter.delete("/removeFromMealPlan/:mealTime/:recipeID", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+privateMealPlannerRouter.delete("/removeFromMealPlan/:recipeID", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
     const { mealTime, recipeID } = req.params;
     const _user: IUser = req['user'];
-    const mealPlan = await MealPlannerController.removeFromMealPlan(_user, mealTime, recipeID);
+    const mealPlan = await MealPlannerController.removeFromMealPlan(_user, recipeID);
     res.json(mealPlan);
 }));
 

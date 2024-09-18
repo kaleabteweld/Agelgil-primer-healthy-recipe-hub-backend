@@ -51,28 +51,13 @@ const mealPlannerSchema = new Schema<IMealPlanner, IMealPlannerModel, IMealPlann
         activityLevel: { type: String, enum: Object.values(EActivityLevel) },
         diet_goals: { type: String, enum: Object.values(EDietGoals) },
     },
-    recipes: {
-        breakfast: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
-            nutrition: nutritionSchema,
-            shoppingList: [ingredientSchema],
-        },
-        lunch: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
-            nutrition: nutritionSchema,
-            shoppingList: [ingredientSchema],
-        },
-        dinner: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
-            nutrition: nutritionSchema,
-            shoppingList: [ingredientSchema],
-        },
-        snack: {
-            recipe: [{ type: Schema.Types.ObjectId, ref: 'Recipe', default: [] }],
-            nutrition: nutritionSchema,
-            shoppingList: [ingredientSchema],
-        }
-    }
+    recipes: [{
+        recipe: { type: Schema.Types.ObjectId, ref: 'Recipe' },
+        mealTime: { type: String, enum: ['breakfast', 'lunch', 'dinner', 'snack'] },
+        _id: false
+    }],
+    nutrition: nutritionSchema,
+    shoppingList: [ingredientSchema]
 
 }, {
     timestamps: true,

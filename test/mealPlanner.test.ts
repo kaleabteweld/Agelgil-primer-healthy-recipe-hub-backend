@@ -3,7 +3,7 @@ import { connectDB, dropCollections, dropDB } from './util';
 import request from "supertest";
 import { makeServer } from '../src/Util/Factories';
 import RedisCache from '../src/Util/cache/redis';
-import { createIngredients, createModerators, createRecipes, createReviews, createUsers, defaultNutritionData, defaultNutritionGoal, expectError, expectValidMealPlanner, expectValidRecipeCardList, expectValidRecipeCardListWithNoRes, loginUrl, mealPlannerPrivateUrl, newValidModeratorSignUp, newValidUser, newValidUser2, sighupUrl, userPrivateUrl, userPublicUrl, validIngredients, validRecipes, validReviews, validUserStatus } from './common';
+import { createIngredients, createModerators, createRecipes, createReviews, createUsers, defaultNutritionData, defaultNutritionGoal, expectError, expectValidMealPlanner, expectValidRecipeCardLisMealplanners, expectValidRecipeCardList, expectValidRecipeCardListWithNoRes, loginUrl, mealPlannerPrivateUrl, newValidModeratorSignUp, newValidUser, newValidUser2, sighupUrl, userPrivateUrl, userPublicUrl, validIngredients, validRecipes, validReviews, validUserStatus } from './common';
 import { UserType } from '../src/Util/jwt/jwt.types';
 import { IUser } from '../src/Schema/user/user.type';
 import { IIngredient } from '../src/Schema/Ingredient/ingredient.type';
@@ -125,14 +125,12 @@ describe('MealPlanner', () => {
 
                 expectValidMealPlanner(res, {
                     matchers: {
-                        recipes: {
-                            breakfast: {
-                                recipe: [recipes[0].id]
-                            },
-                            lunch: {
-                                recipe: []
-                            },
-                        }
+                        recipes: [
+                            {
+                                recipe: recipes[0].id,
+                                mealTime: "breakfast"
+                            }
+                        ]
                     }
                 });
             });
@@ -184,51 +182,67 @@ describe('MealPlanner', () => {
         describe("WHEN user Dose't have a meal plan", () => {
             it("SHOULD return an error", async () => {
                 const res = await request(app)
-                    .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
+                    .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/${recipes[0].id}`)
                     .set('Authorization', 'Bearer ' + accessToken[0]);
+                console.log(res.body);
                 expectError(res, 404);
             });
         });
 
         describe("WHEN user has a meal plan", () => {
-            it("SHOULD remove a recipe from the meal plan and Subtract the recipe's nutrients from current in from total nutrients", async () => {
-                await request(app)
-                    .post(`${mealPlannerPrivateUrl()}createMealPlan`)
-                    .set('Authorization', 'Bearer ' + accessToken[0])
-                    .send(validUserStatus[0]);
 
-                var res = await request(app)
-                    .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
-                    .set('Authorization', 'Bearer ' + accessToken[0]);
+            describe("WHEN user try to remove a recipe that dose't exist", () => {
+                it("SHOULD return an error", async () => {
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                        .set('Authorization', 'Bearer ' + accessToken[0])
+                        .send(validUserStatus[0]);
 
-                expectValidMealPlanner(res, {
-                    matchers: {
-                        recipes: {
-                            breakfast: {
-                                recipe: [recipes[0].id]
-                            },
-                        }
-                    }
+                    const res = await request(app)
+                        .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/${recipes[0].id}`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    expectError(res, 400);
                 });
+            });
 
+            describe("WHEN user try to remove a recipe that exist", () => {
+                it("SHOULD remove a recipe from the meal plan and Subtract the recipe's nutrients from current in from total nutrients", async () => {
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                        .set('Authorization', 'Bearer ' + accessToken[0])
+                        .send(validUserStatus[0]);
 
-                res = await request(app)
-                    .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
-                    .set('Authorization', 'Bearer ' + accessToken[0]);
+                    var res = await request(app)
+                        .post(`${mealPlannerPrivateUrl()}addToMealPlan/breakfast/${recipes[0].id}`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
 
-                expectValidMealPlanner(res, {
-                    matchers: {
-                        currentNutrition: defaultNutritionGoal,
-                        recipes: {
-                            breakfast: {
-                                recipe: [],
-                                nutrition: defaultNutritionData
-                            },
+                    expectValidMealPlanner(res, {
+                        matchers: {
+                            recipes: [
+                                {
+                                    recipe: recipes[0].id,
+                                    mealTime: "breakfast"
+                                }
+                            ]
                         }
-                    }
-                });
-                expect(res.status).toBe(200);
+                    });
 
+
+                    res = await request(app)
+                        .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/${recipes[0].id}`)
+                        .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    expectValidMealPlanner(res, {
+                        matchers: {
+                            currentNutrition: defaultNutritionGoal,
+                            recipes: [],
+                            nutrition: defaultNutritionData
+                        }
+                    });
+                    expect(res.status).toBe(200);
+
+                });
             });
         });
     });
@@ -277,11 +291,12 @@ describe('MealPlanner', () => {
 
                 expectValidMealPlanner(res, {
                     matchers: {
-                        recipes: {
-                            breakfast: {
-                                recipe: [recipes[0].id]
-                            },
-                        }
+                        recipes: [
+                            {
+                                recipe: recipes[0].id,
+                                mealTime: "breakfast"
+                            }
+                        ]
                     }
                 });
 
@@ -292,24 +307,8 @@ describe('MealPlanner', () => {
 
                 expectValidMealPlanner(res, {
                     matchers: {
-                        recipes: {
-                            breakfast: {
-                                recipe: [],
-                                nutrition: defaultNutritionData
-                            },
-                            lunch: {
-                                recipe: [],
-                                nutrition: defaultNutritionData
-                            },
-                            dinner: {
-                                recipe: [],
-                                nutrition: defaultNutritionData
-                            },
-                            snack: {
-                                recipe: [],
-                                nutrition: defaultNutritionData
-                            }
-                        }
+                        recipes: [],
+                        nutrition: defaultNutritionData
                     }
                 });
                 expect(res.status).toBe(200);
@@ -369,7 +368,8 @@ describe('MealPlanner', () => {
                     .get(`${mealPlannerPrivateUrl()}mealPlan/breakfast/1`)
                     .set('Authorization', 'Bearer ' + accessToken[0]);
 
-                expectValidRecipeCardListWithNoRes(res.body.body.recipe, 1);
+                console.log({ body: res.body.body })
+                expectValidRecipeCardLisMealplanners(res, 1);
             });
 
             it("SHOULD return the meal plan", async () => {
@@ -382,7 +382,8 @@ describe('MealPlanner', () => {
                     .get(`${mealPlannerPrivateUrl()}mealPlan/breakfast/1`)
                     .set('Authorization', 'Bearer ' + accessToken[0]);
 
-                expectValidRecipeCardListWithNoRes(res.body.body.recipe, 0);
+                expectValidRecipeCardLisMealplanners(res, 0);
+
             });
         });
     });
@@ -422,37 +423,59 @@ describe('MealPlanner', () => {
         });
 
         describe("WHEN user has a meal plan", () => {
-            it("SHOULD update the user stats", async () => {
-                await request(app)
-                    .post(`${mealPlannerPrivateUrl()}createMealPlan`)
-                    .set('Authorization', 'Bearer ' + accessToken[0])
-                    .send(validUserStatus[0]);
 
-                var res = await request(app)
-                    .patch(`${mealPlannerPrivateUrl()}updateStats`)
-                    .set('Authorization', 'Bearer ' + accessToken[0])
-                    .send({
-                        weight: 80,
-                        height: 180,
-                        age: 25,
-                        activityLevel: EActivityLevel.active,
-                        diet_goals: EDietGoals.weight_loss,
-                        gender: EGender.female
-                    } as INewMealPlanner);
+            describe("WHEN user update the stats with invalid data", () => {
+                it("SHOULD return an error", async () => {
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                        .set('Authorization', 'Bearer ' + accessToken[0])
+                        .send(validUserStatus[0]);
 
-                console.log(res.body.body.userStats);
+                    var res = await request(app)
+                        .patch(`${mealPlannerPrivateUrl()}updateStats`)
+                        .set('Authorization', 'Bearer ' + accessToken[0])
+                        .send({
+                            weight: "80",
+                            as: "as"
+                        });
 
-                expectValidMealPlanner(res, {
-                    matchers: {
-                        userStats: {
-                            weights: expect.any(Array),
+                    expectError(res, 400);
+                });
+            });
+
+            describe("WHEN user update the stats with valid data", () => {
+                it("SHOULD update the user stats", async () => {
+                    await request(app)
+                        .post(`${mealPlannerPrivateUrl()}createMealPlan`)
+                        .set('Authorization', 'Bearer ' + accessToken[0])
+                        .send(validUserStatus[0]);
+
+                    var res = await request(app)
+                        .patch(`${mealPlannerPrivateUrl()}updateStats`)
+                        .set('Authorization', 'Bearer ' + accessToken[0])
+                        .send({
                             weight: 80,
                             height: 180,
                             age: 25,
                             activityLevel: EActivityLevel.active,
                             diet_goals: EDietGoals.weight_loss,
+                            gender: EGender.female
+                        } as INewMealPlanner);
+
+                    console.log(res.body.body.userStats);
+
+                    expectValidMealPlanner(res, {
+                        matchers: {
+                            userStats: {
+                                weights: expect.any(Array),
+                                weight: 80,
+                                height: 180,
+                                age: 25,
+                                activityLevel: EActivityLevel.active,
+                                diet_goals: EDietGoals.weight_loss,
+                            }
                         }
-                    }
+                    });
                 });
             });
         });
@@ -555,12 +578,14 @@ describe('MealPlanner', () => {
                         .set('Authorization', 'Bearer ' + accessToken[0]);
 
                     await request(app)
-                        .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/breakfast/${recipes[0].id}`)
+                        .delete(`${mealPlannerPrivateUrl()}removeFromMealPlan/${recipes[0].id}`)
                         .set('Authorization', 'Bearer ' + accessToken[0]);
 
                     var res = await request(app)
                         .get(`${mealPlannerPrivateUrl()}shoppingList/breakfast`)
                         .set('Authorization', 'Bearer ' + accessToken[0]);
+
+                    console.log({ res: res.body.body })
 
                     expect(res.body.body).toEqual(recipes[1].ingredients)
                 });

@@ -82,10 +82,10 @@ export async function removeByID(this: mongoose.Model<IMealPlanner>, _id: string
     }
 }
 
-export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: string, mealTime: EPreferredMealTime, page: number): Promise<{ recipe: IRecipe[]; nutrition: NutritionData }> {
+export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: string, mealTime: EPreferredMealTime, page: number): Promise<{ recipes: mongoose.Schema.Types.ObjectId; mealTime: EPreferredMealTime; }[]> {
     try {
         const mealPlanner = await this.findOne({ user: new mongoose.Types.ObjectId(_id) }).populate({
-            path: `recipes.${mealTime}.recipe`,
+            path: `recipes.recipe`,
             // match: { status: ERecipeStatus.verified },
             select: ['name', 'description', 'imgs', 'preparationDifficulty', 'preferredMealTime', "rating"],
             options: { limit: page * 10, skip: (page - 1) * 10 }
@@ -99,7 +99,7 @@ export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: stri
             }, "_id")
         }
 
-        return mealPlanner?.recipes[mealTime] as any;
+        return mealPlanner?.recipes.filter((recipe) => recipe.mealTime === mealTime) as any;
     } catch (error) {
         if (error instanceof BSONError) {
             throw ValidationErrorFactory({
@@ -112,7 +112,7 @@ export async function getUserMeals(this: mongoose.Model<IMealPlanner>, _id: stri
     }
 }
 
-export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner> {
+export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _id: string, recipeId: string): Promise<IMealPlanner> {
     try {
         const mealPlanner = await this.findOne({
             user: new mongoose.Types.ObjectId(_id),
@@ -126,7 +126,7 @@ export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _
             }, "recipeId")
         }
 
-        if (mealPlanner?.recipes[time].recipe.includes(new mongoose.Types.ObjectId(recipeId) as any)) {
+        if (mealPlanner?.recipes.filter((recipe) => new mongoose.Types.ObjectId(recipeId).equals(recipe.recipe as any)).length > 0) {
             throw ValidationErrorFactory({
                 msg: "User already has recipe in meal plan",
                 statusCode: 400,
@@ -146,7 +146,7 @@ export async function checkIfUserHasRecipe(this: mongoose.Model<IMealPlanner>, _
     }
 }
 
-export async function checkIfUserDoseNotRecipe(this: mongoose.Model<IMealPlanner>, _id: string, time: EPreferredMealTime, recipeId: string): Promise<IMealPlanner> {
+export async function checkIfUserDoseNotRecipe(this: mongoose.Model<IMealPlanner>, _id: string, recipeId: string): Promise<IMealPlanner> {
     try {
         const mealPlanner = await this.findOne({
             user: new mongoose.Types.ObjectId(_id),
@@ -160,9 +160,9 @@ export async function checkIfUserDoseNotRecipe(this: mongoose.Model<IMealPlanner
             }, "recipeId")
         }
 
-        if (!mealPlanner?.recipes[time].recipe.includes(new mongoose.Types.ObjectId(recipeId) as any)) {
+        if ((mealPlanner?.recipes.filter((recipe) => new mongoose.Types.ObjectId(recipeId).equals(recipe.recipe as any)).length == 0)) {
             throw ValidationErrorFactory({
-                msg: "User already has recipe in meal plan",
+                msg: "User does not have recipe in meal plan",
                 statusCode: 400,
                 type: "validation"
             }, "recipeId")
@@ -180,11 +180,11 @@ export async function checkIfUserDoseNotRecipe(this: mongoose.Model<IMealPlanner
     }
 }
 
-export async function removeRecipeFromMealPlan(this: mongoose.Model<IMealPlanner>, _id: string, time: EPreferredMealTime, recipeId: string): Promise<void> {
+export async function removeRecipeFromMealPlan(this: mongoose.Model<IMealPlanner>, _id: string, recipeId: string): Promise<void> {
     try {
         const result = await this.updateOne({ user: new mongoose.Types.ObjectId(_id) }, {
             $pull: {
-                [`recipes.${time}.recipe`]: new mongoose.Types.ObjectId(recipeId)
+                [`recipes.recipe`]: new mongoose.Types.ObjectId(recipeId)
             }
         });
 
@@ -210,31 +210,22 @@ export async function removeRecipeFromMealPlan(this: mongoose.Model<IMealPlanner
 
 export async function resetRecipes(this: mongoose.Model<IMealPlanner>, _id: string): Promise<IMealPlanner> {
     try {
-        const resetNutritionGoal = {
-            calories: 0,
-            protein: 0,
-            carbs: 0,
-            fat: 0
-        }
         const mealPlan = await this.findOneAndUpdate({ user: new mongoose.Types.ObjectId(_id) }, {
-            recipes: {
-                breakfast: {
-                    recipe: [],
-                    nutrition: resetNutritionGoal
-                },
-                lunch: {
-                    recipe: [],
-                    nutrition: resetNutritionGoal
-                },
-                dinner: {
-                    recipe: [],
-                    nutrition: resetNutritionGoal
-                },
-                snacks: {
-                    recipe: [],
-                    nutrition: resetNutritionGoal
-                }
-            }
+            recipes: [],
+            shoppingList: [],
+            nutrition: {
+                sugar_g: 0,
+                fiber_g: 0,
+                serving_size_g: 0,
+                sodium_mg: 0,
+                potassium_mg: 0,
+                fat_saturated_g: 0,
+                fat_total_g: 0,
+                calories: 0,
+                cholesterol_mg: 0,
+                protein_g: 0,
+                carbohydrates_total_g: 0,
+            } as NutritionData
         }, { new: true });
 
         if (mealPlan == null) {
@@ -360,7 +351,7 @@ export async function updateStats(this: mongoose.Model<IMealPlanner>, _id: strin
             throw ValidationErrorFactory({
                 msg: "mealPlanner or userStats not found",
                 statusCode: 404,
-                type: "validationtion"
+                type: "validation"
             }, "_id");
         }
 
@@ -377,9 +368,9 @@ export async function updateStats(this: mongoose.Model<IMealPlanner>, _id: strin
     }
 }
 
-export async function addOrMergeShoppingListItem(this: IMealPlanner, mealTime: EPreferredMealTime, ingredient: IngredientDetail[]): Promise<IMealPlanner> {
+export async function addOrMergeShoppingListItem(this: IMealPlanner, ingredient: IngredientDetail[]): Promise<IMealPlanner> {
     try {
-        const shoppingList = this.recipes[mealTime].shoppingList;
+        const shoppingList = this.shoppingList;
         ingredient.forEach((item) => {
             const index = shoppingList.findIndex((i) => i.name === item.name);
             if (index === -1) {
@@ -394,9 +385,9 @@ export async function addOrMergeShoppingListItem(this: IMealPlanner, mealTime: E
     }
 }
 
-export async function removeFromShoppingList(this: IMealPlanner, mealTime: EPreferredMealTime, ingredient: IngredientDetail[]): Promise<IMealPlanner> {
+export async function removeFromShoppingList(this: IMealPlanner, ingredient: IngredientDetail[]): Promise<IMealPlanner> {
     try {
-        const shoppingList = this.recipes[mealTime].shoppingList;
+        const shoppingList = this.shoppingList;
         ingredient.forEach((item) => {
             const index = shoppingList.findIndex((i) => i.name === item.name);
             if (index !== -1) {
@@ -414,10 +405,7 @@ export async function removeFromShoppingList(this: IMealPlanner, mealTime: EPref
 
 export async function hasRecipeInMealPlan(this: IMealPlanner, recipeId: any): Promise<boolean> {
     try {
-        return this.recipes.breakfast.recipe.includes(recipeId) ||
-            this.recipes.lunch.recipe.includes(recipeId) ||
-            this.recipes.dinner.recipe.includes(recipeId) ||
-            this.recipes.snack.recipe.includes(recipeId);
+        return this.recipes.filter((recipe) => recipe.recipe == recipeId).length > 0;
     } catch (error) {
         throw error;
     }

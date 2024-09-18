@@ -4,7 +4,7 @@ import { EPreferredMealTime, IngredientDetail, IRecipe } from "../../Schema/Reci
 import { IUser } from "../../Schema/user/user.type";
 import { IResponseType } from "../../Types";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
-import { newMealPlannerSchema } from "../../Schema/user/MealPlanner/mealPlanner..validation";
+import { newMealPlannerSchema, updateMealPlannerSchema } from "../../Schema/user/MealPlanner/mealPlanner..validation";
 import { calculateNutritionNeeds } from "../../Schema/user/MealPlanner/mealPlanner.util";
 import mongoose from "mongoose";
 import UserModel from "../../Schema/user/user.schema";
@@ -41,14 +41,14 @@ export default class MealPlannerController {
     }
 
     static async addToMealPlan(user: IUser, mealTime: EPreferredMealTime, recipeID: string): Promise<IResponseType<IMealPlanner>> {
-        await MealPlannerModel.checkIfUserHasRecipe(user.id, mealTime, recipeID)
+        await MealPlannerModel.checkIfUserHasRecipe(user.id, recipeID)
         const recipe = await RecipeModel.getById(recipeID);
         const mealPlanner = await MealPlannerModel.getByUser(user.id);
 
-        mealPlanner.recipes[mealTime].recipe.push(new mongoose.Types.ObjectId(recipeID) as any);
+        mealPlanner.recipes.push({ recipe: recipeID as any, mealTime });
 
         Object.keys(recipe.nutrition).forEach((key: any) => {
-            (mealPlanner.recipes[mealTime].nutrition as any)[key] += (recipe.nutrition as any)[key];
+            (mealPlanner.nutrition as any)[key] += (recipe.nutrition as any)[key];
         });
 
         mealPlanner.currentNutrition.calories += recipe.nutrition.calories;
@@ -56,19 +56,19 @@ export default class MealPlannerController {
         mealPlanner.currentNutrition.carbs += recipe.nutrition.calories;
         mealPlanner.currentNutrition.fat += recipe.nutrition.fat_total_g;
 
-        mealPlanner.addOrMergeShoppingListItem(mealTime, recipe.ingredients);
+        mealPlanner.addOrMergeShoppingListItem(recipe.ingredients);
 
         return { body: await mealPlanner.save() }
     }
 
-    static async removeFromMealPlan(user: IUser, mealTime: EPreferredMealTime, recipeID: string): Promise<IResponseType<IMealPlanner>> {
-        const mealPlanner = await MealPlannerModel.checkIfUserDoseNotRecipe(user.id, mealTime, recipeID);
+    static async removeFromMealPlan(user: IUser, recipeID: string): Promise<IResponseType<IMealPlanner>> {
+        const mealPlanner = await MealPlannerModel.checkIfUserDoseNotRecipe(user.id, recipeID);
         const recipe = await RecipeModel.getById(recipeID);
 
-        mealPlanner.recipes[mealTime].recipe = mealPlanner.recipes[mealTime].recipe.filter((id: any) => id.toString() !== recipe.id) as IRecipe[];
+        mealPlanner.recipes = mealPlanner.recipes.filter(recipe => recipe.recipe.toString() !== recipeID);
 
         Object.keys(recipe.nutrition).forEach((key: any) => {
-            (mealPlanner.recipes[mealTime].nutrition as any)[key] -= (recipe.nutrition as any)[key];
+            (mealPlanner.nutrition as any)[key] -= (recipe.nutrition as any)[key];
         });
 
         mealPlanner.currentNutrition.calories -= recipe.nutrition.calories;
@@ -76,7 +76,8 @@ export default class MealPlannerController {
         mealPlanner.currentNutrition.carbs -= recipe.nutrition.calories;
         mealPlanner.currentNutrition.fat -= recipe.nutrition.fat_total_g;
 
-        mealPlanner.removeFromShoppingList(mealTime, recipe.ingredients);
+        console.log("herr")
+        mealPlanner.removeFromShoppingList(recipe.ingredients);
 
         return { body: await mealPlanner.save() }
     }
@@ -91,12 +92,13 @@ export default class MealPlannerController {
     }
 
     static async updateStats(user: IUser, body: INewMealPlanner): Promise<IResponseType<IMealPlanner>> {
+        await MealPlannerModel.validator(body, updateMealPlannerSchema)
         return { body: await MealPlannerModel.updateStats(user.id, body) }
     }
 
     static async getShoppingList(user: IUser, mealTime: EPreferredMealTime): Promise<IResponseType<IngredientDetail[]>> {
         const mealPlanner = await MealPlannerModel.getByUser(user.id);
-        return { body: mealPlanner.recipes[mealTime].shoppingList }
+        return { body: mealPlanner.shoppingList }
     }
 
     static async getSimilarRecipes(user: IUser, mealTime: EPreferredMealTime, page: number): Promise<IResponseType<IRecipe[]>> {

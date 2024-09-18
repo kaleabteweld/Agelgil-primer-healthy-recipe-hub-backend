@@ -35,7 +35,12 @@ export default class MealPlannerController {
         return { body: await mealPlanner.save() }
     }
 
-    static async getMealPlan(user: IUser, mealTime: EPreferredMealTime, page: number): Promise<IResponseType<{ recipe: IRecipe[]; nutrition: NutritionData } | null>> {
+    static async myMealPlan(user: IUser): Promise<IResponseType<IMealPlanner>> {
+        const mealPlanner = await MealPlannerModel.getByUser(user.id);
+        return { body: mealPlanner }
+    }
+
+    static async getMealPlan(user: IUser, mealTime: EPreferredMealTime, page: number): Promise<IResponseType<{ recipe: IRecipe; nutrition: NutritionData }[] | null>> {
         const mealPlanner = await MealPlannerModel.getUserMeals(user.id, mealTime, page);
         return { body: mealPlanner }
     }
@@ -76,7 +81,6 @@ export default class MealPlannerController {
         mealPlanner.currentNutrition.carbs -= recipe.nutrition.calories;
         mealPlanner.currentNutrition.fat -= recipe.nutrition.fat_total_g;
 
-        console.log("herr")
         mealPlanner.removeFromShoppingList(recipe.ingredients);
 
         return { body: await mealPlanner.save() }
@@ -102,8 +106,8 @@ export default class MealPlannerController {
     }
 
     static async getSimilarRecipes(user: IUser, mealTime: EPreferredMealTime, page: number): Promise<IResponseType<IRecipe[]>> {
-        const mealPlanner = await MealPlannerModel.getUserMeals(user.id, mealTime, (page + 1));
-        const recipes = await RecipeModel.getRecipes(mealPlanner.recipe.map(recipe => recipe.id));
+        const Meals = await MealPlannerModel.getUserMeals(user.id, mealTime, (page + 1));
+        const recipes = await RecipeModel.getRecipes(Meals.map(recipe => recipe.recipe.id));
         const SuggestedRecipes = await Datasx.getInstance().getSuggestionsForRecipes(recipes, page)
         return { body: SuggestedRecipes as IRecipe[] }
     }

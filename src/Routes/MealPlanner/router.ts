@@ -13,6 +13,12 @@ privateMealPlannerRouter.post("/createMealPlan", userOnly, MakeErrorHandler(asyn
     res.json(mealPlan);
 }));
 
+privateMealPlannerRouter.get("/myMealPlan", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+    const _user: IUser = req['user'];
+    const mealPlan = await MealPlannerController.myMealPlan(_user);
+    res.json(mealPlan);
+}));
+
 privateMealPlannerRouter.get("/mealPlan/:mealTime/:page", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
     const { mealTime, page } = req.params;
     const _user: IUser = req['user'];

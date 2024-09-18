@@ -20,7 +20,7 @@ export default class Neo4jClient {
         this.session = driver.session({ database: process.env.NEO4J_DATABASE ?? "Agelgel" });
 
         if (_passive) this._passive = _passive;
-        else this._passive = process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID !== undefined;
+        else this._passive = process.env.NODE_ENV === "test" || process.env.NODE_ENV == "development " || process.env.JEST_WORKER_ID !== undefined;
     }
 
     static getInstance(options: { url?: string, userName?: string, password?: string }, _passive?: boolean): Neo4jClient {

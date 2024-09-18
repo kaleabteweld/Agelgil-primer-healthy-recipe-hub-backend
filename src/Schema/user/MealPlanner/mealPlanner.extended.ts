@@ -4,7 +4,7 @@ import { ValidationErrorFactory } from "../../../Types/error"
 import { BSONError } from 'bson';
 import { MakeValidator } from "../../../Util";
 import { IMealPlanner, INewMealPlanner, INutritionGoal } from "./mealPlanner.type";
-import { EPreferredMealTime, ERecipeStatus, IngredientDetail, IRecipe } from "../../Recipe/recipe.type";
+import { EPreferredMealTime, IngredientDetail } from "../../Recipe/recipe.type";
 import { NutritionData } from "../../../Util/calorieninjas/types";
 
 

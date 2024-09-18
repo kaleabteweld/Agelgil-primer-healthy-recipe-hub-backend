@@ -4,14 +4,15 @@ import { INutritionGoal } from "./mealPlanner.type";
 export function calculateBestWeight(user: IUserStats) {
 
     const { age, height } = user;
+    const heightInMeters = height / 100;
+
     const BMI_MIN = 18.5;
     const BMI_MAX = 24.9;
 
-    let idealWeightMin = BMI_MIN * Math.pow(height, 2);
-    let idealWeightMax = BMI_MAX * Math.pow(height, 2);
+    let idealWeightMin = BMI_MIN * Math.pow(heightInMeters, 2);
+    let idealWeightMax = BMI_MAX * Math.pow(heightInMeters, 2);
 
     let ageAdjustmentFactor = 1.0;
-
     if (age < 25) {
         ageAdjustmentFactor = 0.98;
     } else if (age >= 35 && age <= 44) {
@@ -22,7 +23,6 @@ export function calculateBestWeight(user: IUserStats) {
         ageAdjustmentFactor = 1.06;
     }
 
-    // Apply age adjustment to ideal weight range
     idealWeightMin *= ageAdjustmentFactor;
     idealWeightMax *= ageAdjustmentFactor;
 

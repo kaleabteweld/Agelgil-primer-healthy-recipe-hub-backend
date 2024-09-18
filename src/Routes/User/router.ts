@@ -33,7 +33,6 @@ privateUserRouter.get("/bookedRecipes/:skip/:limit", userOnly, MakeErrorHandler(
         const skip = Number.parseInt(req.params.skip);
         const limit = Number.parseInt(req.params.limit);
         res.json(await UserController.bookedRecipes(_user.id as any, { skip, limit }));
-        res.json(await UserController.bookedRecipes(_user.id as any, { skip, limit }));
     }
 ));
 

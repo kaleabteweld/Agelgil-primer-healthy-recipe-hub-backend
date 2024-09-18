@@ -5,7 +5,7 @@ import { IUser } from "../../Schema/user/user.type";
 import { IResponseType } from "../../Types";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import { newMealPlannerSchema, updateMealPlannerSchema } from "../../Schema/user/MealPlanner/mealPlanner..validation";
-import { calculateNutritionNeeds } from "../../Schema/user/MealPlanner/mealPlanner.util";
+import { calculateBestWeight, calculateNutritionNeeds } from "../../Schema/user/MealPlanner/mealPlanner.util";
 import mongoose from "mongoose";
 import UserModel from "../../Schema/user/user.schema";
 import { NutritionData } from "../../Util/calorieninjas/types";
@@ -37,7 +37,15 @@ export default class MealPlannerController {
 
     static async myMealPlan(user: IUser): Promise<IResponseType<IMealPlanner>> {
         const mealPlanner = await MealPlannerModel.getByUser(user.id);
-        return { body: mealPlanner }
+        const mealPlannerJson = mealPlanner.toJSON();
+        return {
+            body: {
+                ...mealPlannerJson, userStats: {
+                    ...mealPlannerJson.userStats,
+                    bestWeigh: calculateBestWeight(mealPlanner.userStats as any),
+                }
+            } as any
+        }
     }
 
     static async getMealPlan(user: IUser, mealTime: EPreferredMealTime, page: number): Promise<IResponseType<{ recipe: IRecipe; nutrition: NutritionData }[] | null>> {

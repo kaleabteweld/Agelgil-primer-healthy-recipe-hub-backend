@@ -506,7 +506,7 @@ describe('MealPlanner', () => {
         describe("WHEN user Dose't have a meal plan", () => {
             it("SHOULD return an error", async () => {
                 const res = await request(app)
-                    .get(`${mealPlannerPrivateUrl()}shoppingList/breakfast`)
+                    .get(`${mealPlannerPrivateUrl()}shoppingList`)
                     .set('Authorization', 'Bearer ' + accessToken[0]);
 
                 expectError(res, 404);
@@ -527,7 +527,7 @@ describe('MealPlanner', () => {
                         .set('Authorization', 'Bearer ' + accessToken[0]);
 
                     var res = await request(app)
-                        .get(`${mealPlannerPrivateUrl()}shoppingList/breakfast`)
+                        .get(`${mealPlannerPrivateUrl()}shoppingList`)
                         .set('Authorization', 'Bearer ' + accessToken[0]);
 
                     expect(res.body.body).toEqual(recipes[0].ingredients)
@@ -548,7 +548,7 @@ describe('MealPlanner', () => {
                             .set('Authorization', 'Bearer ' + accessToken[0]);
 
                         var res = await request(app)
-                            .get(`${mealPlannerPrivateUrl()}shoppingList/breakfast`)
+                            .get(`${mealPlannerPrivateUrl()}shoppingList`)
                             .set('Authorization', 'Bearer ' + accessToken[0]);
 
                         expect(res.body.body).toEqual(
@@ -582,7 +582,7 @@ describe('MealPlanner', () => {
                         .set('Authorization', 'Bearer ' + accessToken[0]);
 
                     var res = await request(app)
-                        .get(`${mealPlannerPrivateUrl()}shoppingList/breakfast`)
+                        .get(`${mealPlannerPrivateUrl()}shoppingList`)
                         .set('Authorization', 'Bearer ' + accessToken[0]);
 
                     console.log({ res: res.body.body })

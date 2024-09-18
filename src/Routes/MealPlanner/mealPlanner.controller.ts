@@ -96,7 +96,7 @@ export default class MealPlannerController {
         return { body: await MealPlannerModel.updateStats(user.id, body) }
     }
 
-    static async getShoppingList(user: IUser, mealTime: EPreferredMealTime): Promise<IResponseType<IngredientDetail[]>> {
+    static async getShoppingList(user: IUser): Promise<IResponseType<IngredientDetail[]>> {
         const mealPlanner = await MealPlannerModel.getByUser(user.id);
         return { body: mealPlanner.shoppingList }
     }

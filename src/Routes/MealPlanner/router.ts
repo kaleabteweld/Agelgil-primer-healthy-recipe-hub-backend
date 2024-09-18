@@ -52,10 +52,10 @@ privateMealPlannerRouter.patch("/updateStats", userOnly, MakeErrorHandler(async 
     res.json(mealPlan);
 }));
 
-privateMealPlannerRouter.get("/shoppingList/:mealTime", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
+privateMealPlannerRouter.get("/shoppingList", userOnly, MakeErrorHandler(async (req: any, res: Response) => {
     const _user: IUser = req['user'];
     const mealTime = req.params.mealTime;
-    const mealPlan = await MealPlannerController.getShoppingList(_user, mealTime);
+    const mealPlan = await MealPlannerController.getShoppingList(_user);
     res.json(mealPlan);
 }));
 

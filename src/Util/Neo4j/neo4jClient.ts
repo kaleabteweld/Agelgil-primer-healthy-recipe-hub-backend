@@ -3,6 +3,7 @@ import { EAllergies, EChronicDisease, EDietaryPreferences, IUser } from "../../S
 import { IRecipe, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
 import { IReview } from "../../Schema/Review/review.type";
 import { IPagination } from "../../Types";
+import mongoose from "mongoose";
 
 export default class Neo4jClient {
 
@@ -115,7 +116,7 @@ export default class Neo4jClient {
         if (this._passive) return;
         try {
             await this.session.run(
-                /* cypher */`CREATE (u:User { 
+                /* cypher */`MERGE (u:User { 
                     id: $id,
                     email: $email, 
                     first_name: $first_name, 
@@ -135,7 +136,7 @@ export default class Neo4jClient {
                     /* cypher */`MERGE (c:MedicalCondition {name: $medicalCondition}) 
                     WITH c
                     MATCH (u:User {id: $id})
-                    CREATE (u)-[:HAS_CONDITION]->(c)`,
+                    MERGE (u)-[:HAS_CONDITION]->(c)`,
                         {
                             id: (user as any)._id.toString(),
                             medicalCondition: medicalCondition
@@ -149,7 +150,7 @@ export default class Neo4jClient {
                     /* cypher */`MERGE (d:DietaryPreference {name: $dietaryPreference}) 
                     WITH d
                     MATCH (u:User {id: $id})
-                    CREATE (u)-[:PREFERS]->(d)`,
+                    MERGE (u)-[:PREFERS]->(d)`,
                         {
                             id: (user as any)._id.toString(),
                             dietaryPreference: dietaryPreference
@@ -163,7 +164,7 @@ export default class Neo4jClient {
                     /* cypher */`MERGE (a:Allergy {name: $allergy}) 
                     WITH a
                     MATCH (u:User {id: $id})
-                    CREATE (u)-[:ALLERGIC_TO]->(a)`,
+                    MERGE (u)-[:ALLERGIC_TO]->(a)`,
                         {
                             id: (user as any)._id.toString(),
                             allergy: allergy
@@ -206,7 +207,7 @@ export default class Neo4jClient {
                     /* cypher */`MERGE (c:MedicalCondition {name: $medicalCondition}) 
                     WITH c
                     MATCH (u:User {id: $id})
-                    CREATE (u)-[:HAS_CONDITION]->(c)`,
+                    MERGE (u)-[:HAS_CONDITION]->(c)`,
                         {
                             id: (user as any)._id.toString(),
                             medicalCondition: medicalCondition
@@ -228,7 +229,7 @@ export default class Neo4jClient {
                     /* cypher */`MERGE (d:DietaryPreference {name: $dietaryPreference}) 
                     WITH d
                     MATCH (u:User {id: $id})
-                    CREATE (u)-[:PREFERS]->(d)`,
+                    MERGE (u)-[:PREFERS]->(d)`,
                         {
                             id: (user as any)._id.toString(),
                             dietaryPreference: dietaryPreference
@@ -250,7 +251,7 @@ export default class Neo4jClient {
                     /* cypher */`MERGE (a:Allergy {name: $allergy}) 
                     WITH a
                     MATCH (u:User {id: $id})
-                    CREATE (u)-[:ALLERGIC_TO]->(a)`,
+                    MERGE (u)-[:ALLERGIC_TO]->(a)`,
                         {
                             id: (user as any)._id.toString(),
                             allergy: allergy
@@ -303,7 +304,7 @@ export default class Neo4jClient {
                     /* cypher */ `MERGE (i:Ingredient {name: $ingredient}) 
                     WITH i
                     MATCH (r:Recipe {id: $id})
-                    CREATE (r)-[:CONTAINS {amount: $amount}]->(i)`,
+                    MERGE (r)-[:CONTAINS {amount: $amount}]->(i)`,
                     {
                         id: (recipe as any)._id.toString(),
                         ingredient: ingredient.name,
@@ -328,7 +329,7 @@ export default class Neo4jClient {
                     MERGE (p:PreferredMealTime {name: $preferredMealTime}) 
                     WITH p
                     MATCH (r:Recipe {id: $id})
-                    CREATE (r)-[:PREFERRED_MEAL_TIME]->(p)`,
+                    MERGE (r)-[:PREFERRED_MEAL_TIME]->(p)`,
                     {
                         id: (recipe as any)._id.toString(),
                         preferredMealTime: preferredMealTime
@@ -374,7 +375,7 @@ export default class Neo4jClient {
         try {
             await this.session.run(
                 /* cypher */ `
-                CREATE (r:Recipe { 
+                MERGE (r:Recipe { 
                     id: $id,
                     img: $img,
                     name: $name, 
@@ -385,7 +386,7 @@ export default class Neo4jClient {
                 })`,
                 {
                     id: (recipe as any)._id.toString(),
-                    img: recipe.imgs[0],
+                    img: recipe.imgs.at(0) ?? "",
                     name: recipe.name,
                     preparationDifficulty: recipe.preparationDifficulty,
                     description: recipe.description,
@@ -399,7 +400,7 @@ export default class Neo4jClient {
                     /* cypher */ `MERGE (i:Ingredient {name: $ingredient}) 
                     WITH i
                     MATCH (r:Recipe {id: $id})
-                    CREATE (r)-[:CONTAINS {amount: $amount}]->(i)`,
+                    MERGE (r)-[:CONTAINS {amount: $amount}]->(i)`,
                     {
                         id: (recipe as any)._id.toString(),
                         ingredient: ingredient.name,
@@ -414,7 +415,7 @@ export default class Neo4jClient {
                     MERGE (p:PreferredMealTime {name: $preferredMealTime}) 
                     WITH p
                     MATCH (r:Recipe {id: $id})
-                    CREATE (r)-[:PREFERRED_MEAL_TIME]->(p)`,
+                    MERGE (r)-[:PREFERRED_MEAL_TIME]->(p)`,
                     {
                         id: (recipe as any)._id.toString(),
                         preferredMealTime: preferredMealTime
@@ -429,7 +430,7 @@ export default class Neo4jClient {
                     MERGE (c:MedicalCondition {name: $medicalCondition}) 
                     WITH c
                     MATCH (u:Recipe {id: $id})
-                    CREATE (u)-[:HAS_CONDITION]->(c)`,
+                    MERGE (u)-[:HAS_CONDITION]->(c)`,
                         {
                             id: (recipe as any)._id.toString(),
                             medicalCondition: medicalCondition
@@ -444,7 +445,7 @@ export default class Neo4jClient {
                     MERGE (d:DietaryPreference {name: $dietaryPreference}) 
                     WITH d
                     MATCH (u:Recipe {id: $id})
-                    CREATE (u)-[:PREFERS]->(d)`,
+                    MERGE (u)-[:PREFERS]->(d)`,
                         {
                             id: (recipe as any)._id.toString(),
                             dietaryPreference: dietaryPreference
@@ -459,7 +460,7 @@ export default class Neo4jClient {
                     MERGE (a:Allergy {name: $allergy}) 
                     WITH a
                     MATCH (u:Recipe {id: $id})
-                    CREATE (u)-[:ALLERGIC_TO]->(a)`,
+                    MERGE (u)-[:ALLERGIC_TO]->(a)`,
                         {
                             id: (recipe as any)._id.toString(),
                             allergy: allergy
@@ -471,7 +472,7 @@ export default class Neo4jClient {
                 /* cypher */ `
                 MERGE (u:User {id: $userId}) 
                 MERGE (r:Recipe {id: $recipeId})
-                CREATE (r)-[:CREATED_BY]->(u)`,
+                MERGE (r)-[:MERGED_BY]->(u)`,
                 {
                     recipeId: recipe.id.toString(),
                     userId: recipe.user.user.toString(),
@@ -490,7 +491,7 @@ export default class Neo4jClient {
                 /* cypher */ `
                 MATCH (r:Recipe {id: $recipeId})
                 MERGE (u:User {id: $userId})
-                CREATE (u)-[:REVIEWED {rating: $rating, comment: $comment}]->(r)
+                MERGE (u)-[:REVIEWED {rating: $rating, comment: $comment}]->(r)
                 `,
                 {
                     recipeId,
@@ -512,7 +513,7 @@ export default class Neo4jClient {
                 /* cypher */ `
                 MATCH (u:User {id: $userId})
                 MERGE (r:Recipe {id: $recipeId})
-                CREATE (u)-[:BOOKED]->(r)
+                MERGE (u)-[:BOOKED]->(r)
                 `,
                 {
                     userId,
@@ -540,6 +541,25 @@ export default class Neo4jClient {
             );
         } catch (error) {
             console.error('Error removing booked recipe:', error);
+            throw error;
+        }
+    }
+
+    async seedDatabase<T>(Models: mongoose.Model<T>[]) {
+        if (this._passive) return;
+        try {
+            for (const model of Models) {
+                const documents = await model.find();
+                for (const document of documents) {
+                    if (model.modelName === 'User') {
+                        await this.addUser(document as IUser);
+                    } else if (model.modelName === 'Recipe') {
+                        await this.addRecipe(document as IRecipe);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error seeding database:', error);
             throw error;
         }
     }

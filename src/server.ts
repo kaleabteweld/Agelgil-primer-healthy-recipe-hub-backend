@@ -5,6 +5,8 @@ import RedisCache from "./Util/cache/redis";
 import { IngredientController } from "./Routes/Ingredient";
 import { Datasx } from "./Util/Datasx";
 import Neo4jClient from "./Util/Neo4j/neo4jClient";
+import UserModel from "./Schema/user/user.schema";
+import RecipeModel from "./Schema/Recipe/recipe.schema";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV?.trim()}` });
 console.log(`[+] running on ${process.env.NODE_ENV?.trim()} mode`)
@@ -17,10 +19,13 @@ app.listen(port, () => {
 
 mongoose.connect(process.env.DATABASE_URL ?? "").catch((error) => {
     console.log("[-] Database Connection Error", error);
-}).then(() => {
+}).then(async () => {
     console.log("[+] Database Connected");
     IngredientController.seed()
     console.log("[+] Ingredients Seeded");
+
+    await Neo4jClient.getInstance({}).seedDatabase<any>([UserModel, RecipeModel])
+    console.log("[+] Neo4j Database Seeded");
 });
 
 const redisCache = RedisCache.getInstance();

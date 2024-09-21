@@ -24,8 +24,12 @@ mongoose.connect(process.env.DATABASE_URL ?? "").catch((error) => {
     IngredientController.seed()
     console.log("[+] Ingredients Seeded");
 
-    await Neo4jClient.getInstance({}).seedDatabase<any>([UserModel, RecipeModel])
-    console.log("[+] Neo4j Database Seeded");
+    try {
+        await Neo4jClient.getInstance({}).seedDatabase<any>([UserModel, RecipeModel])
+        console.log("[+] Neo4j Database Seeded");
+    } catch (error) {
+        console.log("[-] Error Seeding Neo4j Database", error);
+    }
 });
 
 const redisCache = RedisCache.getInstance();

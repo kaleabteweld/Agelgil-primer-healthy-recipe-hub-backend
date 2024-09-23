@@ -1,6 +1,6 @@
 import neo4j, { Session } from "neo4j-driver";
 import { EAllergies, EChronicDisease, EDietaryPreferences, IUser } from "../../Schema/user/user.type";
-import { IRecipe, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
+import { ERecipeStatus, IRecipe, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
 import { IReview } from "../../Schema/Review/review.type";
 import { IPagination } from "../../Types";
 import mongoose from "mongoose";
@@ -554,7 +554,9 @@ export default class Neo4jClient {
                     if (model.modelName === 'User') {
                         await this.addUser(document as IUser);
                     } else if (model.modelName === 'Recipe') {
-                        await this.addRecipe(document as IRecipe);
+                        if ((document as IRecipe).status == ERecipeStatus.verified) {
+                            await this.addRecipe(document as IRecipe);
+                        }
                     }
                 }
             }

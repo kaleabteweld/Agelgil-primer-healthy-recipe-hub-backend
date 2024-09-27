@@ -60,7 +60,7 @@ export async function removeByID(this: mongoose.Model<INotification>, _id: strin
     }
 }
 
-export async function checkIfUserOwnsNotification(this: INotification, _id: string, user: IUser): Promise<INotification> {
+export async function checkIfUserOwnsNotification(this: INotification, user: IUser): Promise<INotification> {
     try {
 
         if (this.user.toString() !== user.id.toString()) {
@@ -83,7 +83,7 @@ export async function checkIfUserOwnsNotification(this: INotification, _id: stri
     }
 }
 
-export async function markAsRead(this: INotification, _id: string): Promise<INotification> {
+export async function markAsRead(this: INotification): Promise<INotification> {
     try {
         this.isRead = true;
         return this.save();;

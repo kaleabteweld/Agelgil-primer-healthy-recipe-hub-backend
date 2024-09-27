@@ -14,8 +14,8 @@ export interface INotification extends mongoose.Document {
 
 //Dynamic methods
 export interface INotificationMethods {
-    markAsRead(this: INotification, _id: string): Promise<INotification>
-    checkIfUserOwnsNotification(this: INotification, _id: string, user: IUser): Promise<INotification>
+    markAsRead(this: INotification): Promise<INotification>
+    checkIfUserOwnsNotification(this: INotification, user: IUser): Promise<INotification>
 }
 
 // Extend the Document type with IUserMethods
@@ -24,6 +24,6 @@ export interface INotificationDocument extends INotification, INotificationMetho
 
 // statics methods
 export interface INotificationModel extends mongoose.Model<INotificationDocument> {
-    getById(_id: string, populate?: string | string[]): Promise<INotification>
+    getById(_id: string, populate?: string | string[]): Promise<INotificationDocument>
     removeByID(_id: string): Promise<void>
 }

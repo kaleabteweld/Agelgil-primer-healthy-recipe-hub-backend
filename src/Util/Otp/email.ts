@@ -1,9 +1,9 @@
 import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
 import { errorResponse } from "../../Types/error";
-import RedisCache from "../cache/redis";
+import { EmailOtpRedisCache } from "../cache/redis/emailOtp";
 
-const redisCache = RedisCache.getInstance();
+const redisCache = new EmailOtpRedisCache();
 
 let transporter = nodemailer.createTransport({
     host: "mail.sweaven.dev",

@@ -2,21 +2,17 @@ import mongoose from "mongoose";
 import { IReviewDocument } from "../Review/review.type";
 import { IUser } from "../user/user.type";
 
-
-
 export interface INotification extends mongoose.Document {
-    title: string;
-    body: string;
-}
-
-export interface INewReviewNotificationSchema extends INotification {
     user: mongoose.Types.ObjectId | IUser;
-    review: mongoose.Types.ObjectId | IReviewDocument;
+    review: {
+        review: mongoose.Types.ObjectId | IReviewDocument;
+        rating: number;
+        comment: string;
+    };
 }
 
 //Dynamic methods
 export interface INotificationMethods {
-
 }
 
 // Extend the Document type with IUserMethods

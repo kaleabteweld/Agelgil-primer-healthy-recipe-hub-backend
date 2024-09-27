@@ -1,16 +1,9 @@
 import mongoose from "mongoose";
-import Joi from "joi";
 import { ValidationErrorFactory } from "../../Types/error"
 import { BSONError } from 'bson';
-import { MakeValidator } from "../../Util";
 import { INotification } from "./notification.type";
 import { IUser } from "../user/user.type";
 
-
-
-export function validator<T>(notificationInput: T, schema: Joi.ObjectSchema<T>) {
-    return MakeValidator<T>(schema, notificationInput);
-}
 
 export async function getById(this: mongoose.Model<INotification>, _id: string, populate?: string | string[]): Promise<INotification> {
     try {

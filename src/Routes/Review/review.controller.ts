@@ -51,21 +51,21 @@ export default class ReviewController {
             }
         })
 
-        await newNotificationModel.save();
+        newNotificationModel.save();
 
-        console.log({ newNotificationModel })
+        // console.log({ newNotificationModel })
 
-        const userFCMToken = "as"
-        const pushMessageBuilder: PushMessageBuilder = new PushMessageBuilder(userFCMToken);
-        const reviewNotification = pushMessageBuilder
-            .setTitle(`${_user.full_name} has reviewed your recipe ${recipe.name}`)
-            .setBody(`${_review.rating} stars`)
-            .build()
+        // const userFCMToken = "as"
+        // const pushMessageBuilder: PushMessageBuilder = new PushMessageBuilder(userFCMToken);
+        // const reviewNotification = pushMessageBuilder
+        //     .setTitle(`${_user.full_name} has reviewed your recipe ${recipe.name}`)
+        //     .setBody(`${_review.rating} stars`)
+        //     .build()
 
-        console.log({ reviewNotification })
+        // console.log({ reviewNotification })
 
-        const isRunningInJest: boolean = typeof process !== 'undefined' && process.env.JEST_WORKER_ID !== undefined;
-        if (!isRunningInJest) await sendPushNotification(reviewNotification);
+        // const isRunningInJest: boolean = typeof process !== 'undefined' && process.env.JEST_WORKER_ID !== undefined;
+        // if (!isRunningInJest) await sendPushNotification(reviewNotification);
 
         return { body: (review.toJSON() as any) }
     }

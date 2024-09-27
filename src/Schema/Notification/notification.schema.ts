@@ -1,9 +1,11 @@
 import mongoose from 'mongoose'
-import { INotification, INotificationMethods, INotificationModel } from './notification.schema.type';
+import { INotification, INotificationMethods, INotificationModel } from './notification.type';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
+import { getById, removeByID, markAsRead, checkIfUserOwnsNotification } from './notification.extended';
 
 export const notificationSchema = new mongoose.Schema<INotification, INotificationModel, INotificationMethods>({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    isRead: { type: Boolean, default: false },
     review: {
         review: { type: mongoose.Schema.Types.ObjectId, ref: 'Review' },
         rating: Number,
@@ -12,10 +14,12 @@ export const notificationSchema = new mongoose.Schema<INotification, INotificati
 }, {
     timestamps: true,
     methods: {
-
+        markAsRead,
+        checkIfUserOwnsNotification,
     },
     statics: {
-
+        getById,
+        removeByID
     }
 });
 

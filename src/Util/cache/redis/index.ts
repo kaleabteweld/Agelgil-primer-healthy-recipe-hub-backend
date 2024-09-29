@@ -2,10 +2,10 @@ import { createClient, RedisClientType } from 'redis';
 import { errorResponse } from '../../../Types/error';
 
 export default class RedisCache {
-    private static instance: RedisCache;
-    private static client: RedisClientType;
+    protected static instance: RedisCache;
+    public static client: RedisClientType;
 
-    private constructor() {
+    protected constructor() {
         RedisCache.client = createClient({
             url: process.env.REDIS_URL
         });

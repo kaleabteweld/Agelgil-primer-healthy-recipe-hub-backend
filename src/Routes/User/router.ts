@@ -69,6 +69,18 @@ publicUserRouter.post("/search/:page", MakeErrorHandler(
         res.json(await UserController.usersSearch(req.body, page));
     }
 ));
+
+publicUserRouter.patch('/:userType/forgotPassword/email/:email/:newPassword', MakeErrorHandler(
+    async (req: Request, res: Response) => {
+
+        const email = req.params.email
+        const newPassword = req.params.newPassword;
+        // const user = await UserController.forgotPassword(email, newPassword);
+
+        res.json({});
+    }
+));
+
 publicUserRouter.use("/user", publicUserRouter);
 privateUserRouter.use("/user", privateUserRouter);
 

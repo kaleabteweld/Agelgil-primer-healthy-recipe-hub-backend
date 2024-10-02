@@ -57,6 +57,7 @@ privateAuthenticationRouter.delete('/:userType/logOut', authorization([UserType.
     }
 ));
 
+
 publicAuthenticationRouter.use("/authentication", publicAuthenticationRouter);
 privateAuthenticationRouter.use("/authentication", privateAuthenticationRouter);
 

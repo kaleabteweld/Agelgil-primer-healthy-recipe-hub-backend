@@ -93,6 +93,17 @@ publicUserRouter.get('/emailOtp/:email', MakeErrorHandler(
     }
 ));
 
+publicUserRouter.get('/emailOtp/verify/:email/:otp', MakeErrorHandler(
+    async (req: Request, res: Response) => {
+
+        const email: string = req.params.email;
+        const otp: string = req.params.otp;
+
+        res.json(await UserController.verifyEmailOTP(email, otp))
+
+    }
+));
+
 publicUserRouter.use("/user", publicUserRouter);
 privateUserRouter.use("/user", privateUserRouter);
 

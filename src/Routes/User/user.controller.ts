@@ -8,7 +8,7 @@ import { IRecipe, TRecipeStatus } from "../../Schema/Recipe/recipe.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import { UserSearchBuilder } from "../../Schema/user/user.utils";
 import Neo4jClient from "../../Util/Neo4j/neo4jClient";
-import { sendEmailOtp } from "../../Util/Otp";
+import { sendEmailOtp, verifyEmailOtp } from "../../Util/Otp";
 
 
 export default class UserController {
@@ -94,5 +94,9 @@ export default class UserController {
     static async generateEmailOTP(email: string): Promise<IResponseType<{}>> {
         await sendEmailOtp(email)
         return { body: {} };
+    }
+
+    static async verifyEmailOTP(email: string, otp: string): Promise<IResponseType<{ email: string, code: string, status: boolean }>> {
+        return { body: await verifyEmailOtp(email, otp) };
     }
 }

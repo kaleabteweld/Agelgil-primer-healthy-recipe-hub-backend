@@ -70,7 +70,7 @@ publicUserRouter.post("/search/:page", MakeErrorHandler(
     }
 ));
 
-publicUserRouter.patch('/:userType/forgotPassword/email/:email/:newPassword', MakeErrorHandler(
+publicUserRouter.patch('/forgotPassword/email/:email/:newPassword', MakeErrorHandler(
     async (req: Request, res: Response) => {
 
         const email = req.params.email
@@ -78,6 +78,18 @@ publicUserRouter.patch('/:userType/forgotPassword/email/:email/:newPassword', Ma
         // const user = await UserController.forgotPassword(email, newPassword);
 
         res.json({});
+    }
+));
+
+publicUserRouter.get('/emailOtp/:email', MakeErrorHandler(
+    async (req: Request, res: Response) => {
+
+        const email: string = req.params.email;
+        const OTP = await UserController.generateEmailOTP(email);
+        res.json({
+            email,
+            status: true
+        })
     }
 ));
 

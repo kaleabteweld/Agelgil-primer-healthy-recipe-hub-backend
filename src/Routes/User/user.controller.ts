@@ -8,6 +8,7 @@ import { IRecipe, TRecipeStatus } from "../../Schema/Recipe/recipe.type";
 import RecipeModel from "../../Schema/Recipe/recipe.schema";
 import { UserSearchBuilder } from "../../Schema/user/user.utils";
 import Neo4jClient from "../../Util/Neo4j/neo4jClient";
+import { sendEmailOtp } from "../../Util/Otp";
 
 
 export default class UserController {
@@ -88,5 +89,10 @@ export default class UserController {
     static async usersSearch(query: IUserSearchFrom, page: number): Promise<IResponseType<IUser[]>> {
         UserModel.validator(query, userSearchSchema);
         return { body: await (await UserSearchBuilder.fromJSON(query)).withPagination(page).execute() };
+    }
+
+    static async generateEmailOTP(email: string): Promise<IResponseType<{}>> {
+        await sendEmailOtp(email)
+        return { body: {} };
     }
 }

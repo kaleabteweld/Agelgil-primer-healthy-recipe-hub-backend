@@ -31,6 +31,9 @@ export const reviewPublicUrl = () => `/Api/v1/public/review/`;
 export const mealPlannerPrivateUrl = () => `/Api/v1/private/mealPlanner/`;
 export const mealPlannerPublicUrl = () => `/Api/v1/public/mealPlanner/`;
 
+export const notificationPrivateUrl = () => `/Api/v1/private/notification/`;
+export const notificationPublicUrl = () => `/Api/v1/public/notification/`;
+
 
 
 export const newValidUser: IUserSignUpFrom = {
@@ -488,6 +491,26 @@ export const expectValidRecipeCardLisMealplanners = async (response: Response, m
             imgs: expect.any(Array),
             preferredMealTime: expect.any(Array),
             preparationDifficulty: expect.any(String),
+            ...matchers
+        });
+    });
+}
+
+export const expectValidNotificationList = async (response: Response, minLen: number, maxLen?: number, matchers?: Record<string, unknown> | Record<string, unknown>[]) => {
+
+    expect(response.status).toBe(200)
+
+    expect(response.body.body.length).toBeGreaterThanOrEqual(minLen)
+    maxLen && expect(response.body.body.length).toBeLessThanOrEqual(maxLen)
+
+    response.body.body.forEach((notification: any) => {
+        expect(notification).toMatchObject({
+            _id: expect.any(String),
+            user: expect.any(String),
+            review: expect.any(Object),
+            isRead: expect.any(Boolean),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
             ...matchers
         });
     });

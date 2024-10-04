@@ -51,7 +51,7 @@ export default class ReviewController {
             }
         })
 
-        newNotificationModel.save();
+        await newNotificationModel.save();
 
         // console.log({ newNotificationModel })
 

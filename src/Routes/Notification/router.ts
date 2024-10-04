@@ -13,7 +13,7 @@ publicNotificationRouter.get("/:notificationId", MakeErrorHandler(
     }
 ));
 
-privateNotificationRouter.post("/user/:skip/:limit", userOnly, MakeErrorHandler(
+privateNotificationRouter.get("/user/:skip/:limit", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];
         const skip = Number.parseInt(req.params.skip);

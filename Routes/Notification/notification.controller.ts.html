@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for Schema/Moderator/moderator.validation.ts</title>
+    <title>Code coverage report for Routes/Notification/notification.controller.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">Schema/Moderator</a> moderator.validation.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">Routes/Notification</a> notification.controller.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">80.64% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>25/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">33.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">80.64% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>25/31</span>
             </div>
         
             
@@ -93,7 +93,8 @@
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -103,56 +104,58 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Joi from "joi";
-import { IModeratorLogInFrom, IModeratorSignUpFrom, IModeratorUpdateFrom } from "./moderator.type";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+import NotificationModel from "../../Schema/Notification/notification.schema";
+import { INotification } from "../../Schema/Notification/notification.type";
+import { IUser } from "../../Schema/user/user.type";
+import { IResponseType } from "../../Types";
 &nbsp;
 &nbsp;
-export const moderatorSignUpSchema = Joi.object&lt;IModeratorSignUpFrom&gt;({
-    email: Joi.string().email().required(),
-    password: Joi.string().min(8).required(),
-    first_name: Joi.string().required(),
-    last_name: Joi.string().required(),
-    phone_number: Joi.string().required(),
-    bio: Joi.string().required(),
-    profile_img: Joi.string().optional(),
-});
+export default class NotificationController {
 &nbsp;
-export const moderatorLogInSchema = Joi.object&lt;IModeratorLogInFrom&gt;({
-    email: Joi.string().email().required(),
-    password: Joi.string().min(8).required(),
-});
+    static async <span class="fstat-no" title="function not covered" >getById(notificationId: string = ""): Promise&lt;IResponseType&lt;INotification | null&gt;&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        return { body: ((await NotificationModel.getById(notificationId))?.toJSON() as any) };</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-export const moderatorUpdateSchema = Joi.object&lt;IModeratorUpdateFrom&gt;({
-    first_name: Joi.string().optional(),
-    last_name: Joi.string().optional(),
-    phone_number: Joi.string().optional(),
-    password: Joi.string().min(8).optional(),
-    bio: Joi.string().optional(),
-    profile_img: Joi.string().optional(),
-});
+    static async userNotifications(user: IUser, { skip = 0, limit = 10 }): Promise&lt;IResponseType&lt;INotification[]&gt;&gt; {
+        return {
+            body: (await NotificationModel
+                .find({ user: user.id })
+                .sort({ createdAt: -1, isRead: 1 })
+                .skip(skip)
+                .limit(limit)
+                .exec()
+            )
+        };
+    }
 &nbsp;
-&nbsp;
-&nbsp;
+    static async <span class="fstat-no" title="function not covered" >markAsRead(notificationId: string, user: IUser): Promise&lt;IResponseType&lt;INotification&gt;&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        const notification = await NotificationModel.getById(notificationId);</span>
+<span class="cstat-no" title="statement not covered" >        await notification.checkIfUserOwnsNotification(user)</span>
+<span class="cstat-no" title="statement not covered" >        return { body: (await notification.markAsRead()).toJSON() as any };</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

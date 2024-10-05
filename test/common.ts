@@ -506,8 +506,8 @@ export const expectValidNotificationList = async (response: Response, minLen: nu
     response.body.body.forEach((notification: any) => {
         expect(notification).toMatchObject({
             _id: expect.any(String),
-            user: expect.any(String),
             review: expect.any(Object),
+            user: expect.any(Object),
             isRead: expect.any(Boolean),
             createdAt: expect.any(String),
             updatedAt: expect.any(String),

@@ -91,31 +91,7 @@ describe('Notification', () => {
                 expect(res.body.body).toHaveLength(0);
             })
 
-            // it("SHOULD not create a notification for the user who reviewed the recipe", async () => {
-            //     const res = await request(app)
-            //         .get(`/api/notifications`)
-            //         .set("Authorization", `Bearer ${accessToken}`)
-            //         .expect(200);
-
-            //     expect(res.body).toHaveLength(1);
-            //     expect(res.body[0].type).toBe("RECIPE_REVIEW");
-            //     expect(res.body[0].recipeId).toBe(recipe._id.toString());
-            //     expect(res.body[0].from).toBe(user._id.toString());
-            // })
-
-            // it("SHOULD not create a notification for other users", async () => {
-            //     const res = await request(app)
-            //         .get(`/api/notifications`)
-            //         .set("Authorization", `Bearer ${moderatorTokens[0]}`)
-            //         .expect(200);
-
-            //     expect(res.body).toHaveLength(0);
-            // })
         })
 
     });
-
-    describe("Get Notification", () => {
-
-    })
 })

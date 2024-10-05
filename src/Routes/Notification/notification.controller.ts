@@ -16,6 +16,7 @@ export default class NotificationController {
             body: (await NotificationModel
                 .find({ user: user.id })
                 .sort({ createdAt: -1, isRead: 1 })
+                .populate("user")
                 .skip(skip)
                 .limit(limit)
                 .exec()
@@ -27,5 +28,9 @@ export default class NotificationController {
         const notification = await NotificationModel.getById(notificationId);
         await notification.checkIfUserOwnsNotification(user)
         return { body: (await notification.markAsRead()).toJSON() as any };
+    }
+
+    static async userNotificationCount(user: IUser): Promise<IResponseType<number>> {
+        return { body: await NotificationModel.countDocuments({ user: user.id, isRead: false }) };
     }
 }

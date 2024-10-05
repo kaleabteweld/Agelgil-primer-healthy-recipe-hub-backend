@@ -22,6 +22,13 @@ privateNotificationRouter.get("/user/:skip/:limit", userOnly, MakeErrorHandler(
     }
 ));
 
+privateNotificationRouter.get("/user/count", userOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _user: IUser = req['user'];
+        res.json(await NotificationController.userNotificationCount(_user));
+    }
+));
+
 privateNotificationRouter.patch("/markAsRead/:notificationId", userOnly, MakeErrorHandler(
     async (req: any, res: Response) => {
         const _user: IUser = req['user'];

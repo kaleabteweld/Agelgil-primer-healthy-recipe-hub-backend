@@ -75,7 +75,7 @@ publicUserRouter.patch('/forgotPassword/email/:email/:newPassword', MakeErrorHan
 
         const email = req.params.email
         const newPassword = req.params.newPassword;
-        // const user = await UserController.forgotPassword(email, newPassword);
+        const user = await UserController.forgotPassword(email, newPassword);
 
         res.json({});
     }

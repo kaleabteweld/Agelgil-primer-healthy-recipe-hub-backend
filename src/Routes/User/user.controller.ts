@@ -100,10 +100,12 @@ export default class UserController {
         return { body: await verifyEmailOtp(email, otp) };
     }
 
-    static async forgotPassword(email: string, newPassword: string): Promise<IResponseType<{}>> {
+    static async forgotPassword(email: string, newPassword: string, otp: string): Promise<IResponseType<{}>> {
         const user = await UserModel.getByEmail(email);
-        await user!.encryptPassword(newPassword);
-        await user!.save();
+        await UserController.verifyEmailOTP(email, otp);
+        await UserModel.update(user.id, {
+            password: newPassword
+        });
         return { body: {} };
     }
 }

@@ -70,12 +70,13 @@ publicUserRouter.post("/search/:page", MakeErrorHandler(
     }
 ));
 
-publicUserRouter.patch('/forgotPassword/email/:email/:newPassword', MakeErrorHandler(
+publicUserRouter.patch('/forgotPassword/email/:otp/:email/:newPassword', MakeErrorHandler(
     async (req: Request, res: Response) => {
 
         const email = req.params.email
         const newPassword = req.params.newPassword;
-        const user = await UserController.forgotPassword(email, newPassword);
+        const otp = req.params.otp;
+        const user = await UserController.forgotPassword(email, newPassword, otp);
 
         res.json({});
     }

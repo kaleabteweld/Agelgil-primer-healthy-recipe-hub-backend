@@ -70,19 +70,43 @@ export async function verifyEmailOtp(email: string, otp: string) {
 }
 
 function emailHtml(generatedCode: string) {
-    return `<tbody>\n
-    <tr style=\"height:318px\">\n
-    <td style=\"font-family:Verdana,sans-serif;font-size:14px;vertical-align:top;height:318px\">\n
-    <p style=\"margin-bottom:15px;list-style-type:disc\">Hi,</p>\n
-    <p style=\"margin-bottom:15px;list-style-type:disc\">&nbsp;</p>\n
-    <p style=\"margin-bottom:15px;list-style-type:disc\">Here is a temporary security code for your <span class=\"il\">Ticket</span> Account. It can only be used once within the next <strong><span>4</span></strong> minutes, after which it will expire:<span> </span><span></span></p>\n
-    <p style=\"margin-bottom:15px;list-style-type:disc\"><strong><span>${generatedCode}</span></strong></p>\n
-    <p style=\"margin-bottom:15px;list-style-type:disc\">&nbsp;</p>\n
-    <p style=\"margin-bottom:15px;list-style-type:disc\">Did you receive this email without having an active request from <span class=\"il\">Ticket</span> to enter a verification code? If so, the security of your <span class=\"il\">Ticket</span> account may be compromised. Please <a style=\"color:#3498db;text-decoration:underline\" href=\"https://tracking.Ticket.com/CL0/https:%2F%2Faccount.Ticket.com%2Fen-US%2Fsecurity-settings/1/010001841faef37d-c20488a4-b30e-4fa4-9e7f-606b667d8f92-000000/ihKv13KNrvfs8QMB_KmMN4Yx57IuCzuePTLiiSpcSmA=272\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://tracking.Ticket.com/CL0/https:%252F%252Faccount.Ticket.com%252Fen-US%252Fsecurity-settings/1/010001841faef37d-c20488a4-b30e-4fa4-9e7f-606b667d8f92-000000/ihKv13KNrvfs8QMB_KmMN4Yx57IuCzuePTLiiSpcSmA%3D272&amp;source=gmail&amp;ust=1667734588528000&amp;usg=AOvVaw2_GXIa0jxG0yiPN_CQf2W0\">change your password</a>&nbsp;as soon as possible.</p>\n
-    <p style=\"margin-bottom:15px;list-style-type:disc\">&nbsp;</p>\n
-    <p style=\"margin-bottom:15px;list-style-type:disc\"><span>Sincerely,</span></p>\n
-    <p style=\"margin-bottom:15px;list-style-type:disc\"><span>Your <span class=\"il\">Ticket</span> Team</span></p>\n
-    </td>\n
-    </tr>\n
-    </tbody>`
+    return `<tbody>
+    <tbody>
+  <tr>
+    <td style="font-family: Verdana, sans-serif; background-color: #f0f7f0; padding: 20px;">
+      <table style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; border: 1px solid #0E9F6E;">
+        <tr>
+          <td style="background-color: #0E9F6E; color: white; text-align: center; padding: 15px; border-radius: 8px 8px 0 0;">
+            <h2 style="margin: 0;">Agelgil Security Code</h2>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 20px; color: #0E9F6E;">
+            <p style="margin-bottom: 15px;">Hi,</p>
+            <p style="margin-bottom: 15px;">
+              Here is a temporary security code for your <strong>Agelgil</strong> account. It can only be used once within the next <strong>4 minutes</strong>, after which it will expire:
+            </p>
+            <p style="font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #0E9F6E;">${generatedCode}</p>
+            <p style="margin-bottom: 15px;">
+              If you did not request a verification code, your <strong>Agelgil</strong> account may be compromised. Please 
+              <a href="https://tracking.Agelgil.com/CL0/https:%2F%2Faccount.Agelgil.com%2Fen-US%2Fsecurity-settings/1/010001841faef37d-c20488a4-b30e-4fa4-9e7f-606b667d8f92-000000/ihKv13KNrvfs8QMB_KmMN4Yx57IuCzuePTLiiSpcSmA=272" target="_blank" style="color: #0E9F6E; text-decoration: underline;">
+                change your password
+              </a>
+              as soon as possible.
+            </p>
+            <p style="margin-bottom: 15px;">Sincerely,</p>
+            <p style="margin-bottom: 15px;"><strong>Your Agelgil Team</strong></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center; padding: 10px; font-size: 12px; color: #666666;">
+            © 2024 Agelgil. All rights reserved.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</tbody>
+
+    `
 }

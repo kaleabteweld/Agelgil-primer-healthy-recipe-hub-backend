@@ -82,7 +82,7 @@ publicUserRouter.patch('/forgotPassword/email/:otp/:email/:newPassword', MakeErr
     }
 ));
 
-publicUserRouter.get('/emailOtp/:email', MakeErrorHandler(
+publicUserRouter.get('/sendEmailOtp/:email', MakeErrorHandler(
     async (req: Request, res: Response) => {
 
         const email: string = req.params.email;

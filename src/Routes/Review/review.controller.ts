@@ -8,7 +8,6 @@ import UserModel from "../../Schema/user/user.schema";
 import { EXpType, IUser } from "../../Schema/user/user.type";
 import { IPagination, IResponseType } from "../../Types";
 import Neo4jClient from "../../Util/Neo4j/neo4jClient";
-import { PushMessageBuilder, sendPushNotification, TopicMessageBuilder } from "../../Util/push notifications";
 
 
 export default class ReviewController {

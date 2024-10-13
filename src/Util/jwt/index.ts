@@ -101,3 +101,103 @@ export function makeAuthHeaders(res: Response, headers: { accessToken: string, r
 export function removeRefreshToken(userId: string) {
     redisCache.removeRefreshToken(userId);
 }
+export default class TokenService {
+    private static instance: TokenService;
+    private redisCache: RedisCache;
+
+    private constructor() {
+        this.redisCache = RedisCache.getInstance();
+    }
+
+    public static getInstance(): TokenService {
+        if (!TokenService.instance) {
+            TokenService.instance = new TokenService();
+        }
+        return TokenService.instance;
+    }
+
+    public async makeTokens(user: any, userType: UserType) {
+        try {
+            const tokenKey = TokenSecret(userType, TokenType.accessToken);
+            const refreshKey = TokenSecret(userType, TokenType.refreshToken);
+            if (tokenKey === undefined || refreshKey === undefined) throw Error("No Env");
+
+            const accessToken = Jwt.sign({ id: user.id, type: userType }, tokenKey); // expiresIn: "2h",
+            const refreshToken = Jwt.sign({ id: user.id }, refreshKey, { expiresIn: "2w" });
+
+            await this.redisCache.removeRefreshToken(user.id);
+
+            const ttl: number = (Jwt.decode(refreshToken) as Jwt.JwtPayload).exp ?? 145152000;
+
+            await this.redisCache.addRefreshToken(refreshToken, user.id, ttl);
+
+            return { accessToken, refreshToken };
+        } catch (error: any) {
+            throw {
+                msg: error.message ?? "No Valid Token",
+                statusCode: 400,
+                type: "token"
+            };
+        }
+    }
+
+    public async verifyAccessToken<T>(token: string, userType: UserType): Promise<T> {
+        try {
+            const decoded = Jwt.decode(token, { complete: true });
+            if (decoded === null) throw Error("No Valid Token");
+            if (!Object.keys((decoded?.payload as Jwt.JwtPayload)).includes("id")) throw Error("No Valid Token");
+
+            const userId = (decoded?.payload as Jwt.JwtPayload).id;
+            if (userId == undefined) throw Error("No Valid Token");
+
+            const tokenKey = TokenSecret(userType, TokenType.accessToken);
+            if (tokenKey === undefined) throw Error("No Env");
+
+            const jwtDecoded = Jwt.verify(token, tokenKey ?? "");
+            return jwtDecoded as T;
+        } catch (error: any) {
+            console.log("[-] verifyAccessToken error", error);
+            throw {
+                msg: error.message ?? "No Valid Token",
+                statusCode: 400,
+                type: "token"
+            };
+        }
+    }
+
+    public async verifyRefreshToken<T>(_refreshToken: string, userType: UserType): Promise<T> {
+        try {
+            const decoded = Jwt.decode(_refreshToken, { complete: true });
+            if (decoded === null) throw Error("No Valid Token");
+            if (!Object.keys((decoded?.payload as Jwt.JwtPayload)).includes("id")) throw Error("No Valid Token");
+
+            const userId = (decoded?.payload as Jwt.JwtPayload).id;
+            if (userId == undefined) throw Error("No Valid Token");
+
+            const refreshToken = await this.redisCache.getRefreshToken(userId);
+
+            if ((refreshToken === undefined || refreshToken === null) || _refreshToken !== refreshToken) throw Error("No Valid Token [Cache]");
+
+            const refreshKey = TokenSecret(userType, TokenType.refreshToken);
+            if (refreshKey === undefined) throw Error("No Env");
+
+            const user = await Jwt.verify(refreshToken, refreshKey);
+            return user as T;
+        } catch (error: any) {
+            throw {
+                msg: error.message ?? "No Valid Token",
+                statusCode: 400,
+                type: "token"
+            };
+        }
+    }
+
+    public removeRefreshToken(userId: string) {
+        this.redisCache.removeRefreshToken(userId);
+    }
+
+    static makeAuthHeaders(res: Response, headers: { accessToken: string, refreshToken: string }) {
+        res.header("Authorization", "Bearer " + headers.accessToken);
+        res.header("RefreshToken", "Bearer " + headers.refreshToken);
+    }
+}

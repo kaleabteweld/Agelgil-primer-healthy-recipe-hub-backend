@@ -111,25 +111,40 @@ function emailHtml(generatedCode: string) {
     `
 }
 export class EmailService {
+
   private transporter;
   private redisCache;
 
-  constructor() {
+  private host;
+  private port;
+  private secure = false;
+  private user;
+  private pass;
+
+  constructor({ host, port, user, pass }: { host: string, port: number, user: string, pass: string }) {
+
+    this.host = host ?? process.env.EMAIL_HOST ?? "";
+    this.port = port ?? parseInt(process.env.EMAIL_PORT ?? '-1') ?? -1;
+    if (this.port == 465) this.secure = true;
+    this.user = user ?? process.env.EMAIL_USER ?? "";
+    this.pass = pass ?? process.env.EMAIL_PASS ?? "";
+
     this.transporter = nodemailer.createTransport({
-      host: "mail.sweaven.dev",
-      port: 465,
-      secure: true, // true for 465, false for other ports
+      host: this.host,
+      port: this.port,
+      secure: true,
       auth: {
-        user: "auth@sweaven.dev", // generated ethereal user
-        pass: "]_kti~_ImkAJ", // generated ethereal password
+        user: this.user,
+        pass: this.pass,
       },
     });
 
     this.redisCache = new EmailOtpRedisCache();
   }
 
-  public async sendEmailOtp(email: string): Promise<string> {
+  public async sendEmailOtp(email: string, { from = '"ticket-master-authentication 👻" <auth@sweaven.dev>' }: { from?: string }): Promise<string> {
     email = email.toLowerCase();
+
     const generatedCode: string = otpGenerator.generate(6, {
       digits: true,
       lowerCaseAlphabets: false,
@@ -139,7 +154,7 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail({
-        from: '"ticket-master-authentication 👻" <auth@sweaven.dev>', // sender address
+        from,
         to: `${email}`,
         subject: `${generatedCode}`,
         html: this.emailHtml(generatedCode),

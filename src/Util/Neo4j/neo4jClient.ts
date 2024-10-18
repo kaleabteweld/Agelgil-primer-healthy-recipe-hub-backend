@@ -32,83 +32,89 @@ export default class Neo4jClient {
     }
 
     async recommendRecipesForUser(userId: string, time: TPreferredMealTime | 'all', pagination: IPagination) {
-        const result = await this.session.run(
-             /* cypher */`
-             // Match the current user's preferences, conditions, and allergies
-                MATCH (u:User {id: $userId})-[:PREFERS]->(dp:DietaryPreference)
-                MATCH (u)-[:HAS_CONDITION]->(mc:MedicalCondition)
-                MATCH (u)-[:ALLERGIC_TO]->(a:Allergy)
+        try {
+            const result = await this.session.run(
+                /* cypher */`
+                // Match the current user's preferences, conditions, and allergies
+                   MATCH (u:User {id: $userId})-[:PREFERS]->(dp:DietaryPreference)
+                   MATCH (u)-[:HAS_CONDITION]->(mc:MedicalCondition)
+                   MATCH (u)-[:ALLERGIC_TO]->(a:Allergy)
+   
+               // Find similar users based on shared preferences, conditions, or allergies
+               MATCH (similarUser:User)-[:PREFERS]->(dp)
+               MATCH (similarUser)-[:HAS_CONDITION]->(mc)
+               MATCH (similarUser)-[:ALLERGIC_TO]->(a)
+   
+               //Find recipes that match the user's preferences and do not have disliked attributes
+               MATCH (r:Recipe)
+               WHERE 
+                   (r)-[:PREFERS]->(dp) OR 
+                   NOT EXISTS((r)-[:ALLERGIC_TO]->(a)) OR
+                   (r)-[:HAS_CONDITION]->(mc) OR
+                   ($time = 'all' OR (r)-[:PREFERRED_MEAL_TIME]->(:PreferredMealTime {name: $time}))
+   
+               //Check if similar users have BOOKED or REVIEWED the recipe
+               OPTIONAL MATCH (similarUser)-[:BOOKED]->(r)
+               OPTIONAL MATCH (similarUser)-[:REVIEWED]->(r)
+   
+               //Calculate review statistics for the current user
+               OPTIONAL MATCH (u)-[review:REVIEWED]->(r)
+               WITH r, 
+                   COUNT(CASE WHEN review.rating >= 3 THEN 1 ELSE null END) AS userPositiveReviews,  // Positive reviews by the user
+                   COUNT(CASE WHEN review.rating < 3 THEN 1 ELSE null END) AS userNegativeReviews,   // Negative reviews by the user
+                   
+                   //Count total positive and negative reviews by similar users
+                   COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 3}]->(r) THEN 1 ELSE null END) AS similarUserPositiveReviews, 
+                   COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 1}]->(r) THEN 1 ELSE null END) AS similarUserNegativeReviews,
+                   
+                   //Calculate total reviews by any user
+                   COUNT { MATCH (:User)-[reviewPos:REVIEWED]->(r) WHERE reviewPos.rating >= 3 RETURN 1 } AS totalPositiveReviews,
+                   COUNT { MATCH (:User)-[reviewNeg:REVIEWED]->(r) WHERE reviewNeg.rating < 3 RETURN 1 } AS totalNegativeReviews
+   
+               //Calculate the probabilities using Naive Bayes formula components
+               WITH r, 
+                   userPositiveReviews,
+                   userNegativeReviews,
+                   similarUserPositiveReviews,
+                   similarUserNegativeReviews,
+                   totalPositiveReviews, 
+                   totalNegativeReviews,
+   
+               // Prior probability P(Like) based on total reviews
+               toFloat(totalPositiveReviews) / NULLIF((totalPositiveReviews + totalNegativeReviews), 0) AS P_Like,  
+               
+               // Conditional probability P(UserLikes | Recipe) with Laplace smoothing for user's positive reviews
+               toFloat(userPositiveReviews + similarUserPositiveReviews + 1) / (NULLIF(totalPositiveReviews, 0) + 2) AS P_UserLikesGivenRecipe,  
+               
+               // Conditional probability P(UserDislikes | Recipe) with Laplace smoothing for user's negative reviews
+               toFloat(userNegativeReviews + similarUserNegativeReviews + 1) / (NULLIF(totalNegativeReviews, 0) + 2) AS P_UserDislikesGivenRecipe  
+   
+               //Calculate the Naive Bayes score
+               WITH r, 
+                   P_Like * P_UserLikesGivenRecipe AS score
+   
+               WHERE score IS NOT NULL
+   
+               RETURN r, score
+               ORDER BY score DESC
+               SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)
+   
+               `,
+                { userId, time, skip: pagination.skip ?? 0, limit: pagination.limit ?? 10 }
+            );
 
-            // Find similar users based on shared preferences, conditions, or allergies
-            MATCH (similarUser:User)-[:PREFERS]->(dp)
-            MATCH (similarUser)-[:HAS_CONDITION]->(mc)
-            MATCH (similarUser)-[:ALLERGIC_TO]->(a)
+            const recommendations = result.records.map((record) => {
+                const recipe = record.get('r').properties;
+                const score = record.get('score');
+                return { ...recipe, score };
+            });
 
-            //Find recipes that match the user's preferences and do not have disliked attributes
-            MATCH (r:Recipe)
-            WHERE 
-                (r)-[:PREFERS]->(dp) OR 
-                NOT EXISTS((r)-[:ALLERGIC_TO]->(a)) OR
-                (r)-[:HAS_CONDITION]->(mc) OR
-                ($time = 'all' OR (r)-[:PREFERRED_MEAL_TIME]->(:PreferredMealTime {name: $time}))
+            return recommendations;
+        } catch (error) {
+            console.error('Error updating user:', error);
+            throw error;
+        }
 
-            //Check if similar users have BOOKED or REVIEWED the recipe
-            OPTIONAL MATCH (similarUser)-[:BOOKED]->(r)
-            OPTIONAL MATCH (similarUser)-[:REVIEWED]->(r)
-
-            //Calculate review statistics for the current user
-            OPTIONAL MATCH (u)-[review:REVIEWED]->(r)
-            WITH r, 
-                COUNT(CASE WHEN review.rating >= 3 THEN 1 ELSE null END) AS userPositiveReviews,  // Positive reviews by the user
-                COUNT(CASE WHEN review.rating < 3 THEN 1 ELSE null END) AS userNegativeReviews,   // Negative reviews by the user
-                
-                //Count total positive and negative reviews by similar users
-                COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 3}]->(r) THEN 1 ELSE null END) AS similarUserPositiveReviews, 
-                COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 1}]->(r) THEN 1 ELSE null END) AS similarUserNegativeReviews,
-                
-                //Calculate total reviews by any user
-                COUNT { MATCH (:User)-[reviewPos:REVIEWED]->(r) WHERE reviewPos.rating >= 3 RETURN 1 } AS totalPositiveReviews,
-                COUNT { MATCH (:User)-[reviewNeg:REVIEWED]->(r) WHERE reviewNeg.rating < 3 RETURN 1 } AS totalNegativeReviews
-
-            //Calculate the probabilities using Naive Bayes formula components
-            WITH r, 
-                userPositiveReviews,
-                userNegativeReviews,
-                similarUserPositiveReviews,
-                similarUserNegativeReviews,
-                totalPositiveReviews, 
-                totalNegativeReviews,
-
-            // Prior probability P(Like) based on total reviews
-            toFloat(totalPositiveReviews) / NULLIF((totalPositiveReviews + totalNegativeReviews), 0) AS P_Like,  
-            
-            // Conditional probability P(UserLikes | Recipe) with Laplace smoothing for user's positive reviews
-            toFloat(userPositiveReviews + similarUserPositiveReviews + 1) / (NULLIF(totalPositiveReviews, 0) + 2) AS P_UserLikesGivenRecipe,  
-            
-            // Conditional probability P(UserDislikes | Recipe) with Laplace smoothing for user's negative reviews
-            toFloat(userNegativeReviews + similarUserNegativeReviews + 1) / (NULLIF(totalNegativeReviews, 0) + 2) AS P_UserDislikesGivenRecipe  
-
-            //Calculate the Naive Bayes score
-            WITH r, 
-                P_Like * P_UserLikesGivenRecipe AS score
-
-            WHERE score IS NOT NULL
-
-            RETURN r, score
-            ORDER BY score DESC
-            SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)
-
-            `,
-            { userId, time, skip: pagination.skip ?? 0, limit: pagination.limit ?? 10 }
-        );
-
-        const recommendations = result.records.map((record) => {
-            const recipe = record.get('r').properties;
-            const score = record.get('score');
-            return { ...recipe, score };
-        });
-
-        return recommendations;
     }
 
 
@@ -553,10 +559,16 @@ export default class Neo4jClient {
                 for (const document of documents) {
                     if (model.modelName === 'User') {
                         await this.addUser(document as IUser);
+                        for (let index = 0; index < (document as any).booked_recipes.length; index++) {
+                            const recipeId = (document as any).booked_recipes[index];
+                            await this.addBookRecipe((document as any)._id.toString(), recipeId.toString());
+                        }
                     } else if (model.modelName === 'Recipe') {
                         if ((document as IRecipe).status == ERecipeStatus.verified) {
                             await this.addRecipe(document as IRecipe);
                         }
+                    } else if (model.modelName === 'Review') {
+                        await this.addReviewToRecipe((document as IReview).recipe.toString(), (document as IReview).user.toString(), document as IReview);
                     }
                 }
             }

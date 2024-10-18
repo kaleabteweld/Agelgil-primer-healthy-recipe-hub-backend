@@ -7,6 +7,7 @@ import { Datasx } from "./Util/Datasx";
 import Neo4jClient from "./Util/Neo4j/neo4jClient";
 import UserModel from "./Schema/user/user.schema";
 import RecipeModel from "./Schema/Recipe/recipe.schema";
+import ReviewModel from "./Schema/Review/review.schema";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV?.trim()}` });
 console.log(`[+] running on ${process.env.NODE_ENV?.trim()} mode`)
@@ -25,7 +26,7 @@ mongoose.connect(process.env.DATABASE_URL ?? "").catch((error) => {
     console.log("[+] Ingredients Seeded");
 
     try {
-        await Neo4jClient.getInstance({}).seedDatabase<any>([UserModel, RecipeModel])
+        await Neo4jClient.getInstance({}).seedDatabase<any>([UserModel, RecipeModel, ReviewModel])
         console.log("[+] Neo4j Database Seeded");
     } catch (error) {
         console.log("[-] Error Seeding Neo4j Database", error);

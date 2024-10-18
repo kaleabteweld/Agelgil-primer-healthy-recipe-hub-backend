@@ -200,7 +200,7 @@ export default class RecipeController {
     /* istanbul ignore file */
     static async recommendation(user: IUser, time: TPreferredMealTime, pagination: IPagination): Promise<IResponseType<IRecipe[]>> {
         const _user = await UserModel.getById(user.id as any)
-        const recommendations = await Neo4jClient.getInstance({}).recommendRecipesForUser(_user.id as any, time, pagination);
+        const recommendations = await (Neo4jClient.getInstance({}).recommendRecipesForUser(_user.id as any, time, pagination));
         return {
             body: recommendations
         }

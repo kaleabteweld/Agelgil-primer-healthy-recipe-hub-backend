@@ -6,6 +6,7 @@ import { MakeValidator } from "../../../Util";
 import { IMealPlanner, INewMealPlanner, INutritionGoal } from "./mealPlanner.type";
 import { EPreferredMealTime, IngredientDetail } from "../../Recipe/recipe.type";
 import { NutritionData } from "../../../Util/calorieninjas/types";
+import { calculateNutritionNeeds } from "./mealPlanner.util";
 
 
 
@@ -332,7 +333,9 @@ export async function updateStats(this: mongoose.Model<IMealPlanner>, _id: strin
             };
         }
 
+        const nutritionGoal = await calculateNutritionNeeds(body);
         update.$set = {
+            nutritionGoal,
             'userStats.weight': body.weight,
             'userStats.height': body.height,
             'userStats.age': body.age,

@@ -9,7 +9,7 @@
     "start": "node dist/src/server.js",
     "test": "jest",
     "generate-coverage-badge": "jest-coverage-badges",
-    "prod": "set NODE_ENV=production && npm run build && npm run start"
+    "prod": "set NODE_ENV=production && nodemon src/server.ts"
   },
   "keywords": [],
   "author": "",

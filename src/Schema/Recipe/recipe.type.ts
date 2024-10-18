@@ -93,6 +93,7 @@ export interface IRecipeModel extends mongoose.Model<IRecipeDocument> {
     getRecipeByShareableLink(recipeId: string): Promise<IRecipe>
     getRecipesOwner(_id: string, showError?: Boolean): Promise<IUserDocument>
     getRecipes(_ids: string[]): Promise<IRecipe[]>
+    getRecipeImages(_id: string): Promise<string[]>
 }
 
 export interface INewRecipeFrom {

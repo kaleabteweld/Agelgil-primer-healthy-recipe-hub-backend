@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongooseErrorPlugin } from '../Middleware/errors.middleware';
-import { addModerator, checkIfUserOwnsRecipe, getById, getRecipeByShareableLink, getRecipes, getRecipesOwner, getRecipesReview, removeByID, update, validator } from './recipe.extended';
+import { addModerator, checkIfUserOwnsRecipe, getById, getRecipeByShareableLink, getRecipeImages, getRecipes, getRecipesOwner, getRecipesReview, removeByID, update, validator } from './recipe.extended';
 import { EPreferredMealTime, EPreparationDifficulty, ERecipeStatus, IRecipe, IRecipeMethods, IRecipeModel } from './recipe.type';
 import ShareableLink from '../../Util/ShareableLink';
 import { EAllergies, EChronicDisease, EDietaryPreferences } from '../user/user.type';
@@ -84,6 +84,7 @@ const recipeSchema = new Schema<IRecipe, IRecipeModel, IRecipeMethods>({
         getRecipeByShareableLink,
         getRecipesOwner,
         getRecipes,
+        getRecipeImages,
     }
 });
 

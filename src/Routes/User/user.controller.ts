@@ -108,4 +108,13 @@ export default class UserController {
         });
         return { body: {} };
     }
+
+    static async changePassword(userId: string = "", oldPassword: string = "", newPassword: string = ""): Promise<IResponseType<{}>> {
+        const user = await UserModel.getById(userId);
+        await user!.checkPassword(oldPassword);
+        await UserModel.update(user!.id, {
+            password: newPassword
+        });
+        return { body: {} };
+    }
 }

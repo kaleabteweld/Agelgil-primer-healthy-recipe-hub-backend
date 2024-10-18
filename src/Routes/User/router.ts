@@ -105,6 +105,14 @@ publicUserRouter.get('/emailOtp/verify/:email/:otp', MakeErrorHandler(
     }
 ));
 
+privateUserRouter.patch('/changePassword', userOnly, MakeErrorHandler(
+    async (req: any, res: Response) => {
+        const _user: IUser = req['user'];
+        res.json(await UserController.changePassword(_user.id, req.body.oldPassword, req.body.newPassword));
+    }
+));
+
+
 publicUserRouter.use("/user", publicUserRouter);
 privateUserRouter.use("/user", privateUserRouter);
 

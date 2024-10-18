@@ -554,22 +554,25 @@ export default class Neo4jClient {
     async seedDatabase<T>(Models: mongoose.Model<T>[]) {
         if (this._passive) return;
         try {
+            const tempBookedRecipes = []
             for (const model of Models) {
                 const documents = await model.find();
                 for (const document of documents) {
                     if (model.modelName === 'User') {
                         await this.addUser(document as IUser);
-                        for (let index = 0; index < (document as any).booked_recipes.length; index++) {
-                            const recipeId = (document as any).booked_recipes[index];
-                            await this.addBookRecipe((document as any)._id.toString(), recipeId.toString());
-                        }
+                        tempBookedRecipes.push({ id: (document as any)._id.toString(), bookedRecipes: (document as any).booked_recipes });
                     } else if (model.modelName === 'Recipe') {
                         if ((document as IRecipe).status == ERecipeStatus.verified) {
                             await this.addRecipe(document as IRecipe);
                         }
                     } else if (model.modelName === 'Review') {
-                        await this.addReviewToRecipe((document as IReview).recipe.toString(), (document as IReview).user.toString(), document as IReview);
+                        await this.addReviewToRecipe((document as IReview).recipe.toString(), (document as IReview).user.user.toString(), document as IReview);
                     }
+                }
+            }
+            for (const { bookedRecipes, id } of tempBookedRecipes) {
+                for (const recipeId of bookedRecipes) {
+                    await this.addBookRecipe(id, recipeId.toString());
                 }
             }
         } catch (error) {

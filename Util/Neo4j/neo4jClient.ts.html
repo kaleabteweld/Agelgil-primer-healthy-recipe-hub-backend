@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.7% </span>
+                <span class="strong">13.35% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>78/569</span>
+                <span class='fraction'>78/584</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.7% </span>
+                <span class="strong">13.35% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>78/569</span>
+                <span class='fraction'>78/584</span>
             </div>
         
             
@@ -632,7 +632,22 @@
 <a name='L567'></a><a href='#L567'>567</a>
 <a name='L568'></a><a href='#L568'>568</a>
 <a name='L569'></a><a href='#L569'>569</a>
-<a name='L570'></a><a href='#L570'>570</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L570'></a><a href='#L570'>570</a>
+<a name='L571'></a><a href='#L571'>571</a>
+<a name='L572'></a><a href='#L572'>572</a>
+<a name='L573'></a><a href='#L573'>573</a>
+<a name='L574'></a><a href='#L574'>574</a>
+<a name='L575'></a><a href='#L575'>575</a>
+<a name='L576'></a><a href='#L576'>576</a>
+<a name='L577'></a><a href='#L577'>577</a>
+<a name='L578'></a><a href='#L578'>578</a>
+<a name='L579'></a><a href='#L579'>579</a>
+<a name='L580'></a><a href='#L580'>580</a>
+<a name='L581'></a><a href='#L581'>581</a>
+<a name='L582'></a><a href='#L582'>582</a>
+<a name='L583'></a><a href='#L583'>583</a>
+<a name='L584'></a><a href='#L584'>584</a>
+<a name='L585'></a><a href='#L585'>585</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -666,6 +681,12 @@
 <span class="cline-any cline-yes">116x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1180,6 +1201,15 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1235,83 +1265,89 @@ export default class Neo4jClient {
     }
 &nbsp;
     async <span class="fstat-no" title="function not covered" >recommendRecipesForUser(userId: string, time: TPreferredMealTime | 'all', pagination: IPagination) {</span>
-<span class="cstat-no" title="statement not covered" >        const result = await this.session.run(</span>
-<span class="cstat-no" title="statement not covered" >             /* cypher */`</span>
-<span class="cstat-no" title="statement not covered" >             // Match the current user's preferences, conditions, and allergies</span>
-<span class="cstat-no" title="statement not covered" >                MATCH (u:User {id: $userId})-[:PREFERS]-&gt;(dp:DietaryPreference)</span>
-<span class="cstat-no" title="statement not covered" >                MATCH (u)-[:HAS_CONDITION]-&gt;(mc:MedicalCondition)</span>
-<span class="cstat-no" title="statement not covered" >                MATCH (u)-[:ALLERGIC_TO]-&gt;(a:Allergy)</span>
+<span class="cstat-no" title="statement not covered" >        try {</span>
+<span class="cstat-no" title="statement not covered" >            const result = await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                /* cypher */`</span>
+<span class="cstat-no" title="statement not covered" >                // Match the current user's preferences, conditions, and allergies</span>
+<span class="cstat-no" title="statement not covered" >                   MATCH (u:User {id: $userId})-[:PREFERS]-&gt;(dp:DietaryPreference)</span>
+<span class="cstat-no" title="statement not covered" >                   MATCH (u)-[:HAS_CONDITION]-&gt;(mc:MedicalCondition)</span>
+<span class="cstat-no" title="statement not covered" >                   MATCH (u)-[:ALLERGIC_TO]-&gt;(a:Allergy)</span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               // Find similar users based on shared preferences, conditions, or allergies</span>
+<span class="cstat-no" title="statement not covered" >               MATCH (similarUser:User)-[:PREFERS]-&gt;(dp)</span>
+<span class="cstat-no" title="statement not covered" >               MATCH (similarUser)-[:HAS_CONDITION]-&gt;(mc)</span>
+<span class="cstat-no" title="statement not covered" >               MATCH (similarUser)-[:ALLERGIC_TO]-&gt;(a)</span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               //Find recipes that match the user's preferences and do not have disliked attributes</span>
+<span class="cstat-no" title="statement not covered" >               MATCH (r:Recipe)</span>
+<span class="cstat-no" title="statement not covered" >               WHERE </span>
+<span class="cstat-no" title="statement not covered" >                   (r)-[:PREFERS]-&gt;(dp) OR </span>
+<span class="cstat-no" title="statement not covered" >                   NOT EXISTS((r)-[:ALLERGIC_TO]-&gt;(a)) OR</span>
+<span class="cstat-no" title="statement not covered" >                   (r)-[:HAS_CONDITION]-&gt;(mc) OR</span>
+<span class="cstat-no" title="statement not covered" >                   ($time = 'all' OR (r)-[:PREFERRED_MEAL_TIME]-&gt;(:PreferredMealTime {name: $time}))</span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               //Check if similar users have BOOKED or REVIEWED the recipe</span>
+<span class="cstat-no" title="statement not covered" >               OPTIONAL MATCH (similarUser)-[:BOOKED]-&gt;(r)</span>
+<span class="cstat-no" title="statement not covered" >               OPTIONAL MATCH (similarUser)-[:REVIEWED]-&gt;(r)</span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               //Calculate review statistics for the current user</span>
+<span class="cstat-no" title="statement not covered" >               OPTIONAL MATCH (u)-[review:REVIEWED]-&gt;(r)</span>
+<span class="cstat-no" title="statement not covered" >               WITH r, </span>
+<span class="cstat-no" title="statement not covered" >                   COUNT(CASE WHEN review.rating &gt;= 3 THEN 1 ELSE null END) AS userPositiveReviews,  // Positive reviews by the user</span>
+<span class="cstat-no" title="statement not covered" >                   COUNT(CASE WHEN review.rating &lt; 3 THEN 1 ELSE null END) AS userNegativeReviews,   // Negative reviews by the user</span>
+<span class="cstat-no" title="statement not covered" >                   </span>
+<span class="cstat-no" title="statement not covered" >                   //Count total positive and negative reviews by similar users</span>
+<span class="cstat-no" title="statement not covered" >                   COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 3}]-&gt;(r) THEN 1 ELSE null END) AS similarUserPositiveReviews, </span>
+<span class="cstat-no" title="statement not covered" >                   COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 1}]-&gt;(r) THEN 1 ELSE null END) AS similarUserNegativeReviews,</span>
+<span class="cstat-no" title="statement not covered" >                   </span>
+<span class="cstat-no" title="statement not covered" >                   //Calculate total reviews by any user</span>
+<span class="cstat-no" title="statement not covered" >                   COUNT { MATCH (:User)-[reviewPos:REVIEWED]-&gt;(r) WHERE reviewPos.rating &gt;= 3 RETURN 1 } AS totalPositiveReviews,</span>
+<span class="cstat-no" title="statement not covered" >                   COUNT { MATCH (:User)-[reviewNeg:REVIEWED]-&gt;(r) WHERE reviewNeg.rating &lt; 3 RETURN 1 } AS totalNegativeReviews</span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               //Calculate the probabilities using Naive Bayes formula components</span>
+<span class="cstat-no" title="statement not covered" >               WITH r, </span>
+<span class="cstat-no" title="statement not covered" >                   userPositiveReviews,</span>
+<span class="cstat-no" title="statement not covered" >                   userNegativeReviews,</span>
+<span class="cstat-no" title="statement not covered" >                   similarUserPositiveReviews,</span>
+<span class="cstat-no" title="statement not covered" >                   similarUserNegativeReviews,</span>
+<span class="cstat-no" title="statement not covered" >                   totalPositiveReviews, </span>
+<span class="cstat-no" title="statement not covered" >                   totalNegativeReviews,</span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               // Prior probability P(Like) based on total reviews</span>
+<span class="cstat-no" title="statement not covered" >               toFloat(totalPositiveReviews) / NULLIF((totalPositiveReviews + totalNegativeReviews), 0) AS P_Like,  </span>
+<span class="cstat-no" title="statement not covered" >               </span>
+<span class="cstat-no" title="statement not covered" >               // Conditional probability P(UserLikes | Recipe) with Laplace smoothing for user's positive reviews</span>
+<span class="cstat-no" title="statement not covered" >               toFloat(userPositiveReviews + similarUserPositiveReviews + 1) / (NULLIF(totalPositiveReviews, 0) + 2) AS P_UserLikesGivenRecipe,  </span>
+<span class="cstat-no" title="statement not covered" >               </span>
+<span class="cstat-no" title="statement not covered" >               // Conditional probability P(UserDislikes | Recipe) with Laplace smoothing for user's negative reviews</span>
+<span class="cstat-no" title="statement not covered" >               toFloat(userNegativeReviews + similarUserNegativeReviews + 1) / (NULLIF(totalNegativeReviews, 0) + 2) AS P_UserDislikesGivenRecipe  </span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               //Calculate the Naive Bayes score</span>
+<span class="cstat-no" title="statement not covered" >               WITH r, </span>
+<span class="cstat-no" title="statement not covered" >                   P_Like * P_UserLikesGivenRecipe AS score</span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               WHERE score IS NOT NULL</span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               RETURN r, score</span>
+<span class="cstat-no" title="statement not covered" >               ORDER BY score DESC</span>
+<span class="cstat-no" title="statement not covered" >               SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)</span>
+<span class="cstat-no" title="statement not covered" >   </span>
+<span class="cstat-no" title="statement not covered" >               `,</span>
+<span class="cstat-no" title="statement not covered" >                { userId, time, skip: pagination.skip ?? 0, limit: pagination.limit ?? 10 }</span>
+<span class="cstat-no" title="statement not covered" >            );</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            // Find similar users based on shared preferences, conditions, or allergies</span>
-<span class="cstat-no" title="statement not covered" >            MATCH (similarUser:User)-[:PREFERS]-&gt;(dp)</span>
-<span class="cstat-no" title="statement not covered" >            MATCH (similarUser)-[:HAS_CONDITION]-&gt;(mc)</span>
-<span class="cstat-no" title="statement not covered" >            MATCH (similarUser)-[:ALLERGIC_TO]-&gt;(a)</span>
+<span class="cstat-no" title="statement not covered" >            const recommendations = result.records.map((record) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                const recipe = record.get('r').properties;</span>
+<span class="cstat-no" title="statement not covered" >                const score = record.get('score');</span>
+<span class="cstat-no" title="statement not covered" >                return { ...recipe, score };</span>
+<span class="cstat-no" title="statement not covered" >            });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            //Find recipes that match the user's preferences and do not have disliked attributes</span>
-<span class="cstat-no" title="statement not covered" >            MATCH (r:Recipe)</span>
-<span class="cstat-no" title="statement not covered" >            WHERE </span>
-<span class="cstat-no" title="statement not covered" >                (r)-[:PREFERS]-&gt;(dp) OR </span>
-<span class="cstat-no" title="statement not covered" >                NOT EXISTS((r)-[:ALLERGIC_TO]-&gt;(a)) OR</span>
-<span class="cstat-no" title="statement not covered" >                (r)-[:HAS_CONDITION]-&gt;(mc) OR</span>
-<span class="cstat-no" title="statement not covered" >                ($time = 'all' OR (r)-[:PREFERRED_MEAL_TIME]-&gt;(:PreferredMealTime {name: $time}))</span>
+<span class="cstat-no" title="statement not covered" >            return recommendations;</span>
+<span class="cstat-no" title="statement not covered" >        } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >            console.error('Error updating user:', error);</span>
+<span class="cstat-no" title="statement not covered" >            throw error;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            //Check if similar users have BOOKED or REVIEWED the recipe</span>
-<span class="cstat-no" title="statement not covered" >            OPTIONAL MATCH (similarUser)-[:BOOKED]-&gt;(r)</span>
-<span class="cstat-no" title="statement not covered" >            OPTIONAL MATCH (similarUser)-[:REVIEWED]-&gt;(r)</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            //Calculate review statistics for the current user</span>
-<span class="cstat-no" title="statement not covered" >            OPTIONAL MATCH (u)-[review:REVIEWED]-&gt;(r)</span>
-<span class="cstat-no" title="statement not covered" >            WITH r, </span>
-<span class="cstat-no" title="statement not covered" >                COUNT(CASE WHEN review.rating &gt;= 3 THEN 1 ELSE null END) AS userPositiveReviews,  // Positive reviews by the user</span>
-<span class="cstat-no" title="statement not covered" >                COUNT(CASE WHEN review.rating &lt; 3 THEN 1 ELSE null END) AS userNegativeReviews,   // Negative reviews by the user</span>
-<span class="cstat-no" title="statement not covered" >                </span>
-<span class="cstat-no" title="statement not covered" >                //Count total positive and negative reviews by similar users</span>
-<span class="cstat-no" title="statement not covered" >                COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 3}]-&gt;(r) THEN 1 ELSE null END) AS similarUserPositiveReviews, </span>
-<span class="cstat-no" title="statement not covered" >                COUNT(CASE WHEN (similarUser)-[:REVIEWED {rating: 1}]-&gt;(r) THEN 1 ELSE null END) AS similarUserNegativeReviews,</span>
-<span class="cstat-no" title="statement not covered" >                </span>
-<span class="cstat-no" title="statement not covered" >                //Calculate total reviews by any user</span>
-<span class="cstat-no" title="statement not covered" >                COUNT { MATCH (:User)-[reviewPos:REVIEWED]-&gt;(r) WHERE reviewPos.rating &gt;= 3 RETURN 1 } AS totalPositiveReviews,</span>
-<span class="cstat-no" title="statement not covered" >                COUNT { MATCH (:User)-[reviewNeg:REVIEWED]-&gt;(r) WHERE reviewNeg.rating &lt; 3 RETURN 1 } AS totalNegativeReviews</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            //Calculate the probabilities using Naive Bayes formula components</span>
-<span class="cstat-no" title="statement not covered" >            WITH r, </span>
-<span class="cstat-no" title="statement not covered" >                userPositiveReviews,</span>
-<span class="cstat-no" title="statement not covered" >                userNegativeReviews,</span>
-<span class="cstat-no" title="statement not covered" >                similarUserPositiveReviews,</span>
-<span class="cstat-no" title="statement not covered" >                similarUserNegativeReviews,</span>
-<span class="cstat-no" title="statement not covered" >                totalPositiveReviews, </span>
-<span class="cstat-no" title="statement not covered" >                totalNegativeReviews,</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            // Prior probability P(Like) based on total reviews</span>
-<span class="cstat-no" title="statement not covered" >            toFloat(totalPositiveReviews) / NULLIF((totalPositiveReviews + totalNegativeReviews), 0) AS P_Like,  </span>
-<span class="cstat-no" title="statement not covered" >            </span>
-<span class="cstat-no" title="statement not covered" >            // Conditional probability P(UserLikes | Recipe) with Laplace smoothing for user's positive reviews</span>
-<span class="cstat-no" title="statement not covered" >            toFloat(userPositiveReviews + similarUserPositiveReviews + 1) / (NULLIF(totalPositiveReviews, 0) + 2) AS P_UserLikesGivenRecipe,  </span>
-<span class="cstat-no" title="statement not covered" >            </span>
-<span class="cstat-no" title="statement not covered" >            // Conditional probability P(UserDislikes | Recipe) with Laplace smoothing for user's negative reviews</span>
-<span class="cstat-no" title="statement not covered" >            toFloat(userNegativeReviews + similarUserNegativeReviews + 1) / (NULLIF(totalNegativeReviews, 0) + 2) AS P_UserDislikesGivenRecipe  </span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            //Calculate the Naive Bayes score</span>
-<span class="cstat-no" title="statement not covered" >            WITH r, </span>
-<span class="cstat-no" title="statement not covered" >                P_Like * P_UserLikesGivenRecipe AS score</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            WHERE score IS NOT NULL</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            RETURN r, score</span>
-<span class="cstat-no" title="statement not covered" >            ORDER BY score DESC</span>
-<span class="cstat-no" title="statement not covered" >            SKIP TOINTEGER($skip) LIMIT TOINTEGER($limit)</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            `,</span>
-<span class="cstat-no" title="statement not covered" >            { userId, time, skip: pagination.skip ?? 0, limit: pagination.limit ?? 10 }</span>
-<span class="cstat-no" title="statement not covered" >        );</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        const recommendations = result.records.map((record) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            const recipe = record.get('r').properties;</span>
-<span class="cstat-no" title="statement not covered" >            const score = record.get('score');</span>
-<span class="cstat-no" title="statement not covered" >            return { ...recipe, score };</span>
-<span class="cstat-no" title="statement not covered" >        });</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        return recommendations;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
 &nbsp;
@@ -1751,16 +1787,25 @@ export default class Neo4jClient {
     async <span class="fstat-no" title="function not covered" >seedDatabase&lt;T&gt;(Models: mongoose.Model&lt;T&gt;[]) {</span>
 <span class="cstat-no" title="statement not covered" >        if (this._passive) return;</span>
 <span class="cstat-no" title="statement not covered" >        try {</span>
+<span class="cstat-no" title="statement not covered" >            const tempBookedRecipes = []</span>
 <span class="cstat-no" title="statement not covered" >            for (const model of Models) {</span>
 <span class="cstat-no" title="statement not covered" >                const documents = await model.find();</span>
 <span class="cstat-no" title="statement not covered" >                for (const document of documents) {</span>
 <span class="cstat-no" title="statement not covered" >                    if (model.modelName === 'User') {</span>
 <span class="cstat-no" title="statement not covered" >                        await this.addUser(document as IUser);</span>
+<span class="cstat-no" title="statement not covered" >                        tempBookedRecipes.push({ id: (document as any)._id.toString(), bookedRecipes: (document as any).booked_recipes });</span>
 <span class="cstat-no" title="statement not covered" >                    } else if (model.modelName === 'Recipe') {</span>
 <span class="cstat-no" title="statement not covered" >                        if ((document as IRecipe).status == ERecipeStatus.verified) {</span>
 <span class="cstat-no" title="statement not covered" >                            await this.addRecipe(document as IRecipe);</span>
 <span class="cstat-no" title="statement not covered" >                        }</span>
+<span class="cstat-no" title="statement not covered" >                    } else if (model.modelName === 'Review') {</span>
+<span class="cstat-no" title="statement not covered" >                        await this.addReviewToRecipe((document as IReview).recipe.toString(), (document as IReview).user.user.toString(), document as IReview);</span>
 <span class="cstat-no" title="statement not covered" >                    }</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >            for (const { bookedRecipes, id } of tempBookedRecipes) {</span>
+<span class="cstat-no" title="statement not covered" >                for (const recipeId of bookedRecipes) {</span>
+<span class="cstat-no" title="statement not covered" >                    await this.addBookRecipe(id, recipeId.toString());</span>
 <span class="cstat-no" title="statement not covered" >                }</span>
 <span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        } catch (error) {</span>
@@ -1777,7 +1822,7 @@ export default class Neo4jClient {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-10-18T08:55:11.278Z
+                at 2024-10-18T18:00:46.355Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

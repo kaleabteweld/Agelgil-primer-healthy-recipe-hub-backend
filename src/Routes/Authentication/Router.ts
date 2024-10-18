@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { MakeErrorHandler, adminOnly, authorization } from "../../Util/middlewares";
+import { MakeErrorHandler, authorization } from "../../Util/middlewares";
 import { UserController } from "../User";
 import { UserType } from "../../Util/jwt/jwt.types";
 import { makeAuthHeaders } from "../../Util/jwt";

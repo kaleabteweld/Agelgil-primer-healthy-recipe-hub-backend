@@ -11,7 +11,7 @@ import { NutritionData } from "../src/Util/calorieninjas/types";
 
 
 export const sighupUrl = (user: UserType) => `/Api/v1/public/authentication/${user}/signUp`;
-export const privateSighupUrl = (user: UserType = UserType.admin) => `/Api/v1/private/authentication/${user}/signUp`;
+export const privateSighupUrl = (user: UserType = UserType.user) => `/Api/v1/private/authentication/${user}/signUp`;
 export const loginUrl = (user: UserType) => `/Api/v1/public/authentication/${user}/login`;
 export const refreshTokenUrl = (user: UserType) => `/Api/v1/public/authentication/${user}/refreshToken`;
 export const logoutUrl = (user: UserType) => `/Api/v1/private/authentication/${user}/logOut`;

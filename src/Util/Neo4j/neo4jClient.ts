@@ -1,4 +1,4 @@
-import neo4j, { Session } from "neo4j-driver";
+import neo4j, { Session, Driver } from "neo4j-driver";
 import { EAllergies, EChronicDisease, EDietaryPreferences, IUser } from "../../Schema/user/user.type";
 import { ERecipeStatus, IRecipe, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
 import { IReview } from "../../Schema/Review/review.type";
@@ -11,14 +11,15 @@ export default class Neo4jClient {
     private _passive: boolean | null = null;
 
     session: Session;
+    driver: Driver;
 
     private constructor(options?: { url?: string, userName?: string, password?: string }, _passive?: boolean) {
-        const driver = neo4j.driver(
+        this.driver = neo4j.driver(
             options?.url ?? process.env.NEO4J_URL ?? "bolt://localhost:7687",
             neo4j.auth.basic(options?.userName ?? process.env.NEO4J_USER ?? "neo4j", options?.password ?? process.env.NEO4J_PASSWORD ?? "password")
         );
         console.log(`[+] Neo4j Connected at ${options?.url ?? process.env.NEO4J_URL ?? "bolt://localhost:7687"}`);
-        this.session = driver.session({ database: process.env.NEO4J_DATABASE ?? "Agelgel" });
+        this.session = this.driver.session({ database: process.env.NEO4J_DATABASE ?? "Agelgel" });
 
         if (_passive) this._passive = _passive;
         else this._passive = process.env.NODE_ENV === "test" || process.env.NODE_ENV == "development " || process.env.JEST_WORKER_ID !== undefined;
@@ -33,7 +34,7 @@ export default class Neo4jClient {
 
     async recommendRecipesForUser(userId: string, time: TPreferredMealTime | 'all', pagination: IPagination) {
         try {
-            const result = await this.session.run(
+            const result = await this.driver.executeQuery(
                 /* cypher */`
                 // Match the current user's preferences, conditions, and allergies
                    MATCH (u:User {id: $userId})-[:PREFERS]->(dp:DietaryPreference)
@@ -121,7 +122,7 @@ export default class Neo4jClient {
     async addUser(user: IUser) {
         if (this._passive) return;
         try {
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */`MERGE (u:User { 
                     id: $id,
                     email: $email, 
@@ -138,7 +139,7 @@ export default class Neo4jClient {
 
             for (const medicalCondition of user.medical_condition.chronicDiseases) {
                 if (medicalCondition != EChronicDisease.none)
-                    await this.session.run(
+                    await this.driver.executeQuery(
                     /* cypher */`MERGE (c:MedicalCondition {name: $medicalCondition}) 
                     WITH c
                     MATCH (u:User {id: $id})
@@ -152,7 +153,7 @@ export default class Neo4jClient {
 
             for (const dietaryPreference of user.medical_condition.dietary_preferences) {
                 if (dietaryPreference != EDietaryPreferences.none)
-                    await this.session.run(
+                    await this.driver.executeQuery(
                     /* cypher */`MERGE (d:DietaryPreference {name: $dietaryPreference}) 
                     WITH d
                     MATCH (u:User {id: $id})
@@ -166,7 +167,7 @@ export default class Neo4jClient {
 
             for (const allergy of user.medical_condition.allergies) {
                 if (allergy != EAllergies.none)
-                    await this.session.run(
+                    await this.driver.executeQuery(
                     /* cypher */`MERGE (a:Allergy {name: $allergy}) 
                     WITH a
                     MATCH (u:User {id: $id})
@@ -186,7 +187,7 @@ export default class Neo4jClient {
     async updateUser(user: IUser) {
         if (this._passive) return;
         try {
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */`MATCH (u:User {id: $id})
                 SET u.email = $email, 
                     u.first_name = $first_name, 
@@ -199,7 +200,7 @@ export default class Neo4jClient {
                 }
             );
 
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */`MATCH (u:User {id: $id})-[c:HAS_CONDITION]->(m:MedicalCondition)
                 DELETE c`,
                 {
@@ -209,7 +210,7 @@ export default class Neo4jClient {
 
             for (const medicalCondition of user.medical_condition.chronicDiseases) {
                 if (medicalCondition != EChronicDisease.none)
-                    await this.session.run(
+                    await this.driver.executeQuery(
                     /* cypher */`MERGE (c:MedicalCondition {name: $medicalCondition}) 
                     WITH c
                     MATCH (u:User {id: $id})
@@ -221,7 +222,7 @@ export default class Neo4jClient {
                     );
             }
 
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */`MATCH (u:User {id: $id})-[d:PREFERS]->(dp:DietaryPreference)
                 DELETE d`,
                 {
@@ -231,7 +232,7 @@ export default class Neo4jClient {
 
             for (const dietaryPreference of user.medical_condition.dietary_preferences) {
                 if (dietaryPreference != EDietaryPreferences.none)
-                    await this.session.run(
+                    await this.driver.executeQuery(
                     /* cypher */`MERGE (d:DietaryPreference {name: $dietaryPreference}) 
                     WITH d
                     MATCH (u:User {id: $id})
@@ -243,7 +244,7 @@ export default class Neo4jClient {
                     );
             }
 
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */`MATCH (u:User {id: $id})-[a:ALLERGIC_TO]->(al:Allergy)
                 DELETE a`,
                 {
@@ -253,7 +254,7 @@ export default class Neo4jClient {
 
             for (const allergy of user.medical_condition.allergies) {
                 if (allergy != EAllergies.none)
-                    await this.session.run(
+                    await this.driver.executeQuery(
                     /* cypher */`MERGE (a:Allergy {name: $allergy}) 
                     WITH a
                     MATCH (u:User {id: $id})
@@ -274,7 +275,7 @@ export default class Neo4jClient {
     async updateRecipe(recipe: IRecipe) {
         if (this._passive) return;
         try {
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MATCH (r:Recipe {id: $id})
                 SET r.img = $img,
@@ -295,7 +296,7 @@ export default class Neo4jClient {
                 }
             );
 
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MATCH (r:Recipe {id: $id})-[c:CONTAINS]->(i:Ingredient)
                 DELETE c
@@ -306,7 +307,7 @@ export default class Neo4jClient {
             );
 
             for (const ingredient of recipe.ingredients) {
-                await this.session.run(
+                await this.driver.executeQuery(
                     /* cypher */ `MERGE (i:Ingredient {name: $ingredient}) 
                     WITH i
                     MATCH (r:Recipe {id: $id})
@@ -319,7 +320,7 @@ export default class Neo4jClient {
                 );
             }
 
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MATCH (r:Recipe {id: $id})-[p:PREFERRED_MEAL_TIME]->(t:PreferredMealTime)
                 DELETE p
@@ -330,7 +331,7 @@ export default class Neo4jClient {
             );
 
             for (const preferredMealTime of recipe.preferredMealTime) {
-                await this.session.run(
+                await this.driver.executeQuery(
                     /* cypher */ `
                     MERGE (p:PreferredMealTime {name: $preferredMealTime}) 
                     WITH p
@@ -343,7 +344,7 @@ export default class Neo4jClient {
                 );
             }
 
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MATCH (r:Recipe {id: $id})-[c:HAS_CONDITION]->(m:MedicalCondition)
                 DELETE c
@@ -361,7 +362,7 @@ export default class Neo4jClient {
     async removeRecipe(recipeId: string) {
         if (this._passive) return;
         try {
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MATCH (r:Recipe {id: $id})
                 DETACH DELETE r
@@ -379,7 +380,7 @@ export default class Neo4jClient {
     async addRecipe(recipe: IRecipe) {
         if (this._passive) return;
         try {
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MERGE (r:Recipe { 
                     id: $id,
@@ -402,7 +403,7 @@ export default class Neo4jClient {
             );
 
             for (const ingredient of recipe.ingredients) {
-                await this.session.run(
+                await this.driver.executeQuery(
                     /* cypher */ `MERGE (i:Ingredient {name: $ingredient}) 
                     WITH i
                     MATCH (r:Recipe {id: $id})
@@ -416,7 +417,7 @@ export default class Neo4jClient {
             }
 
             for (const preferredMealTime of recipe.preferredMealTime) {
-                await this.session.run(
+                await this.driver.executeQuery(
                     /* cypher */ `
                     MERGE (p:PreferredMealTime {name: $preferredMealTime}) 
                     WITH p
@@ -431,7 +432,7 @@ export default class Neo4jClient {
 
             for (const medicalCondition of recipe.medical_condition.chronicDiseases) {
                 if (medicalCondition != EChronicDisease.none)
-                    await this.session.run(
+                    await this.driver.executeQuery(
                     /* cypher */`
                     MERGE (c:MedicalCondition {name: $medicalCondition}) 
                     WITH c
@@ -446,7 +447,7 @@ export default class Neo4jClient {
 
             for (const dietaryPreference of recipe.medical_condition.dietary_preferences) {
                 if (dietaryPreference != EDietaryPreferences.none)
-                    await this.session.run(
+                    await this.driver.executeQuery(
                     /* cypher */`
                     MERGE (d:DietaryPreference {name: $dietaryPreference}) 
                     WITH d
@@ -461,7 +462,7 @@ export default class Neo4jClient {
 
             for (const allergy of recipe.medical_condition.allergies) {
                 if (allergy != EAllergies.none)
-                    await this.session.run(
+                    await this.driver.executeQuery(
                     /* cypher */`
                     MERGE (a:Allergy {name: $allergy}) 
                     WITH a
@@ -474,7 +475,7 @@ export default class Neo4jClient {
                     );
             }
 
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MERGE (u:User {id: $userId}) 
                 MERGE (r:Recipe {id: $recipeId})
@@ -493,7 +494,7 @@ export default class Neo4jClient {
     async addReviewToRecipe(recipeId: string, userId: string, review: IReview) {
         if (this._passive) return;
         try {
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MATCH (r:Recipe {id: $recipeId})
                 MERGE (u:User {id: $userId})
@@ -515,7 +516,7 @@ export default class Neo4jClient {
     async addBookRecipe(userId: string, recipeId: string) {
         if (this._passive) return;
         try {
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MATCH (u:User {id: $userId})
                 MERGE (r:Recipe {id: $recipeId})
@@ -535,7 +536,7 @@ export default class Neo4jClient {
     async removeBookedRecipe(userId: string, recipeId: string) {
         if (this._passive) return;
         try {
-            await this.session.run(
+            await this.driver.executeQuery(
                 /* cypher */ `
                 MATCH (u:User {id: $userId})-[b:BOOKED]->(r:Recipe {id: $recipeId})
                 DELETE b

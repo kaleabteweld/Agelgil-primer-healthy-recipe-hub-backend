@@ -201,7 +201,6 @@ export default class RecipeController {
     static async recommendation(user: IUser, time: TPreferredMealTime, pagination: IPagination): Promise<IResponseType<IRecipe[]>> {
         const _user = await UserModel.getById(user.id as any)
         const recommendations = await (Neo4jClient.getInstance({}).recommendRecipesForUser(_user.id as any, time, pagination));
-        console.log({ recommendations })
         for (const recipe of recommendations) {
             recipe._id = recipe.id
             recipe.imgs = await RecipeModel.getRecipeImages(recipe.id)

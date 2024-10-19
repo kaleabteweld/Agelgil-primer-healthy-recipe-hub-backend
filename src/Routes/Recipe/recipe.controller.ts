@@ -165,7 +165,7 @@ export default class RecipeController {
         const recipe = await RecipeModel.checkIfUserOwnsRecipe(recipeId, (await UserModel.getById(user.id as any)));
         await RecipeModel.removeByID(recipe?.id)
         await Datasx.getInstance().removeRecipe(recipe as any)
-        await Neo4jClient.getInstance({}).removeRecipe(recipe as any)
+        await Neo4jClient.getInstance({}).removeRecipe(recipe.id)
         return { body: {} };
 
     }

@@ -268,13 +268,14 @@ export async function getRecipeImages(this: mongoose.Model<IRecipe>, _id: string
         }
         return recipe.imgs;
     } catch (error) {
-        if (error instanceof BSONError) {
-            throw ValidationErrorFactory({
-                msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
-                statusCode: 400,
-                type: "validation",
-            }, "id");
-        }
-        throw error;
+        return []
+        // if (error instanceof BSONError) {
+        //     throw ValidationErrorFactory({
+        //         msg: "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+        //         statusCode: 400,
+        //         type: "validation",
+        //     }, "id");
+        // }
+        // throw error;
     }
 }

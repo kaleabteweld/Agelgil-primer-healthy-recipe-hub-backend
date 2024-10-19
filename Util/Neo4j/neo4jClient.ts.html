@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.35% </span>
+                <span class="strong">13.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>78/584</span>
+                <span class='fraction'>79/585</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.35% </span>
+                <span class="strong">13.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>78/584</span>
+                <span class='fraction'>79/585</span>
             </div>
         
             
@@ -647,7 +647,9 @@
 <a name='L582'></a><a href='#L582'>582</a>
 <a name='L583'></a><a href='#L583'>583</a>
 <a name='L584'></a><a href='#L584'>584</a>
-<a name='L585'></a><a href='#L585'>585</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L585'></a><a href='#L585'>585</a>
+<a name='L586'></a><a href='#L586'>586</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1231,7 +1233,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import neo4j, { Session } from "neo4j-driver";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import neo4j, { Session, Driver } from "neo4j-driver";
 import { EAllergies, EChronicDisease, EDietaryPreferences, IUser } from "../../Schema/user/user.type";
 import { ERecipeStatus, IRecipe, TPreferredMealTime } from "../../Schema/Recipe/recipe.type";
 import { IReview } from "../../Schema/Review/review.type";
@@ -1244,14 +1246,15 @@ export default class Neo4jClient {
     private _passive: boolean | null = null;
 &nbsp;
     session: Session;
+    driver: Driver;
 &nbsp;
     private constructor(options?: { url?: string, userName?: string, password?: string }, _passive?: boolean) {
-        const driver = neo4j.driver(
+        this.driver = neo4j.driver(
             options<span class="branch-0 cbranch-no" title="branch not covered" >?.u</span>rl<span class="branch-0 cbranch-no" title="branch not covered" > ?? p</span>rocess.env.NEO4J_URL<span class="branch-0 cbranch-no" title="branch not covered" > ?? "bolt://localhost:7687",</span>
             neo4j.auth.basic(options<span class="branch-0 cbranch-no" title="branch not covered" >?.u</span>serName<span class="branch-0 cbranch-no" title="branch not covered" > ?? p</span>rocess.env.NEO4J_USER<span class="branch-0 cbranch-no" title="branch not covered" > ?? "neo4j",</span> options<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>assword<span class="branch-0 cbranch-no" title="branch not covered" > ?? p</span>rocess.env.NEO4J_PASSWORD<span class="branch-0 cbranch-no" title="branch not covered" > ?? "password")</span>
         );
         console.log(`[+] Neo4j Connected at ${options<span class="branch-0 cbranch-no" title="branch not covered" >?.u</span>rl<span class="branch-0 cbranch-no" title="branch not covered" > ?? p</span>rocess.env.NEO4J_URL<span class="branch-0 cbranch-no" title="branch not covered" > ?? "bolt://localhost:7687"}</span>`);
-        this.session = driver.session({ database: process.env.NEO4J_DATABASE<span class="branch-0 cbranch-no" title="branch not covered" > ?? "Agelgel" </span>});
+        this.session = this.driver.session({ database: process.env.NEO4J_DATABASE<span class="branch-0 cbranch-no" title="branch not covered" > ?? "Agelgel" </span>});
 &nbsp;
         if (_passive) <span class="branch-0 cbranch-no" title="branch not covered" >this._passive = _passive;</span>
         else this._passive = process.env.NODE_ENV === "test"<span class="branch-0 cbranch-no" title="branch not covered" > || process.env.NODE_ENV == "development "<span class="branch-0 cbranch-no" title="branch not covered" > </span>|| process.env.JEST_WORKER_ID !== undefined;</span>
@@ -1266,7 +1269,7 @@ export default class Neo4jClient {
 &nbsp;
     async <span class="fstat-no" title="function not covered" >recommendRecipesForUser(userId: string, time: TPreferredMealTime | 'all', pagination: IPagination) {</span>
 <span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            const result = await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            const result = await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */`</span>
 <span class="cstat-no" title="statement not covered" >                // Match the current user's preferences, conditions, and allergies</span>
 <span class="cstat-no" title="statement not covered" >                   MATCH (u:User {id: $userId})-[:PREFERS]-&gt;(dp:DietaryPreference)</span>
@@ -1354,7 +1357,7 @@ export default class Neo4jClient {
     async addUser(user: IUser) {
         if (this._passive) return;
 <span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >        try {</span></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */`MERGE (u:User { </span>
 <span class="cstat-no" title="statement not covered" >                    id: $id,</span>
 <span class="cstat-no" title="statement not covered" >                    email: $email, </span>
@@ -1371,7 +1374,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const medicalCondition of user.medical_condition.chronicDiseases) {</span>
 <span class="cstat-no" title="statement not covered" >                if (medicalCondition != EChronicDisease.none)</span>
-<span class="cstat-no" title="statement not covered" >                    await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                    await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */`MERGE (c:MedicalCondition {name: $medicalCondition}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH c</span>
 <span class="cstat-no" title="statement not covered" >                    MATCH (u:User {id: $id})</span>
@@ -1385,7 +1388,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const dietaryPreference of user.medical_condition.dietary_preferences) {</span>
 <span class="cstat-no" title="statement not covered" >                if (dietaryPreference != EDietaryPreferences.none)</span>
-<span class="cstat-no" title="statement not covered" >                    await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                    await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */`MERGE (d:DietaryPreference {name: $dietaryPreference}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH d</span>
 <span class="cstat-no" title="statement not covered" >                    MATCH (u:User {id: $id})</span>
@@ -1399,7 +1402,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const allergy of user.medical_condition.allergies) {</span>
 <span class="cstat-no" title="statement not covered" >                if (allergy != EAllergies.none)</span>
-<span class="cstat-no" title="statement not covered" >                    await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                    await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */`MERGE (a:Allergy {name: $allergy}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH a</span>
 <span class="cstat-no" title="statement not covered" >                    MATCH (u:User {id: $id})</span>
@@ -1419,7 +1422,7 @@ export default class Neo4jClient {
     async updateUser(user: IUser) {
         if (this._passive) return;
 <span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >        try {</span></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */`MATCH (u:User {id: $id})</span>
 <span class="cstat-no" title="statement not covered" >                SET u.email = $email, </span>
 <span class="cstat-no" title="statement not covered" >                    u.first_name = $first_name, </span>
@@ -1432,7 +1435,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >                }</span>
 <span class="cstat-no" title="statement not covered" >            );</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */`MATCH (u:User {id: $id})-[c:HAS_CONDITION]-&gt;(m:MedicalCondition)</span>
 <span class="cstat-no" title="statement not covered" >                DELETE c`,</span>
 <span class="cstat-no" title="statement not covered" >                {</span>
@@ -1442,7 +1445,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const medicalCondition of user.medical_condition.chronicDiseases) {</span>
 <span class="cstat-no" title="statement not covered" >                if (medicalCondition != EChronicDisease.none)</span>
-<span class="cstat-no" title="statement not covered" >                    await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                    await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */`MERGE (c:MedicalCondition {name: $medicalCondition}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH c</span>
 <span class="cstat-no" title="statement not covered" >                    MATCH (u:User {id: $id})</span>
@@ -1454,7 +1457,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >                    );</span>
 <span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */`MATCH (u:User {id: $id})-[d:PREFERS]-&gt;(dp:DietaryPreference)</span>
 <span class="cstat-no" title="statement not covered" >                DELETE d`,</span>
 <span class="cstat-no" title="statement not covered" >                {</span>
@@ -1464,7 +1467,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const dietaryPreference of user.medical_condition.dietary_preferences) {</span>
 <span class="cstat-no" title="statement not covered" >                if (dietaryPreference != EDietaryPreferences.none)</span>
-<span class="cstat-no" title="statement not covered" >                    await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                    await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */`MERGE (d:DietaryPreference {name: $dietaryPreference}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH d</span>
 <span class="cstat-no" title="statement not covered" >                    MATCH (u:User {id: $id})</span>
@@ -1476,7 +1479,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >                    );</span>
 <span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */`MATCH (u:User {id: $id})-[a:ALLERGIC_TO]-&gt;(al:Allergy)</span>
 <span class="cstat-no" title="statement not covered" >                DELETE a`,</span>
 <span class="cstat-no" title="statement not covered" >                {</span>
@@ -1486,7 +1489,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const allergy of user.medical_condition.allergies) {</span>
 <span class="cstat-no" title="statement not covered" >                if (allergy != EAllergies.none)</span>
-<span class="cstat-no" title="statement not covered" >                    await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                    await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */`MERGE (a:Allergy {name: $allergy}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH a</span>
 <span class="cstat-no" title="statement not covered" >                    MATCH (u:User {id: $id})</span>
@@ -1507,7 +1510,7 @@ export default class Neo4jClient {
     async updateRecipe(recipe: IRecipe) {
         if (this._passive) return;
 <span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >        try {</span></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MATCH (r:Recipe {id: $id})</span>
 <span class="cstat-no" title="statement not covered" >                SET r.img = $img,</span>
@@ -1528,7 +1531,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >                }</span>
 <span class="cstat-no" title="statement not covered" >            );</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MATCH (r:Recipe {id: $id})-[c:CONTAINS]-&gt;(i:Ingredient)</span>
 <span class="cstat-no" title="statement not covered" >                DELETE c</span>
@@ -1539,7 +1542,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >            );</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const ingredient of recipe.ingredients) {</span>
-<span class="cstat-no" title="statement not covered" >                await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */ `MERGE (i:Ingredient {name: $ingredient}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH i</span>
 <span class="cstat-no" title="statement not covered" >                    MATCH (r:Recipe {id: $id})</span>
@@ -1552,7 +1555,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >                );</span>
 <span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MATCH (r:Recipe {id: $id})-[p:PREFERRED_MEAL_TIME]-&gt;(t:PreferredMealTime)</span>
 <span class="cstat-no" title="statement not covered" >                DELETE p</span>
@@ -1563,7 +1566,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >            );</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const preferredMealTime of recipe.preferredMealTime) {</span>
-<span class="cstat-no" title="statement not covered" >                await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                    MERGE (p:PreferredMealTime {name: $preferredMealTime}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH p</span>
@@ -1576,7 +1579,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >                );</span>
 <span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MATCH (r:Recipe {id: $id})-[c:HAS_CONDITION]-&gt;(m:MedicalCondition)</span>
 <span class="cstat-no" title="statement not covered" >                DELETE c</span>
@@ -1594,7 +1597,7 @@ export default class Neo4jClient {
     async <span class="fstat-no" title="function not covered" >removeRecipe(recipeId: string) {</span>
 <span class="cstat-no" title="statement not covered" >        if (this._passive) return;</span>
 <span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MATCH (r:Recipe {id: $id})</span>
 <span class="cstat-no" title="statement not covered" >                DETACH DELETE r</span>
@@ -1612,7 +1615,7 @@ export default class Neo4jClient {
     async addRecipe(recipe: IRecipe) {
         if (this._passive) return;
 <span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >        try {</span></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MERGE (r:Recipe { </span>
 <span class="cstat-no" title="statement not covered" >                    id: $id,</span>
@@ -1635,7 +1638,7 @@ export default class Neo4jClient {
             );
 <span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span>
 <span class="cstat-no" title="statement not covered" >            for (const ingredient of recipe.ingredients) {</span>
-<span class="cstat-no" title="statement not covered" >                await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */ `MERGE (i:Ingredient {name: $ingredient}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH i</span>
 <span class="cstat-no" title="statement not covered" >                    MATCH (r:Recipe {id: $id})</span>
@@ -1649,7 +1652,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const preferredMealTime of recipe.preferredMealTime) {</span>
-<span class="cstat-no" title="statement not covered" >                await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                    MERGE (p:PreferredMealTime {name: $preferredMealTime}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH p</span>
@@ -1664,7 +1667,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const medicalCondition of recipe.medical_condition.chronicDiseases) {</span>
 <span class="cstat-no" title="statement not covered" >                if (medicalCondition != EChronicDisease.none)</span>
-<span class="cstat-no" title="statement not covered" >                    await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                    await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */`</span>
 <span class="cstat-no" title="statement not covered" >                    MERGE (c:MedicalCondition {name: $medicalCondition}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH c</span>
@@ -1679,7 +1682,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const dietaryPreference of recipe.medical_condition.dietary_preferences) {</span>
 <span class="cstat-no" title="statement not covered" >                if (dietaryPreference != EDietaryPreferences.none)</span>
-<span class="cstat-no" title="statement not covered" >                    await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                    await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */`</span>
 <span class="cstat-no" title="statement not covered" >                    MERGE (d:DietaryPreference {name: $dietaryPreference}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH d</span>
@@ -1694,7 +1697,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            for (const allergy of recipe.medical_condition.allergies) {</span>
 <span class="cstat-no" title="statement not covered" >                if (allergy != EAllergies.none)</span>
-<span class="cstat-no" title="statement not covered" >                    await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >                    await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                    /* cypher */`</span>
 <span class="cstat-no" title="statement not covered" >                    MERGE (a:Allergy {name: $allergy}) </span>
 <span class="cstat-no" title="statement not covered" >                    WITH a</span>
@@ -1707,7 +1710,7 @@ export default class Neo4jClient {
 <span class="cstat-no" title="statement not covered" >                    );</span>
 <span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MERGE (u:User {id: $userId}) </span>
 <span class="cstat-no" title="statement not covered" >                MERGE (r:Recipe {id: $recipeId})</span>
@@ -1726,7 +1729,7 @@ export default class Neo4jClient {
     async addReviewToRecipe(recipeId: string, userId: string, review: IReview) {
         if (this._passive) return;
 <span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >        try {</span></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MATCH (r:Recipe {id: $recipeId})</span>
 <span class="cstat-no" title="statement not covered" >                MERGE (u:User {id: $userId})</span>
@@ -1748,7 +1751,7 @@ export default class Neo4jClient {
     async addBookRecipe(userId: string, recipeId: string) {
         if (this._passive) return;
 <span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >        try {</span></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MATCH (u:User {id: $userId})</span>
 <span class="cstat-no" title="statement not covered" >                MERGE (r:Recipe {id: $recipeId})</span>
@@ -1768,7 +1771,7 @@ export default class Neo4jClient {
     async removeBookedRecipe(userId: string, recipeId: string) {
         if (this._passive) return;
 <span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >        try {</span></span>
-<span class="cstat-no" title="statement not covered" >            await this.session.run(</span>
+<span class="cstat-no" title="statement not covered" >            await this.driver.executeQuery(</span>
 <span class="cstat-no" title="statement not covered" >                /* cypher */ `</span>
 <span class="cstat-no" title="statement not covered" >                MATCH (u:User {id: $userId})-[b:BOOKED]-&gt;(r:Recipe {id: $recipeId})</span>
 <span class="cstat-no" title="statement not covered" >                DELETE b</span>
@@ -1822,7 +1825,7 @@ export default class Neo4jClient {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-10-19T17:01:13.654Z
+                at 2024-10-19T17:17:19.040Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

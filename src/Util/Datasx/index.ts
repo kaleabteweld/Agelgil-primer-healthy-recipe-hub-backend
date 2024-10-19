@@ -78,7 +78,7 @@ export class Datasx {
         }
     }
 
-    async EmbedAndSave(recipe: IRecipe,): Promise<void> {
+    async EmbedAndSave(recipe: IRecipe): Promise<void> {
         if (this._passive) return;
         try {
             const _recipe = await this.db.collection(this.collectionName).findOne({ recipeId: (recipe as any)._id })
@@ -195,6 +195,32 @@ export class Datasx {
             });
         } catch (error) {
             console.error('Error updating recipe:', error);
+            throw error;
+        }
+    }
+
+    async seedRecipes(recipes: IRecipe[]): Promise<void> {
+        if (this._passive) return;
+        try {
+            this.db.collection(this.collectionName).deleteMany({});
+            const docs = recipes.map(recipe => ({
+                _id: UUID.v7(),
+                recipeId: (recipe as any)._id,
+                name: recipe.name,
+                description: recipe.description,
+                preferredMealTime: recipe.preferredMealTime,
+                preparationDifficulty: recipe.preparationDifficulty,
+                imgs: recipe.imgs,
+                rating: recipe.rating,
+                $vectorize: `${recipe.name} ${recipe.description}
+            ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
+            ${recipe.ingredients.map(ingredientDetail => `${ingredientDetail.name} ${(ingredientDetail as any).type}`).join(' ')}
+            ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
+            ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')}`
+            }));
+            await this.db.collection(this.collectionName).insertMany(docs);
+        } catch (error) {
+            console.error('Error seeding recipes:', error);
             throw error;
         }
     }

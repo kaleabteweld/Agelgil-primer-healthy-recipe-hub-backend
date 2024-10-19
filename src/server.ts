@@ -31,6 +31,13 @@ mongoose.connect(process.env.DATABASE_URL ?? "").catch((error) => {
     } catch (error) {
         console.log("[-] Error Seeding Neo4j Database", error);
     }
+
+    try {
+        await Datasx.getInstance().seedRecipes(await RecipeModel.find({}));
+        console.log("[+] Datasx Recipes Seeded");
+    } catch (error) {
+        console.log("[-] Error Seeding Datasx Recipes", error);
+    }
 });
 
 const redisCache = RedisCache.getInstance();

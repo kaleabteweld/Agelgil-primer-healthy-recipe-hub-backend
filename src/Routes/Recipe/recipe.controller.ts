@@ -123,8 +123,10 @@ export default class RecipeController {
         } as any;
 
         const updateRecipe: any = await RecipeModel.update(recipe.id, _recipe)
+        if (recipe.status === ERecipeStatus.pending) updateRecipe.moderator = undefined
         if (recipe.status === ERecipeStatus.verified) {
             updateRecipe.status = ERecipeStatus.pending
+            updateRecipe.moderator = undefined
             await updateRecipe.save()
         } else {
             await Datasx.getInstance().updateRecipe(recipeId, updateRecipe);

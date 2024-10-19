@@ -557,6 +557,12 @@ export default class Neo4jClient {
     async seedDatabase<T>(Models: mongoose.Model<T>[]) {
         if (this._passive) return;
         try {
+            await this.driver.executeQuery(
+                /* cypher */ `
+                MATCH (n)
+                DETACH DELETE n
+                `
+            );
             const tempBookedRecipes = []
             for (const model of Models) {
                 const documents = await model.find();

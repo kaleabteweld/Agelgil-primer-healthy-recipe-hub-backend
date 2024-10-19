@@ -33,6 +33,7 @@ export const recipeUpdateSchema = Joi.object<IRecipeUpdateFrom>({
     preferredMealTime: Joi.array().items(Joi.string().valid(...Object.values(EPreferredMealTime)).optional()),
     preparationDifficulty: Joi.string().valid(...Object.values(EPreparationDifficulty)).optional(),
     ingredients: Joi.array().items(Joi.object({
+        name: Joi.string().optional(),
         ingredient: Joi.string().optional(),
         unit: Joi.string().optional(),
         amount: Joi.number().optional(),

@@ -49,10 +49,12 @@ export default class Neo4jClient {
                //Find recipes that match the user's preferences and do not have disliked attributes
                MATCH (r:Recipe)
                WHERE 
+               ($time = 'all' OR (r)-[:PREFERRED_MEAL_TIME]->(:PreferredMealTime {name: $time})) AND
+               (
                    (r)-[:PREFERS]->(dp) OR 
                    NOT EXISTS((r)-[:ALLERGIC_TO]->(a)) OR
-                   (r)-[:HAS_CONDITION]->(mc) OR
-                   ($time = 'all' OR (r)-[:PREFERRED_MEAL_TIME]->(:PreferredMealTime {name: $time}))
+                   (r)-[:HAS_CONDITION]->(mc)
+               )
    
                //Check if similar users have BOOKED or REVIEWED the recipe
                OPTIONAL MATCH (similarUser)-[:BOOKED]->(r)

@@ -204,7 +204,7 @@ export class Datasx {
         try {
             this.db.collection(this.collectionName).deleteMany({});
             const docs = recipes
-                .filter(recipe => recipe.status === ERecipeStatus.verified)
+                .filter(recipe => recipe.status == ERecipeStatus.verified)
                 .map(recipe => ({
                     _id: UUID.v7(),
                     recipeId: (recipe as any)._id,
@@ -220,7 +220,7 @@ export class Datasx {
                 ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
                 ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')}`
                 }));
-            for (let i = 0; i < docs.length; i += 1000) {
+            for (let i = 0; i < docs.length; i += 1) {
                 await this.db.collection(this.collectionName).insertOne(docs[i]);
             }
         } catch (error) {

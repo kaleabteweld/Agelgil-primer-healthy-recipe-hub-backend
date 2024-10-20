@@ -215,13 +215,14 @@ export class Datasx {
                     imgs: recipe.imgs,
                     rating: recipe.rating,
                     $vectorize: `${recipe.name} ${recipe.description}
-            ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
-            ${recipe.ingredients.map(ingredientDetail => `${ingredientDetail.name} ${(ingredientDetail as any).type}`).join(' ')}
-            ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
-            ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')}`
+                ${recipe.preferredMealTime} ${recipe.preparationDifficulty} 
+                ${recipe.ingredients.map(ingredientDetail => `${ingredientDetail.name} ${(ingredientDetail as any).type}`).join(' ')}
+                ${recipe.medical_condition.chronicDiseases.map(disease => disease).join(' ')} ${recipe.medical_condition.dietary_preferences.map(diet => diet).join(' ')} 
+                ${recipe.medical_condition.allergies.map(allergy => allergy).join(' ')}`
                 }));
-            console.log({ docs })
-            await this.db.collection(this.collectionName).insertMany(docs);
+            for (let i = 0; i < docs.length; i += 1000) {
+                await this.db.collection(this.collectionName).insertOne(docs[i]);
+            }
         } catch (error) {
             console.error('Error seeding recipes:', error);
             throw error;

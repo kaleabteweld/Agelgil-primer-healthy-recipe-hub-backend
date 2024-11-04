@@ -3,6 +3,8 @@ import appRouter from "../Routes";
 import { errorMiddleWare } from "./middlewares";
 import helmet from "helmet";
 import Cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import SwaggerSpecs from "./swagger";
 
 export function makeServer() {
     const app = express();
@@ -26,6 +28,8 @@ export function makeServer() {
 
     app.use(appRouter);
     app.use(errorMiddleWare);
+
+    app.use('/docs', swaggerUi.serve, swaggerUi.setup(SwaggerSpecs));
 
     return app;
 }

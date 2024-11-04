@@ -53,5 +53,3 @@ datasx.initNvidiaCollection().catch((error) => {
 }).then(() => {
     console.log("[+] Vector Database Initialized");
 });
-
-const neo4j = Neo4jClient.getInstance({});

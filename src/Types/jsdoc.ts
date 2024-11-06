@@ -20,3 +20,31 @@ export const Error401JsdocSchema = {
         },
     }
 }
+
+
+export const validationError = {
+    type: "object",
+    properties: {
+        error: {
+            type: "object",
+            properties: {
+                msg: {
+                    type: "string",
+                    example: "\"email\" must be a valid email"
+                },
+                statusCode: {
+                    type: "number",
+                    example: 400
+                },
+                type: {
+                    type: "string",
+                    example: "validation"
+                },
+                attr: {
+                    type: "string",
+                    example: "email"
+                }
+            }
+        }
+    }
+}
